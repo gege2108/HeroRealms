@@ -8,17 +8,17 @@
 class Effet {
 public:
     Effet();
-    Effet(const Competence& competence, TypeEffet type);
+    Effet(int valeur, TypeEffet type);
 
-    Competence getCompetence() const;
-    void setCompetence(const Competence& c);
+    int getValeur() const;
+    void setValeur(int v);
 
     TypeEffet getType() const;
     void setType(TypeEffet t);
     std::string toString() const;
 
 private:
-    Competence competence;
+    int valeur;
     TypeEffet type;
 };
 

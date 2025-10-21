@@ -26,7 +26,7 @@ void Plateau::setZoneDeSacrifice(const ZoneDeSacrifice& z) { zoneDeSacrifice = z
 void Plateau::run(Plateau& plateau) {
     std::cout << "=== Début d'une partie simplifiée ===" << std::endl;
     int round = 0;
-    while (round < 10) {
+    while (round < 10 && plateau.getJoueur1().getPointDeVie() > 0 && plateau.getJoueur2().getPointDeVie() > 0) {
         ++round;
 
         // En-tête de tour plus lisible

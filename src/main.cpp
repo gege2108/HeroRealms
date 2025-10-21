@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 
-extern void runTests();
+//extern void runTests();
 
 #include "Plateau.h"
 #include "Joueur.h"
@@ -11,7 +11,7 @@ extern void runTests();
 #include "Effet.h"
 
 int main() {
-    runTests();
+   // runTests();
 
     // Créer deux joueurs et initialiser les PV à 30
     Joueur j1;

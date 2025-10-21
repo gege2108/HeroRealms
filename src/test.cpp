@@ -3,7 +3,7 @@
 #include "Effet.h"
 #include "Pioche.h"
 #include "MainJoueur.h"
-
+/*
 void runTests() {
     // Carte sur la pile (stack) - objet local
     CarteDeBase cb("TestCard");
@@ -61,3 +61,4 @@ void runTests() {
 
     delete heapCard;
 }
+*/

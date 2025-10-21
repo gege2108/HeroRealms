@@ -8,6 +8,7 @@
 class Action : public Carte {
 public:
     //Temporaire pour l'instant Instancier toutes les differentes factions possibles dans un autre fichier
+    //TODO : déplacer cette énumération dans un fichier approprié et bien l'initialiser 
     enum Faction { FactionJaune, FactionRouge, FactionBleue, FactionVerte, NEUTRE };
 
     Action() = default;

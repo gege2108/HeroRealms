@@ -8,6 +8,12 @@ public:
     CarteDeBase() = default;
     CarteDeBase(const std::string& nom) : Carte(nom) {}
     void utiliserEffet() override;
+    
+    std::string toString() const {
+        std::string description = Carte::toString();
+        description += " (Type: CarteDeBase)";
+        return description;
+    }
 };
 
 #endif // CARTEDEBASE_H

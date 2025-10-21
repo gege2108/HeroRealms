@@ -1,4 +1,5 @@
 #include "MainJoueur.h"
+#include <algorithm>
 
 MainJoueur::MainJoueur() = default;
 
@@ -29,4 +30,14 @@ bool MainJoueur::removeCarte(Carte* c) {
 
 void MainJoueur::clear() {
     cartes.clear();
+}
+
+std::vector<CarteDeBase*> MainJoueur::getCartesDeBase() const {
+    std::vector<CarteDeBase*> res;
+    for (Carte* c : cartes) {
+        if (auto cb = dynamic_cast<CarteDeBase*>(c)) {
+            res.push_back(cb);
+        }
+    }
+    return res;
 }

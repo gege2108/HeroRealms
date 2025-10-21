@@ -12,7 +12,7 @@ public:
     const std::vector<Carte*>& getCartes() const;
     void setCartes(const std::vector<Carte*>& c);
 
-    void add(Carte* c);
+    void addCarte(Carte* c);
     bool remove(Carte* c);
     void clear();
 

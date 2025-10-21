@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Carte.h"
+#include "CarteDeBase.h"
 
 class MainJoueur {
 public:
@@ -15,6 +16,9 @@ public:
     void addCarte(Carte* c);
     bool removeCarte(Carte* c);
     void clear();
+
+    // Retourne une liste de pointeurs vers les CartesDeBase présentes dans la main
+    std::vector<CarteDeBase*> getCartesDeBase() const;
 
 private:
     std::vector<Carte*> cartes;

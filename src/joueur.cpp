@@ -1,6 +1,5 @@
 #include "Joueur.h"
 
-Joueur::Joueur() = default;
 
 int Joueur::getPointDeVie() const { return pointDeVie; }
 void Joueur::setPointDeVie(int v) { pointDeVie = v; }

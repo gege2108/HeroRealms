@@ -3,6 +3,7 @@
 
 #include "TypeEffet.h"
 #include "Competence.h"
+#include <string>
 
 class Effet {
 public:
@@ -14,6 +15,7 @@ public:
 
     TypeEffet getType() const;
     void setType(TypeEffet t);
+    std::string toString() const;
 
 private:
     Competence competence;

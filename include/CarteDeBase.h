@@ -7,8 +7,8 @@ class CarteDeBase : public Carte {
 public:
     CarteDeBase() = default;
     CarteDeBase(const std::string& nom) : Carte(nom) {}
-    void utiliserEffet() override;
-    
+    Competence utiliserEffet() override;
+
     std::string toString() const {
         std::string description = Carte::toString();
         description += " (Type: CarteDeBase)";

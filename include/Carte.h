@@ -18,7 +18,7 @@ public:
 
     std::vector<Effet>& getEffetsBasiqueChoix1() { return ListEffetBasiqueChoix1; }
 
-    std::string toString() const {
+    virtual std::string toString() const {
         return "Carte: " + nom;
     }
 

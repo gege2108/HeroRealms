@@ -19,7 +19,16 @@ public:
     std::vector<Effet>& getEffetsBasiqueChoix1() { return ListEffetBasiqueChoix1; }
 
     virtual std::string toString() const {
-        return "Carte: " + nom;
+        std::string res = "Carte: " + nom;
+        if (!ListEffetBasiqueChoix1.empty()) {
+            res += " [";
+            for (size_t i = 0; i < ListEffetBasiqueChoix1.size(); ++i) {
+                if (i) res += ", ";
+                res += ListEffetBasiqueChoix1[i].toString();
+            }
+            res += "]";
+        }
+        return res;
     }
 
 protected:

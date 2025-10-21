@@ -12,12 +12,12 @@ public:
     const std::vector<Carte*>& getCartes() const;
     void setCartes(const std::vector<Carte*>& c);
 
-    void push(Carte* c);
-    bool draw(Carte* c);
+    void addCarte(Carte* c);
+    bool tirerCarte(Carte* c);
     void clear();
 
 private:
-    std::vector<Carte*> cartes;
+    std::vector<Carte*> cartesPioche;
 };
 
 #endif // PIOCHE_H

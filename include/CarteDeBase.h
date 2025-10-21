@@ -7,7 +7,10 @@ class CarteDeBase : public Carte {
 public:
     CarteDeBase() = default;
     CarteDeBase(const std::string& nom) : Carte(nom) {}
+
     Competence utiliserEffet() override;
+
+    virtual ~CarteDeBase();
 
     std::string toString() const {
         std::string description = Carte::toString();

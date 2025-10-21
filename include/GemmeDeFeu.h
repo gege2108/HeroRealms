@@ -13,7 +13,7 @@ public:
 
     void UtiliserAttaque(); // utilise l'attaque mais jette la Carte
 
-    void utiliserEffet() override;
+    //void utiliserEffet() override;
 
 private:
     static int prix;

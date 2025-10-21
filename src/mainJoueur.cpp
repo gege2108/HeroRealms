@@ -18,7 +18,7 @@ void MainJoueur::addCarte(Carte* c) {
 }
 
 bool MainJoueur::removeCarte(Carte* c) {
-    for (int i = 0; i < cartes.size(); ++i) {
+    for (size_t i = 0; i < cartes.size(); ++i) {
         if (cartes[i] == c) {
             cartes.erase(cartes.begin() + i);
             return true;

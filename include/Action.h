@@ -14,7 +14,7 @@ public:
     Action() = default;
     Action(const std::string& nom) : Carte(nom) {}
 
-    void utiliserEffet() override;
+   // void utiliserEffet() override;
 
     int getPrix() const { return prix; }
     void setPrix(int p) { prix = p; }

@@ -16,7 +16,6 @@ std::string Effet::toString() const {
     switch (type) {
         case OR: typeStr = "Or"; break;
         case DEGAT: typeStr = "Degat"; break;
-        case ATTAQUE: typeStr = "Attaque"; break;
         default: typeStr = "Unknown"; break;
     }
     return std::to_string(valeur) + " (" + typeStr + ")";

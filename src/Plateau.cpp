@@ -51,11 +51,36 @@ void Plateau::run(Plateau& plateau) {
         for(auto* carte : plateau.getJoueur1().getMain().getCartesDeBase()) {
 
             newDefausseJoueur1.addCarte(carte);
-            plateau.getJoueur1().getMain().removeCarte(carte);
         }
         plateau.getJoueur1().setDefausse(newDefausseJoueur1);
 
+        MainJoueur newMainJoueur1 = MainJoueur();
+        Pioche newPiocheJoueur1 = plateau.getJoueur1().getPioche();
 
+
+        for(int i = 0; i < 5; ++i) {
+            //Si la pioche est vide, on remplit la pioche avec la défausse
+            if(newPiocheJoueur1.getCartes().empty()) {
+                for(auto* carte : newDefausseJoueur1.getCartes()) {
+                    newPiocheJoueur1.addCarte(carte);
+                }
+                newDefausseJoueur1.clear();
+                plateau.getJoueur1().setDefausse(newDefausseJoueur1);
+                plateau.getJoueur1().setPioche(newPiocheJoueur1);
+            }
+
+            // Si on n'a plus de cartes dans la pioche (après reconstitution), sortir de la boucle
+            if (newPiocheJoueur1.getCartes().empty()) break;
+
+            // Prendre la première carte disponible (sécurisé contre out-of-range)
+            Carte* carte = newPiocheJoueur1.getCartes()[i % newPiocheJoueur1.getCartes().size()];
+            newPiocheJoueur1.tirerCarte(carte);
+            newMainJoueur1.addCarte(carte);
+
+        }
+
+        plateau.getJoueur1().setMain(newMainJoueur1);
+        plateau.getJoueur1().setPioche(newPiocheJoueur1);
 
         std::cout << "C'est au Joueur2 de jouer " << std::endl;
         std::cout << "La main du joueur 2 est composée des cartes de base :" << std::endl;
@@ -71,6 +96,45 @@ void Plateau::run(Plateau& plateau) {
         else{
             std::cout << "Joueur 2 n'utilise pas les effets de ces cartes de base cette manche." << std::endl;
         }
+
+        // --- Ajout: traitement pour le Joueur2 déplacé ici (après son choix) ---
+        {
+            Defausse newDefausseJoueur2 = plateau.getJoueur2().getDefausse();
+
+            for(auto* carte : plateau.getJoueur2().getMain().getCartesDeBase()) {
+                newDefausseJoueur2.addCarte(carte);
+            }
+            plateau.getJoueur2().setDefausse(newDefausseJoueur2);
+
+            MainJoueur newMainJoueur2 = MainJoueur();
+            Pioche newPiocheJoueur2 = plateau.getJoueur2().getPioche();
+
+            for(int i = 0; i < 5; ++i) {
+                // Si la pioche est vide, on remplit la pioche avec la défausse
+                if(newPiocheJoueur2.getCartes().empty()) {
+                    for(auto* carte : newDefausseJoueur2.getCartes()) {
+                        newPiocheJoueur2.addCarte(carte);
+                    }
+                    newDefausseJoueur2.clear();
+                    plateau.getJoueur2().setDefausse(newDefausseJoueur2);
+                    plateau.getJoueur2().setPioche(newPiocheJoueur2);
+                }
+
+                // Si on n'a plus de cartes dans la pioche (après reconstitution), sortir de la boucle
+                if (newPiocheJoueur2.getCartes().empty()) break;
+
+                // Prendre la première carte disponible (sécurisé contre out-of-range)
+                Carte* carte = newPiocheJoueur2.getCartes()[i % newPiocheJoueur2.getCartes().size()];
+                newPiocheJoueur2.tirerCarte(carte);
+                newMainJoueur2.addCarte(carte);
+            }
+
+            plateau.getJoueur2().setMain(newMainJoueur2);
+            plateau.getJoueur2().setPioche(newPiocheJoueur2);
+        }
+        // --- Fin du bloc ajouté pour Joueur2 ---
+
+
 
         // condition d'arrêt simplifiée
         if (plateau.getJoueur1().getPointDeVie() <= 0 || plateau.getJoueur2().getPointDeVie() <= 0) {

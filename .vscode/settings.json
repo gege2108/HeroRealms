@@ -43,7 +43,8 @@
     "streambuf": "cpp",
     "typeinfo": "cpp",
     "iostream": "cpp",
-    "istream": "cpp"
+    "istream": "cpp",
+    "sstream": "cpp"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",

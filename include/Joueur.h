@@ -1,7 +1,7 @@
 #ifndef JOUEUR_H
 #define JOUEUR_H
 
-#include "Main.h"
+#include "MainJoueur.h"
 #include "Pioche.h"
 #include "StackChampion.h"
 #include "Defausse.h"
@@ -9,18 +9,33 @@
 
 class Joueur {
 public:
-    Joueur() = default;
+    Joueur();
 
-    int getPointDeVie() const { return pointDeVie; }
-    void setPointDeVie(int v) { pointDeVie = v; }
+    int getPointDeVie() const;
+    void setPointDeVie(int v);
 
-    Main main;
+    // getters et setters pour les containers
+    const MainJoueur& getMain() const;
+    void setMain(const MainJoueur& m);
+
+    const Pioche& getPioche() const;
+    void setPioche(const Pioche& p);
+
+    const StackChampion& getStackChampion() const;
+    void setStackChampion(const StackChampion& s);
+
+    const Defausse& getDefausse() const;
+    void setDefausse(const Defausse& d);
+
+
+
+   
+
+private:
+    MainJoueur mainJoueur;
     Pioche pioche;
     StackChampion stackChampion;
     Defausse defausse;
-    Champion champion;
-
-private:
     int pointDeVie = 0;
 };
 

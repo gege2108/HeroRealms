@@ -15,7 +15,7 @@ public:
     CarteDeBase(const std::string& nom, const std::vector<Effet>& effets)
         : Carte(nom) {
         // Assigne les effets au champ protected hérité depuis la classe Carte
-        this->effetsBasiqueChoix1 = effets;
+        this->listEffetsBasiqueChoix1 = effets;
     }
 
     // Définition inline du destructeur pour éviter déclaration non définie
@@ -30,7 +30,7 @@ public:
 
     // Accesseur pour les effets basiques (utilisé par Plateau)
     const std::vector<Effet>& getEffetsBasiqueChoix1() const override {
-        return effetsBasiqueChoix1; // champ hérité de Carte (protected)
+        return listEffetsBasiqueChoix1; // champ hérité de Carte (protected)
     }
 
     std::string toString() const override {

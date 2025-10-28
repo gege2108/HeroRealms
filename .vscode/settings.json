@@ -44,7 +44,9 @@
     "typeinfo": "cpp",
     "iostream": "cpp",
     "istream": "cpp",
-    "sstream": "cpp"
+    "sstream": "cpp",
+    "xstring": "cpp",
+    "xutility": "cpp"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",

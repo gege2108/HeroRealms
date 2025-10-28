@@ -14,8 +14,8 @@ public:
 	       const Pioche& p = Pioche(),
 	       const StackChampion& s = StackChampion(),
 	       const Defausse& d = Defausse(),
-	       int pv = 30)
-	    : mainJoueur(m), pioche(p), stackChampion(s), defausse(d), pointDeVie(pv) {}
+	       int pv = 30, int _argent = 0)
+	    : mainJoueur(m), pioche(p), stackChampion(s), defausse(d), argent(_argent), pointDeVie(pv) {}
 
 	int getPointDeVie() const;
 	void setPointDeVie(int v);
@@ -23,6 +23,9 @@ public:
 	// getters et setters pour les containers
 	const MainJoueur& getMain() const;
 	void setMain(const MainJoueur& m);
+
+	int getArgent() const;
+	void setArgent(int a);
 
 	const Pioche& getPioche() const;
 	void setPioche(const Pioche& p);
@@ -40,7 +43,8 @@ private:
 	Pioche pioche;
 	StackChampion stackChampion;
 	Defausse defausse;
-	int pointDeVie;
+	int argent = 0;      // Déplacer argent AVANT pointDeVie
+	int pointDeVie = 0;
 };
 
 #endif // JOUEUR_H

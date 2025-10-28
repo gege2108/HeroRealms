@@ -33,6 +33,14 @@ bool Marche::removeGemme(GemmeDeFeu* g) {
     return false;
 }
 
+GemmeDeFeu* Marche::acheterGemme() {
+    if (gemmeDeFeu.empty()) return nullptr;
+
+    GemmeDeFeu* gemme = gemmeDeFeu[0];
+    removeGemme(gemme);
+    return gemme;
+}
+
 void Marche::clear() {
     actionEtChampion.clear();
     gemmeDeFeu.clear();

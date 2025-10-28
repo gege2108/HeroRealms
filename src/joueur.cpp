@@ -16,3 +16,6 @@ void Joueur::setStackChampion(const StackChampion& s) { stackChampion = s; }
 const Defausse& Joueur::getDefausse() const { return defausse; }
 void Joueur::setDefausse(const Defausse& d) { defausse = d; }
 
+int Joueur::getArgent() const { return argent; }
+void Joueur::setArgent(int a) { argent = a; }
+

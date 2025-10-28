@@ -16,7 +16,14 @@ public:
     bool getIsJetable() const { return isJetable; }
     void setIsJetable(bool jetable) { isJetable = jetable; }
 
-    //void utiliserEffet() override;
+    // Implémentation de la méthode pure virtuelle de Carte
+    virtual void utiliserEffet() override{
+        //TODO enlever cette fonction pour toutes les cartes car mauvaise implementation
+    }
+
+    const std::vector<Effet>& getEffetsBasiqueChoix1() const override {
+        return effetsBasiqueChoix1; // champ hérité de Carte (protected)
+    }
 
 private:
     static int prix;

@@ -11,3 +11,5 @@ Effet& GemmeDeFeu::UtiliserAttaque() {
     // Implémentation de l'attaque
     // TODO: logique pour utiliser l'attaque puis jeter la carte
 }
+
+

@@ -9,6 +9,8 @@
 #include "Pioche.h"
 #include "CarteDeBase.h"
 #include "Effet.h"
+#include "GemmeDeFeu.h"
+#include "Marche.h"
 
 int main() {
    // runTests();
@@ -27,20 +29,23 @@ int main() {
     Effet degatPetite(3, DEGAT);
     Effet degatMoyen(5, DEGAT);
     Effet soinPetit(2, SOIN);
+    Effet orPetit(2, OR);  // Nouvel effet pour donner de l'or
+    Effet orMoyen(3, OR);
 
     // main joueur 1 (création directe de CarteDeBase avec nom + effets)
     main1.addCarte(new CarteDeBase("Frappe légère", {degatPetite}));
-    main1.addCarte(new CarteDeBase("Soin mineur", {soinPetit}));
+    main1.addCarte(new CarteDeBase("Pièce d'or", {orPetit}));
     main1.addCarte(new CarteDeBase("Coup moyen", {degatMoyen}));
-    main1.addCarte(new CarteDeBase("Frappe légère 2", {degatPetite}));
-    main1.addCarte(new CarteDeBase("Soin & Frappe", {soinPetit, degatPetite}));
+    main1.addCarte(new CarteDeBase("Trésor", {orMoyen}));
+    main1.addCarte(new CarteDeBase("Soin & Or", {soinPetit, orPetit}));
 
-    // main joueur 2 (différente composition)
+    // main joueur 2 (différente composition avec plus de cartes d'or)
     main2.addCarte(new CarteDeBase("Coup d'estoc", {degatMoyen}));
-    main2.addCarte(new CarteDeBase("Parade", {}));
+    main2.addCarte(new CarteDeBase("Marchande", {orPetit}));
     main2.addCarte(new CarteDeBase("Frappe rapide", {degatPetite}));
+    main2.addCarte(new CarteDeBase("Coffre au trésor", {orMoyen}));
     main2.addCarte(new CarteDeBase("Soin mineur", {soinPetit}));
-    main2.addCarte(new CarteDeBase("Riposte", {degatPetite}));
+    main2.addCarte(new CarteDeBase("Bourse dorée", {orPetit, orPetit}));
 
     // Préparer une pioche de 23 cartes de base personnalisées pour chaque joueur
     Pioche pioche1;
@@ -71,6 +76,13 @@ int main() {
     Plateau plateau; // utilise constructeur par défaut
     plateau.setJoueur1(j1);
     plateau.setJoueur2(j2);
+
+    // Créer un marché avec 100 cartes GemmeDeFeu
+    Marche marche;
+    for (int i = 0; i < 100; ++i) {
+        marche.addGemme(new GemmeDeFeu("Gemme de Feu"));
+    }
+    plateau.setMarche(marche);
 
     // Lancer la boucle de jeu (utilise std::cin pour les choix)
     plateau.run(plateau);

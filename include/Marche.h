@@ -22,6 +22,8 @@ public:
     void addGemme(GemmeDeFeu* g);
     bool removeGemme(GemmeDeFeu* g);
 
+    GemmeDeFeu* acheterGemme();
+
     void clear();
 
 private:

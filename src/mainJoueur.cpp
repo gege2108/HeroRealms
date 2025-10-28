@@ -1,5 +1,4 @@
 #include "MainJoueur.h"
-#include <algorithm>
 
 MainJoueur::MainJoueur() = default;
 
@@ -37,6 +36,16 @@ std::vector<CarteDeBase*> MainJoueur::getCartesDeBase() const {
     for (Carte* c : cartes) {
         if (auto cb = dynamic_cast<CarteDeBase*>(c)) {
             res.push_back(cb);
+        }
+    }
+    return res;
+}
+
+std::vector<GemmeDeFeu*> MainJoueur::getGemmesDeFeu() const {
+    std::vector<GemmeDeFeu*> res;
+    for (Carte* c : cartes) {
+        if (auto gf = dynamic_cast<GemmeDeFeu*>(c)) {
+            res.push_back(gf);
         }
     }
     return res;

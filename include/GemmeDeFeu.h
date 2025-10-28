@@ -13,6 +13,9 @@ public:
 
     Effet& UtiliserAttaque();
 
+    bool getIsJetable() const { return isJetable; }
+    void setIsJetable(bool jetable) { isJetable = jetable; }
+
     //void utiliserEffet() override;
 
 private:

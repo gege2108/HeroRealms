@@ -6,18 +6,19 @@
 class GemmeDeFeu : public Carte {
 public:
     GemmeDeFeu() = default;
-    GemmeDeFeu(const std::string& nom) : Carte(nom) {}
+    GemmeDeFeu(const std::string& nom) : Carte(nom), isJetable(false) {}
 
-    static int getPrix() { return prix; }
-    static void setPrix(int p) { prix = p; }
+    int getPrix() const { return prix; }
+    void setPrix(int p) { prix = p; }
 
-    void UtiliserAttaque(); // utilise l'attaque mais jette la Carte
+    Effet& UtiliserAttaque();
 
     //void utiliserEffet() override;
 
 private:
     static int prix;
     static Effet attaqueGemmeDeFeu;
+    bool isJetable = false;
 };
 
 #endif // GEMMEDEFEU_H

@@ -24,9 +24,7 @@ public:
     // Implémentation par défaut de la méthode pure virtuelle de Carte.
     // Comportement minimal : ne fait rien (no-op). Modifier si vous voulez appliquer
     // directement les effets (nécessite connaissance des cibles).
-    virtual void utiliserEffet() override {
-        // no-op par défaut
-    }
+    
 
     // Accesseur pour les effets basiques (utilisé par Plateau)
     const std::vector<Effet>& getEffetsBasiqueChoix1() const override {

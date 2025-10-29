@@ -33,9 +33,9 @@ int main() {
     Effet orMoyen(3, OR);
 
     // main joueur 1 (création directe de CarteDeBase avec nom + effets)
-    main1.addCarte(new CarteDeBase("Frappe légère", {degatPetite}));
-    main1.addCarte(new CarteDeBase("Pièce d'or", {orPetit}));
-    main1.addCarte(new CarteDeBase("Coup moyen", {degatMoyen}));
+    main1.addCarte(new CarteDeBase("Soin & Or", {soinPetit, orPetit}));
+    main1.addCarte(new CarteDeBase("Soin & Or", {soinPetit, orPetit}));
+    main1.addCarte(new CarteDeBase("Soin & Or", {soinPetit, orPetit}));
     main1.addCarte(new CarteDeBase("Trésor", {orMoyen}));
     main1.addCarte(new CarteDeBase("Soin & Or", {soinPetit, orPetit}));
 
@@ -45,7 +45,6 @@ int main() {
     main2.addCarte(new CarteDeBase("Frappe rapide", {degatPetite}));
     main2.addCarte(new CarteDeBase("Coffre au trésor", {orMoyen}));
     main2.addCarte(new CarteDeBase("Soin mineur", {soinPetit}));
-    main2.addCarte(new CarteDeBase("Bourse dorée", {orPetit, orPetit}));
 
     // Préparer une pioche de 23 cartes de base personnalisées pour chaque joueur
     Pioche pioche1;
@@ -80,9 +79,21 @@ int main() {
     // Créer un marché avec 100 cartes GemmeDeFeu
     Marche marche;
     for (int i = 0; i < 100; ++i) {
-        marche.addGemme(new GemmeDeFeu("Gemme de Feu"));
+        marche.addGemme(new GemmeDeFeu());
     }
     plateau.setMarche(marche);
+    
+
+    GemmeDeFeu gemmeTest("Gemme de Feu Test");
+    std::cout << "Test de la gemme de feu : " << gemmeTest.toString() << std::endl;
+    std::cout << "Prix de la gemme de feu : " << gemmeTest.getPrix() << std::endl;
+    std::cout << "Effets basiques de la gemme de feu : " << std::endl;
+    for (const auto& effet : gemmeTest.getEffetsBasiqueChoix1()) {
+        std::cout << " - " << effet.toString() << std::endl;
+    }
+
+    Effet effetGemmeTest = gemmeTest.getEffetsBasiqueChoix1()[0];
+    std::cout << "Utilisation de l'effet d'or de la gemme de feu test : " << effetGemmeTest.toString() << std::endl;
 
     // Lancer la boucle de jeu (utilise std::cin pour les choix)
     plateau.run(plateau);

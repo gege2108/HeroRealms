@@ -57,10 +57,10 @@ void Plateau::run(Plateau& plateau) {
 
         // Tour du joueur 1
         std::cout << "C'est au Joueur1 de jouer" << std::endl;
-        std::cout << "La main du joueur 1 est composée des cartes de base :" << std::endl;
+        std::cout << "La main du joueur 1 est composée des cartes :" << std::endl;
         std::cout << "Il y a " << plateau.getMarche().getGemmes().size() << " gemmes dans le marché." << std::endl;
         int idx = 1;
-        for (auto* carte : plateau.getJoueur1().getMain().getCartesDeBase()) {
+        for (auto* carte : plateau.getJoueur1().getMain().getCartes()) {
             std::cout << "  [" << idx++ << "] " << carte->toString() << std::endl;
         }
         std::cout << "Joueur 1 appuyez sur 1 si vous voulez utiliser les effets de vos cartes de base." << std::endl;
@@ -98,20 +98,21 @@ void Plateau::run(Plateau& plateau) {
             
             for (auto* gemme : gemmesDeFeuJ1) {
                 std::cout << "Joueur 1 appuyez sur 1 si vous voulez utiliser l'effet d'argent de votre gemme de feu numero " << idx <<  ", appuyez sur 2 si vous voulez utiliser l'effet faisant 3 de degats (la carte sera sacrifiée dans ce cas)." << std::endl;
-                int choixGemmeP1;
+                int choixGemmeP1 = 0;
                 std::cin >> choixGemmeP1;
 
                 if (choixGemmeP1 == 1) {
-                    const auto& effets = gemme->getEffetsBasiqueChoix1();
-                    for (const auto& effet : effets) {
-                        std::cout << "Le joueur 1 utilise l'effet de la gemme de feu numéro " << idx << " : " << effet.toString() << std::endl;
-                        plateau.getJoueur1().setArgent(effet.getValeur() + plateau.getJoueur1().getArgent());
-                    }
+                    std::cout << "Utilisation de l'effet d'or de la gemme de feu numéro " << idx << std::endl;
+                    Effet effetGemmeJ1 = gemme->getEffetsBasiqueChoix1()[0];
+                    plateau.getJoueur1().setArgent(effetGemmeJ1.getValeur() + plateau.getJoueur1().getArgent());
+                    std::cout << "Le joueur 1 gagne " << effetGemmeJ1.getValeur() << " pièces d'or, il a maintenant " << plateau.getJoueur1().getArgent() << " pièces d'or." << std::endl;
                 }
+
                 else if(choixGemmeP1 == 2){
                     Effet& effetAttaque = gemme->UtiliserAttaque();
                     std::cout << "Le joueur 1 utilise l'effet d'attaque de la gemme de feu numéro " << idx << " : " << effetAttaque.toString() << std::endl;
                     plateau.getJoueur2().setPointDeVie(plateau.getJoueur2().getPointDeVie() - effetAttaque.getValeur());
+                    std::cout << "Le joueur 2 perd " << effetAttaque.getValeur() << " points de vie, il a maintenant " << plateau.getJoueur2().getPointDeVie() << " points de vie." << std::endl;
                     
                     // Marquer pour suppression après la boucle
                     gemmesASupprimer.push_back(gemme);
@@ -148,6 +149,12 @@ void Plateau::run(Plateau& plateau) {
             std::cout << "Le Joueur 1 achète une gemme de feu et dépense 3 pièces d'or." << std::endl;
             std::cout << "Il reste " << plateau.getJoueur1().getArgent() << " pièces d'or au Joueur 1." << std::endl;
             std::cout << "Le marché contient maintenant " << plateau.getMarche().getGemmes().size() << " gemmes de feu." << std::endl;
+            if (plateau.getJoueur1().getArgent() < 3)
+            {
+                std::cout << "Le Joueur 1 n'a plus assez d'argent pour acheter une autre gemme de feu." << std::endl;
+                break;
+            }
+            
             std::cout << "Joueur 1 appuyez sur 1 si vous voulez acheter une autre gemme de feu." << std::endl;
             std::cin >> choixGemmeDeFeuJ1;
         }
@@ -156,7 +163,7 @@ void Plateau::run(Plateau& plateau) {
         Defausse newDefausseJoueur1 = plateau.getJoueur1().getDefausse();
         MainJoueur updatedMainJ1 = plateau.getJoueur1().getMain(); // copie modifiable
 
-        auto cartesMain = updatedMainJ1.getCartesDeBase();
+        auto cartesMain = updatedMainJ1.getCartes();
         for (auto* carte : cartesMain) {
             newDefausseJoueur1.addCarte(carte);
             updatedMainJ1.removeCarte(carte);
@@ -200,7 +207,7 @@ void Plateau::run(Plateau& plateau) {
         
         if(!plateau.getJoueur2().getMain().getCartesDeBase().empty()) {
             idx = 1;
-            std::cout << "La main du joueur 2 est composée des cartes de base :" << std::endl;
+            std::cout << "La main du joueur 2 est composée des cartes :" << std::endl;
             for (auto* carte : plateau.getJoueur2().getMain().getCartes()) {
                 std::cout << "  [" << idx++ << "] " << carte->toString() << std::endl;
             }
@@ -240,11 +247,15 @@ void Plateau::run(Plateau& plateau) {
                 int choixGemme;
                 std::cin >> choixGemme;
 
+               
+
                 if (choixGemme == 1) {
                     const auto& effets = gemme->getEffetsBasiqueChoix1();
                     for (const auto& effet : effets) {
                         std::cout << "Le joueur 2 utilise l'effet de la gemme de feu numéro " << idx << " : " << effet.toString() << std::endl;
                         plateau.getJoueur2().setArgent(effet.getValeur() + plateau.getJoueur2().getArgent());
+                        std::cout << "Le joueur 2 gagne " << effet.getValeur() << " pièces d'or, il a maintenant " << plateau.getJoueur2().getArgent() << " pièces d'or." << std::endl;
+
                     }
                 }
                 else if(choixGemme == 2){

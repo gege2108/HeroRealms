@@ -11,7 +11,6 @@ public:
     Carte(const std::string& nom) : nom(nom) {}
     virtual ~Carte() = default;
 
-    virtual void utiliserEffet() = 0;
 
     // rendre virtual pour permettre l'override dans les classes dérivées
     virtual const std::string& getNom() const { return nom; }
@@ -23,13 +22,15 @@ public:
 
     virtual std::string toString() const {
         std::string res = "Carte: " + nom;
+        int i = 1;
         if (!effetsBasiqueChoix1.empty()) {
-            res += " [";
-            for (size_t i = 0; i < effetsBasiqueChoix1.size(); ++i) {
-                if (i) res += ", ";
-                res += effetsBasiqueChoix1[i].toString();
+            res += " (Effets: ";
+            for (const auto& effet : effetsBasiqueChoix1) {
+                if (i > 1) res += ", ";
+                res += effet.toString();
+                ++i;
             }
-            res += "]";
+            res += ")";
         }
         return res;
     }

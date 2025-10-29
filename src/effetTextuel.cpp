@@ -28,8 +28,18 @@ void EffetTextuel::stunChampion(Joueur& opponent) const {
     Champion& champion = opponent.getStackChampion().getChampions()[nombre];
     champion.setIsDefense(false);
 }
-//4 You may draw a card, then discard a card.gvftcrtct
-
+//4 You may draw a card, then discard a card
+void EffetTextuel::drawAndDiscard(Joueur& player) const {
+    if (player.getPioche().getCartes().empty()) {return;}
+    player.getPioche().piocher(player.getMain());
+    if (player.getMain().getCartes().empty()) {return;}
+    int nombre;
+    std::cout << "Choose a card to discard (0 to " << player.getMain().getCartes().size() - 1 << "): ";
+    std::cin >> nombre;
+    if (nombre < 0 || nombre >= player.getMain().getCartes().size()) {return;}
+    Carte carte = player.getMain().getCartes()[nombre];
+    player.getMain().retirerCarte(carte);
+}
 //5 You may draw up to two cards, then discard that many cards.
 
 //6 Put the next action you acquire this turn on top of your deck.

@@ -13,9 +13,8 @@ public:
 	Joueur(const MainJoueur& m = MainJoueur(),
 	       const Pioche& p = Pioche(),
 	       const StackChampion& s = StackChampion(),
-	       const Defausse& d = Defausse(),
-	       int pv = 30)
-	    : mainJoueur(m), pioche(p), stackChampion(s), defausse(d), pointDeVie(pv) {}
+	       const Defausse& d = Defausse())
+	    : mainJoueur(m), pioche(p), stackChampion(s), defausse(d) {}
 
 	int getPointDeVie() const;
 	void setPointDeVie(int v);
@@ -23,6 +22,8 @@ public:
 	// getters et setters pour les containers
 	const MainJoueur& getMain() const;
 	void setMain(const MainJoueur& m);
+	void subirDegats(int degats);
+	void soigner(int soin);
 
 	const Pioche& getPioche() const;
 	void setPioche(const Pioche& p);
@@ -40,7 +41,7 @@ private:
 	Pioche pioche;
 	StackChampion stackChampion;
 	Defausse defausse;
-	int pointDeVie;
+	int pointDeVie = 50;
 };
 
 #endif // JOUEUR_H

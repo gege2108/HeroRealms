@@ -9,6 +9,8 @@ class Carte {
 public:
     Carte() = default;
     Carte(const std::string& nom) : nom(nom) {}
+    Carte(const std::string& nom, const std::vector<Effet>& effets)
+        : nom(nom), listEffetsBasiqueChoix1(effets) {}
     virtual ~Carte() = default;
 
     virtual void utiliserEffet() = 0;
@@ -18,16 +20,16 @@ public:
     virtual void setNom(const std::string& n) { nom = n; }
 
     // versions non-const et const pour autoriser l'override selon le besoin
-    virtual std::vector<Effet>& getEffetsBasiqueChoix1() { return effetsBasiqueChoix1; }
-    virtual const std::vector<Effet>& getEffetsBasiqueChoix1() const { return effetsBasiqueChoix1; }
+    virtual std::vector<Effet>& getEffetsBasiqueChoix1() { return listEffetsBasiqueChoix1; }
+    virtual const std::vector<Effet>& getEffetsBasiqueChoix1() const { return listEffetsBasiqueChoix1; }
 
     virtual std::string toString() const {
         std::string res = "Carte: " + nom;
-        if (!effetsBasiqueChoix1.empty()) {
+        if (!listEffetsBasiqueChoix1.empty()) {
             res += " [";
-            for (size_t i = 0; i < effetsBasiqueChoix1.size(); ++i) {
+            for (size_t i = 0; i < listEffetsBasiqueChoix1.size(); ++i) {
                 if (i) res += ", ";
-                res += effetsBasiqueChoix1[i].toString();
+                res += listEffetsBasiqueChoix1[i].toString();
             }
             res += "]";
         }
@@ -37,7 +39,7 @@ public:
 protected:
     std::string nom;
     // renommé pour correspondre aux usages dans d'autres fichiers
-    std::vector<Effet> effetsBasiqueChoix1;
+    std::vector<Effet> listEffetsBasiqueChoix1;
 };
 
 #endif // CARTE_H

@@ -44,10 +44,12 @@ public:
 
 
    // void utiliserEffet() override;
-
     int getPrix() const { return prix; }
     void setPrix(int p) { prix = p; }
     void setPeutFaireCombo(bool b) { peutFaireCombo = b; }
+    bool getPeutFaireCombo() const { return peutFaireCombo; }
+    void setFaction(Faction f) { faction = f; }
+    Faction getFaction() const { return faction; }
 
     std::vector<Effet>& getListEffetBasiqueChoix2() { return ListEffetBasiqueChoix2; }
     std::vector<EffetTextuel>& getListEffetTextuelChoix1() { return ListEffetTextuelChoix1; }

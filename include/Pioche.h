@@ -15,6 +15,7 @@ public:
     void addCarte(Carte* c);
     bool tirerCarte(Carte* c);
     void clear();
+    void piocher(MainJoueur& main);
 
 private:
     std::vector<Carte*> cartesPioche;

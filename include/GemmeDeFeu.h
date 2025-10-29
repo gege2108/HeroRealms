@@ -16,7 +16,7 @@ public:
     //void utiliserEffet() override;
 
 private:
-    static int prix;
+    static int prix = 2;
     static Effet attaqueGemmeDeFeu;
 };
 

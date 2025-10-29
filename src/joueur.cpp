@@ -3,6 +3,8 @@
 
 int Joueur::getPointDeVie() const { return pointDeVie; }
 void Joueur::setPointDeVie(int v) { pointDeVie = v; }
+void Joueur::subirDegats(int degats) { pointDeVie -= degats; }
+void Joueur::soigner(int soin) { pointDeVie += soin; }
 
 const MainJoueur& Joueur::getMain() const { return mainJoueur; }
 void Joueur::setMain(const MainJoueur& m) { mainJoueur = m; }

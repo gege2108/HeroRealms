@@ -22,24 +22,6 @@ void EffetTextuel::drawACard(Joueur& joueur) {
     }
 }
 
-// Implémentation de la méthode statique de classe (PAS une fonction libre)
-void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueur) {
-    EffetTextuel effet;
-    switch (id) {    
-        case 1: {
-            effet.drawACard(joueur);
-            break;
-        }
-        case 2: {
-            //Dans ce contexte, joueur correspond à l'adversaire
-            effet.discardOpponentCard(joueur);
-            break;
-        }
-        default:
-            std::cout << "Effet textuel inconnu avec l'ID: " << id << std::endl;
-            break;
-    }
-}
 
 //2 Target opponent discards a card. (Supprimer const de la signature)
 void EffetTextuel::discardOpponentCard(Joueur& opponent) {
@@ -74,4 +56,24 @@ void EffetTextuel::discardOpponentCard(Joueur& opponent) {
     const_cast<Defausse&>(defausseOpponent).addCarte(carte);
     
     std::cout << "L'adversaire défausse : " << carte->getNom() << std::endl;
+}
+
+
+// Implémentation de la méthode statique de classe (PAS une fonction libre)
+void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueur) {
+    EffetTextuel effet;
+    switch (id) {    
+        case 1: {
+            effet.drawACard(joueur);
+            break;
+        }
+        case 2: {
+            //Dans ce contexte, joueur correspond à l'adversaire
+            effet.discardOpponentCard(joueur);
+            break;
+        }
+        default:
+            std::cout << "Effet textuel inconnu avec l'ID: " << id << std::endl;
+            break;
+    }
 }

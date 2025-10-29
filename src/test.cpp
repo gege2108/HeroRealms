@@ -15,6 +15,7 @@ void runAllTests() {
     testMelangeActions();
     testMiseAJourActionsVendables();
     testEffetTextuel();
+    testDiscardOpponentCard();  // Ajouter le nouveau test
     std::cout << "=== FIN DE TOUS LES TESTS ===" << std::endl;
 }
 
@@ -174,4 +175,60 @@ void testEffetTextuel() {
     }
     
     std::cout << "\n=== Fin du test des EffetTextuel ===" << std::endl;
+}
+
+void testDiscardOpponentCard() {
+    std::cout << "\n=== Test de discardOpponentCard ===" << std::endl;
+    
+    // Instancier un effet textuel avec id=2 et description appropriée
+    EffetTextuel effetDefausse(2, "Défausse l'une des cartes que l'adversaire a en main");
+    
+    std::cout << "Effet textuel créé :" << std::endl;
+    std::cout << "  ID: " << effetDefausse.getId() << std::endl;
+    std::cout << "  Description: " << effetDefausse.toString() << std::endl;
+    
+    // Créer deux joueurs : un adversaire avec des cartes en main
+    Joueur adversaire;
+    adversaire.setPointDeVie(20);
+    
+    // Donner des cartes à l'adversaire
+    MainJoueur mainAdversaire;
+    mainAdversaire.addCarte(new CarteDeBase("Carte Adversaire 1", {Effet(1, OR)}));
+    mainAdversaire.addCarte(new CarteDeBase("Carte Adversaire 2", {Effet(2, DEGAT)}));
+    mainAdversaire.addCarte(new CarteDeBase("Carte Adversaire 3", {Effet(1, SOIN)}));
+    adversaire.setMain(mainAdversaire);
+    
+    // Afficher l'état AVANT l'utilisation de l'effet textuel
+    std::cout << "\n--- État AVANT l'effet de défausse ---" << std::endl;
+    std::cout << "Main de l'adversaire : " << adversaire.getMain().getCartes().size() << " cartes" << std::endl;
+    for (size_t i = 0; i < adversaire.getMain().getCartes().size(); ++i) {
+        std::cout << "  - " << adversaire.getMain().getCartes()[i]->getNom() << std::endl;
+    }
+    std::cout << "Défausse de l'adversaire : " << adversaire.getDefausse().getCartes().size() << " cartes" << std::endl;
+    
+    // Utiliser l'effet textuel via handleIdEffetTextuel
+    std::cout << "\n--- Utilisation de l'effet de défausse (choisir carte 1) ---" << std::endl;
+    EffetTextuel::handleIdEffetTextuel(effetDefausse.getId(), adversaire);
+    
+    // Afficher l'état APRÈS l'utilisation de l'effet textuel
+    std::cout << "\n--- État APRÈS l'effet de défausse ---" << std::endl;
+    std::cout << "Main de l'adversaire : " << adversaire.getMain().getCartes().size() << " cartes" << std::endl;
+    if (!adversaire.getMain().getCartes().empty()) {
+        for (size_t i = 0; i < adversaire.getMain().getCartes().size(); ++i) {
+            std::cout << "  - " << adversaire.getMain().getCartes()[i]->getNom() << std::endl;
+        }
+    } else {
+        std::cout << "  (main vide)" << std::endl;
+    }
+    
+    std::cout << "Défausse de l'adversaire : " << adversaire.getDefausse().getCartes().size() << " cartes" << std::endl;
+    if (!adversaire.getDefausse().getCartes().empty()) {
+        for (size_t i = 0; i < adversaire.getDefausse().getCartes().size(); ++i) {
+            std::cout << "  - " << adversaire.getDefausse().getCartes()[i]->getNom() << std::endl;
+        }
+    } else {
+        std::cout << "  (défausse vide)" << std::endl;
+    }
+    
+    std::cout << "\n=== Fin du test de discardOpponentCard ===" << std::endl;
 }

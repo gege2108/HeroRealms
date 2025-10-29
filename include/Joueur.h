@@ -19,33 +19,33 @@ public:
 	int getPointDeVie() const;
 	void setPointDeVie(int v);
 
-	// getters et setters pour les containers
+	// Versions non-const
 	MainJoueur& getMain();
 	Pioche& getPioche();
+	Defausse& getDefausse();
 
+	// Versions const  
 	const MainJoueur& getMain() const;
+	const Pioche& getPioche() const;
+	const Defausse& getDefausse() const;
+
+	// Setters
 	void setMain(const MainJoueur& m);
+	void setPioche(const Pioche& p);
+	void setDefausse(const Defausse& d);
 
 	int getArgent() const;
 	void setArgent(int a);
 
-	const Pioche& getPioche() const;
-	void setPioche(const Pioche& p);
-
 	const StackChampion& getStackChampion() const;
 	void setStackChampion(const StackChampion& s);
-
-	const Defausse& getDefausse() const;
-	void setDefausse(const Defausse& d);
-
-
 
 private:
 	MainJoueur mainJoueur;
 	Pioche pioche;
 	StackChampion stackChampion;
 	Defausse defausse;
-	int argent = 0;      // Déplacer argent AVANT pointDeVie
+	int argent = 0;      
 	int pointDeVie = 0;
 };
 

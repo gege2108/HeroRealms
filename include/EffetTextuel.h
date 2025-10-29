@@ -23,8 +23,9 @@ public:
         return description;
     }
 
-    // Corriger la signature pour passer Joueur par référence
+    // Méthodes utilisant Joueur
     void drawACard(Joueur& joueur);
+    void discardOpponentCard(Joueur& opponent);  // Supprimer const ici aussi
     static void handleIdEffetTextuel(int id, Joueur& joueur);
 
 private:

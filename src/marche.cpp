@@ -3,19 +3,23 @@
 
 Marche::Marche() = default;
 Marche::Marche(const std::vector<Action*>& actions, const std::vector<GemmeDeFeu*>& gemmes)
-    : actionEtChampion(actions), gemmeDeFeu(gemmes) {}
+    : StackActionEtChampion(actions), gemmeDeFeu(gemmes) {}
 
-const std::vector<Action*>& Marche::getActions() const { return actionEtChampion; }
-void Marche::setActions(const std::vector<Action*>& a) { actionEtChampion = a; }
+const std::vector<Action*>& Marche::getStackActions() const { return StackActionEtChampion; }
+void Marche::setStackActions(const std::vector<Action*>& a) { StackActionEtChampion = a; }
+
+// Implémentations pour actionEtChampionVendable
+const std::vector<Action*>& Marche::getActionsVendables() const { return actionEtChampionVendable; }
+void Marche::setActionsVendables(const std::vector<Action*>& a) { actionEtChampionVendable = a; }
 
 const std::vector<GemmeDeFeu*>& Marche::getGemmes() const { return gemmeDeFeu; }
 void Marche::setGemmes(const std::vector<GemmeDeFeu*>& g) { gemmeDeFeu = g; }
 
-void Marche::addAction(Action* a) { actionEtChampion.push_back(a); }
-bool Marche::removeAction(Action* a) {
-    for (int i = 0; i < (int)actionEtChampion.size(); ++i) {
-        if (actionEtChampion[i] == a) {
-            actionEtChampion.erase(actionEtChampion.begin() + i);
+void Marche::addStackAction(Action* a) { StackActionEtChampion.push_back(a); }
+bool Marche::removeStackAction(Action* a) {
+    for (int i = 0; i < (int)StackActionEtChampion.size(); ++i) {
+        if (StackActionEtChampion[i] == a) {
+            StackActionEtChampion.erase(StackActionEtChampion.begin() + i);
             return true;
         }
     }
@@ -33,6 +37,18 @@ bool Marche::removeGemme(GemmeDeFeu* g) {
     return false;
 }
 
+// Implémentations pour actionEtChampionVendable
+void Marche::addActionVendable(Action* a) { actionEtChampionVendable.push_back(a); }
+bool Marche::removeActionVendable(Action* a) {
+    for (int i = 0; i < (int)actionEtChampionVendable.size(); ++i) {
+        if (actionEtChampionVendable[i] == a) {
+            actionEtChampionVendable.erase(actionEtChampionVendable.begin() + i);
+            return true;
+        }
+    }
+    return false;
+}
+
 GemmeDeFeu* Marche::acheterGemme() {
     if (gemmeDeFeu.empty()) return nullptr;
 
@@ -42,6 +58,9 @@ GemmeDeFeu* Marche::acheterGemme() {
 }
 
 void Marche::clear() {
-    actionEtChampion.clear();
-    gemmeDeFeu.clear();
+    //Changer cette fonction et faire en sorte que les champions qui n'ont pas ete achete aillent dans StackActionEtChampion
+    for (auto& action : actionEtChampionVendable) {
+        StackActionEtChampion.push_back(action);
+    }
+    actionEtChampionVendable.clear();
 }

@@ -11,9 +11,36 @@
 #include "Effet.h"
 #include "GemmeDeFeu.h"
 #include "Marche.h"
+#include "Action.h"
+#include "Faction.h"
 
 int main() {
    // runTests();
+
+    // Créer une instance de la carte Taxation
+    Action* taxation = new Action(
+            Faction::FactionJaune,
+            "Taxation",
+            1,
+            { Effet(2, OR) },
+            {},
+            {},
+            {},
+            { Effet(6, SOIN) },
+            {}
+        );
+
+    std::cout << "Carte créée : " << taxation->getNom() 
+              << " - Coût : " << taxation->getPrix() << " or" << std::endl;
+    std::cout << "Effets principaux : ";
+    for (const auto& effet : taxation->getEffetsBasiqueChoix1()) {
+        std::cout << effet.toString() << " ";
+    }
+    std::cout << std::endl;
+    std::cout << "---------------------------------------------------------";
+    std::cout << std::endl;
+    std::cout << taxation->toString() << std::endl;
+    std::cout << "---------------------------------------------------------" << std::endl;
 
     // Créer deux joueurs et initialiser les PV à 30
     Joueur j1;
@@ -73,18 +100,36 @@ int main() {
     j2.setPioche(pioche2);
 
     // Construire un plateau et y assigner les joueurs
-    Plateau plateau; // utilise constructeur par défaut
+    Plateau plateau;
     plateau.setJoueur1(j1);
     plateau.setJoueur2(j2);
 
     // Créer un marché avec 100 cartes GemmeDeFeu
     Marche marche;
-    for (int i = 0; i < 100; ++i) {
+    for (int i = 0; i < 16; ++i) {
         marche.addGemme(new GemmeDeFeu());
     }
+    
+    // Ajouter 3 exemplaires de Taxation au marché (comme spécifié)
+    for (int i = 0; i < 3; ++i) {
+        marche.addStackAction(new Action(
+            Faction::FactionJaune,
+            "Taxation",
+            1,
+            { Effet(2, OR) },
+            {},
+            {},
+            {},
+            { Effet(6, SOIN) },
+            {}
+        ));
+    }
+
+
+    
     plateau.setMarche(marche);
     
-
+/*
     GemmeDeFeu gemmeTest("Gemme de Feu Test");
     std::cout << "Test de la gemme de feu : " << gemmeTest.toString() << std::endl;
     std::cout << "Prix de la gemme de feu : " << gemmeTest.getPrix() << std::endl;
@@ -95,9 +140,9 @@ int main() {
 
     Effet effetGemmeTest = gemmeTest.getEffetsBasiqueChoix1()[0];
     std::cout << "Utilisation de l'effet d'or de la gemme de feu test : " << effetGemmeTest.toString() << std::endl;
-
+*/
     // Lancer la boucle de jeu (utilise std::cin pour les choix)
-    plateau.run(plateau);
+    //plateau.run(plateau);
 
     return 0;
 }

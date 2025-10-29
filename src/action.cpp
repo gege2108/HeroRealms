@@ -1,5 +1,4 @@
 #include "Action.h"
-#include "Faction.h"
 //sans choix
 // Action nom(faction, "nom", prix, effetbasique1, effettextuel1, effetbasiqueCombo, effettextuelCombo);
 

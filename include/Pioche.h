@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Carte.h"
+#include "MainJoueur.h"
 
 class Pioche {
 public:
@@ -15,6 +16,7 @@ public:
     void addCarte(Carte* c);
     bool tirerCarte(Carte* c);
     void clear();
+    void piocher(MainJoueur& main);
 
 private:
     std::vector<Carte*> cartesPioche;

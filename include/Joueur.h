@@ -5,7 +5,6 @@
 #include "Pioche.h"
 #include "StackChampion.h"
 #include "Defausse.h"
-#include "Champion.h"
 
 class Joueur {
 public:
@@ -21,6 +20,9 @@ public:
 	void setPointDeVie(int v);
 
 	// getters et setters pour les containers
+	MainJoueur& getMain();
+	Pioche& getPioche();
+
 	const MainJoueur& getMain() const;
 	void setMain(const MainJoueur& m);
 

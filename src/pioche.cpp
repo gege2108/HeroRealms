@@ -19,4 +19,12 @@ bool Pioche::tirerCarte(Carte* c) {
     return false;
 }
 
+void Pioche::piocher(MainJoueur& main) {
+    if (cartesPioche.empty()) return;
+    Carte* carte = cartesPioche[0];
+    cartesPioche.erase(cartesPioche.begin());
+    main.addCarte(carte);
+}
+
+
 void Pioche::clear() { cartesPioche.clear(); }

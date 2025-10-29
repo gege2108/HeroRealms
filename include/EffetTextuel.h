@@ -3,6 +3,12 @@
 
 #include <string>
 
+#include "Joueur.h" 
+#include <iostream>
+
+
+// Forward declaration pour éviter l'inclusion circulaire
+
 class EffetTextuel {
 public:
     EffetTextuel() : id(0), description("") {}
@@ -17,8 +23,9 @@ public:
         return description;
     }
 
-    // placeholder : implémenter toutes les méthodes correspondant aux effets textuels
-    void executer() const;
+    // Corriger la signature pour passer Joueur par référence
+    void drawACard(Joueur& joueur);
+    static void handleIdEffetTextuel(int id, Joueur& joueur);
 
 private:
     int id;

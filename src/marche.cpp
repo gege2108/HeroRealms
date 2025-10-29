@@ -67,6 +67,30 @@ void Marche::clear() {
     actionEtChampionVendable.clear();
 }
 
+void Marche::MiseAJourActionsVendables() {
+    actionEtChampionVendable.clear();
+    int nombreAAjouter = std::min(5, static_cast<int>(StackActionEtChampion.size()));
+    for (int i = 0; i < nombreAAjouter; ++i) {
+        actionEtChampionVendable.push_back(StackActionEtChampion[i]);
+    }
+}
+
+void Marche::MiseAJourActionsVendables(int nombreActions) {
+    // Vider les actions vendables actuelles
+    actionEtChampionVendable.clear();
+    
+    // Prendre les premières actions de la stack pour les mettre en vente
+    int actionsAPrendre = std::min(nombreActions, (int)StackActionEtChampion.size());
+    
+    for (int i = 0; i < actionsAPrendre; ++i) {
+        if (!StackActionEtChampion.empty()) {
+            Action* action = StackActionEtChampion.back();
+            StackActionEtChampion.pop_back();
+            actionEtChampionVendable.push_back(action);
+        }
+    }
+}
+
 void Marche::melangeStackActionEtChampion() {
     if (StackActionEtChampion.empty()) return;
     

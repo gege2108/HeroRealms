@@ -28,6 +28,8 @@ public:
     void addActionVendable(Action* a);
     bool removeActionVendable(Action* a);
 
+    void MiseAJourActionsVendables();
+
     void addGemme(GemmeDeFeu* g);
     bool removeGemme(GemmeDeFeu* g);
 
@@ -35,6 +37,9 @@ public:
 
     // Fonction pour mélanger aléatoirement StackActionEtChampion
     void melangeStackActionEtChampion();
+
+    // Fonction pour mettre à jour les actions vendables
+    void MiseAJourActionsVendables(int nombreActions = 5);
 
     void clear();
 

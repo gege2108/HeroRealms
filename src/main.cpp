@@ -34,6 +34,16 @@ int main() {
     marcheTestMix.addStackAction(intimidation);
     marcheTestMix.addStackAction(recrutement);
     marcheTestMix.addStackAction(commandement);
+    marcheTestMix.addStackAction(taxation);
+    marcheTestMix.addStackAction(potDeVin);
+    marcheTestMix.addStackAction(intimidation);
+    marcheTestMix.addStackAction(recrutement);
+    marcheTestMix.addStackAction(commandement);
+    marcheTestMix.addStackAction(taxation);
+    marcheTestMix.addStackAction(potDeVin);
+    marcheTestMix.addStackAction(intimidation);
+    marcheTestMix.addStackAction(recrutement);
+    marcheTestMix.addStackAction(commandement);
     
     // Afficher l'ordre AVANT le mélange
     std::cout << "\nOrdre AVANT le mélange :" << std::endl;
@@ -54,6 +64,38 @@ int main() {
     }
     
     std::cout << "\n=== Fin du test de mélange ===" << std::endl;
+
+    // Test de la fonction MiseAJourActionsVendables
+    std::cout << "\n=== Test de MiseAJourActionsVendables ===" << std::endl;
+    
+    // Afficher l'état initial des actions vendables
+    std::cout << "\nActions vendables AVANT mise à jour :" << std::endl;
+    const auto& vendablesAvant = marcheTestMix.getActionsVendables();
+    if (vendablesAvant.empty()) {
+        std::cout << "  Aucune action vendable" << std::endl;
+    } else {
+        for (size_t i = 0; i < vendablesAvant.size(); ++i) {
+            std::cout << "  [" << i << "] " << vendablesAvant[i]->getNom() << std::endl;
+        }
+    }
+    
+    // Mettre à jour les actions vendables (prendre 5 actions de la stack)
+    std::cout << "\n--- Mise à jour des actions vendables (5 actions) ---" << std::endl;
+    marcheTestMix.MiseAJourActionsVendables(5);
+    
+    // Afficher les actions vendables après mise à jour
+    std::cout << "\nActions vendables APRÈS mise à jour :" << std::endl;
+    const auto& vendablesApres = marcheTestMix.getActionsVendables();
+    for (size_t i = 0; i < vendablesApres.size(); ++i) {
+        std::cout << "  [" << i << "] " << vendablesApres[i]->getNom() << std::endl;
+    }
+    
+    // Afficher l'état de la stack après prélèvement
+    std::cout << "\nStack restante après prélèvement :" << std::endl;
+    const auto& stackRestante = marcheTestMix.getStackActions();
+    std::cout << "  Nombre d'actions restantes : " << stackRestante.size() << std::endl;
+    
+    std::cout << "\n=== Fin du test de MiseAJourActionsVendables ===" << std::endl;
 
     // Créer deux joueurs et initialiser les PV à 30
     Joueur j1;

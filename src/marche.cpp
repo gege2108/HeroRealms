@@ -1,5 +1,7 @@
 #include "Marche.h"
 #include <algorithm>
+#include <random>
+#include <chrono>
 
 Marche::Marche() = default;
 Marche::Marche(const std::vector<Action*>& actions, const std::vector<GemmeDeFeu*>& gemmes)
@@ -63,4 +65,22 @@ void Marche::clear() {
         StackActionEtChampion.push_back(action);
     }
     actionEtChampionVendable.clear();
+}
+
+void Marche::melangeStackActionEtChampion() {
+    if (StackActionEtChampion.empty()) return;
+    
+    // Initialiser le générateur aléatoire
+    srand(time(nullptr));
+    
+    // Algorithme de mélange simple (Fisher-Yates)
+    for (int i = StackActionEtChampion.size() - 1; i > 0; i--) {
+        // Choisir un index aléatoire entre 0 et i
+        int j = rand() % (i + 1);
+        
+        // Échanger les éléments aux positions i et j
+        Action* temp = StackActionEtChampion[i];
+        StackActionEtChampion[i] = StackActionEtChampion[j];
+        StackActionEtChampion[j] = temp;
+    }
 }

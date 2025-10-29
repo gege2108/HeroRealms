@@ -17,30 +17,43 @@
 int main() {
    // runTests();
 
-    // Créer une instance de la carte Taxation
-    Action* taxation = new Action(
-            Faction::FactionJaune,
-            "Taxation",
-            1,
-            { Effet(2, OR) },
-            {},
-            {},
-            {},
-            { Effet(6, SOIN) },
-            {}
-        );
+    // Test du mélange des actions dans le marché
+    std::cout << "=== Test du mélange des actions ===" << std::endl;
+    
+    // Créer plusieurs actions avec des noms différents
+    Action* taxation = new Action(Faction::FactionJaune, "Taxation", 1, {Effet(2, OR)}, {}, {},{} ,{Effet(6, SOIN)}, {});
+    Action* potDeVin = new Action(Faction::FactionBleu, "Pot-de-Vin", 1, {Effet(2, OR)}, {},{}, {}, {Effet(4, DEGAT)}, {});
+    Action* intimidation = new Action(Faction::FactionBleu, "Intimidation", 2, {Effet(5, DEGAT)}, {} , {}, {}, {Effet(3, OR)}, {});
+    Action* recrutement = new Action(Faction::FactionJaune, "Recrutement", 3, {Effet(1, OR)}, {}, {}, {}, {Effet(2, SOIN)}, {});
+    Action* commandement = new Action(Faction::FactionJaune, "Commandement", 2, {Effet(3, DEGAT)}, {}, {}, {}, {Effet(1, OR)}, {});
 
-    std::cout << "Carte créée : " << taxation->getNom() 
-              << " - Coût : " << taxation->getPrix() << " or" << std::endl;
-    std::cout << "Effets principaux : ";
-    for (const auto& effet : taxation->getEffetsBasiqueChoix1()) {
-        std::cout << effet.toString() << " ";
+    // Créer un marché et ajouter les actions
+    Marche marcheTestMix;
+    marcheTestMix.addStackAction(taxation);
+    marcheTestMix.addStackAction(potDeVin);
+    marcheTestMix.addStackAction(intimidation);
+    marcheTestMix.addStackAction(recrutement);
+    marcheTestMix.addStackAction(commandement);
+    
+    // Afficher l'ordre AVANT le mélange
+    std::cout << "\nOrdre AVANT le mélange :" << std::endl;
+    const auto& actionsAvant = marcheTestMix.getStackActions();
+    for (size_t i = 0; i < actionsAvant.size(); ++i) {
+        std::cout << "  [" << i << "] " << actionsAvant[i]->getNom() << std::endl;
     }
-    std::cout << std::endl;
-    std::cout << "---------------------------------------------------------";
-    std::cout << std::endl;
-    std::cout << taxation->toString() << std::endl;
-    std::cout << "---------------------------------------------------------" << std::endl;
+    
+    // Effectuer le mélange
+    std::cout << "\n--- Mélange en cours ---" << std::endl;
+    marcheTestMix.melangeStackActionEtChampion();
+    
+    // Afficher l'ordre APRÈS le mélange
+    std::cout << "\nOrdre APRÈS le mélange :" << std::endl;
+    const auto& actionsApres = marcheTestMix.getStackActions();
+    for (size_t i = 0; i < actionsApres.size(); ++i) {
+        std::cout << "  [" << i << "] " << actionsApres[i]->getNom() << std::endl;
+    }
+    
+    std::cout << "\n=== Fin du test de mélange ===" << std::endl;
 
     // Créer deux joueurs et initialiser les PV à 30
     Joueur j1;

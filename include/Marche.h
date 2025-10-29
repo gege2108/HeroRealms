@@ -4,6 +4,7 @@
 #include <vector>
 #include "Action.h"
 #include "GemmeDeFeu.h"
+#include <algorithm>
 
 class Marche {
 public:
@@ -31,6 +32,9 @@ public:
     bool removeGemme(GemmeDeFeu* g);
 
     GemmeDeFeu* acheterGemme();
+
+    // Fonction pour mélanger aléatoirement StackActionEtChampion
+    void melangeStackActionEtChampion();
 
     void clear();
 

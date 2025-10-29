@@ -40,11 +40,12 @@ int main() {
     main1.addCarte(new CarteDeBase("Soin & Or", {soinPetit, orPetit}));
 
     // main joueur 2 (différente composition avec plus de cartes d'or)
-    main2.addCarte(new CarteDeBase("Coup d'estoc", {degatMoyen}));
-    main2.addCarte(new CarteDeBase("Marchande", {orPetit}));
-    main2.addCarte(new CarteDeBase("Frappe rapide", {degatPetite}));
-    main2.addCarte(new CarteDeBase("Coffre au trésor", {orMoyen}));
-    main2.addCarte(new CarteDeBase("Soin mineur", {soinPetit}));
+    main2.addCarte(new CarteDeBase("Soin & Or", {soinPetit, orPetit}));
+    main2.addCarte(new CarteDeBase("Soin & Or", {soinPetit, orPetit}));
+    main2.addCarte(new CarteDeBase("Soin & Or", {soinPetit, orPetit}));
+    main2.addCarte(new CarteDeBase("Trésor", {orMoyen}));
+    main2.addCarte(new CarteDeBase("Soin & Or", {soinPetit, orPetit}));
+
 
     // Préparer une pioche de 23 cartes de base personnalisées pour chaque joueur
     Pioche pioche1;

@@ -57,12 +57,18 @@ void Plateau::run(Plateau& plateau) {
 
         // Tour du joueur 1
         std::cout << "C'est au Joueur1 de jouer" << std::endl;
+        std::cout << "Le joueur 1 a en main " << plateau.getJoueur1().getMain().getCartes().size() << " cartes." << std::endl;
+        std::cout << plateau.getJoueur1().getMain().getCartesDeBase().size() << " cartes de base :" << std::endl;
+        std::cout << plateau.getJoueur1().getMain().getGemmesDeFeu().size() << " gemmes de feu :" << std::endl;
+
         std::cout << "La main du joueur 1 est composée des cartes :" << std::endl;
         std::cout << "Il y a " << plateau.getMarche().getGemmes().size() << " gemmes dans le marché." << std::endl;
         int idx = 1;
         for (auto* carte : plateau.getJoueur1().getMain().getCartes()) {
             std::cout << "  [" << idx++ << "] " << carte->toString() << std::endl;
         }
+        
+        
         std::cout << "Joueur 1 appuyez sur 1 si vous voulez utiliser les effets de vos cartes de base." << std::endl;
         int choix;
         std::cin >> choix;
@@ -136,29 +142,32 @@ void Plateau::run(Plateau& plateau) {
             }
         }
 
-        int choixGemmeDeFeuJ1;
-        std::cout << "Joueur 1 appuyez sur 1 si vous voulez acheter une gemme de feu." << std::endl;
-        std::cin >> choixGemmeDeFeuJ1;
-
-        while (choixGemmeDeFeuJ1 == 1 && plateau.getJoueur1().getArgent() > 2 && plateau.getMarche().getGemmes().size() > 0)
-        {
-            plateau.getJoueur1().setArgent(plateau.getJoueur1().getArgent() - 3);
-            Defausse newDefausseJoueur1 = plateau.getJoueur1().getDefausse();
-            newDefausseJoueur1.addCarte(plateau.getMarche().acheterGemme());
-            plateau.getJoueur1().setDefausse(newDefausseJoueur1);
-            std::cout << "Le Joueur 1 achète une gemme de feu et dépense 3 pièces d'or." << std::endl;
-            std::cout << "Il reste " << plateau.getJoueur1().getArgent() << " pièces d'or au Joueur 1." << std::endl;
-            std::cout << "Le marché contient maintenant " << plateau.getMarche().getGemmes().size() << " gemmes de feu." << std::endl;
-            if (plateau.getJoueur1().getArgent() < 3)
-            {
-                std::cout << "Le Joueur 1 n'a plus assez d'argent pour acheter une autre gemme de feu." << std::endl;
-                break;
-            }
-            
-            std::cout << "Joueur 1 appuyez sur 1 si vous voulez acheter une autre gemme de feu." << std::endl;
+        if (plateau.getJoueur1().getArgent()>2){
+            int choixGemmeDeFeuJ1;
+            std::cout << "Joueur 1 appuyez sur 1 si vous voulez acheter une gemme de feu." << std::endl;
             std::cin >> choixGemmeDeFeuJ1;
+
+            while (choixGemmeDeFeuJ1 == 1 && plateau.getJoueur1().getArgent() > 2 && plateau.getMarche().getGemmes().size() > 0)
+            {
+                plateau.getJoueur1().setArgent(plateau.getJoueur1().getArgent() - 3);
+                Defausse newDefausseJoueur1 = plateau.getJoueur1().getDefausse();
+                newDefausseJoueur1.addCarte(plateau.getMarche().acheterGemme());
+                plateau.getJoueur1().setDefausse(newDefausseJoueur1);
+                std::cout << "Le Joueur 1 achète une gemme de feu et dépense 3 pièces d'or." << std::endl;
+                std::cout << "Il reste " << plateau.getJoueur1().getArgent() << " pièces d'or au Joueur 1." << std::endl;
+                std::cout << "Le marché contient maintenant " << plateau.getMarche().getGemmes().size() << " gemmes de feu." << std::endl;
+                if (plateau.getJoueur1().getArgent() < 3)
+                {
+                    std::cout << "Le Joueur 1 n'a plus assez d'argent pour acheter une autre gemme de feu." << std::endl;
+                    break;
+                }
+                
+                std::cout << "Joueur 1 appuyez sur 1 si vous voulez acheter une autre gemme de feu." << std::endl;
+                std::cin >> choixGemmeDeFeuJ1;
+            }
         }
 
+        
         // Déplacement propre des cartes de la main vers la défausse (Joueur1)
         Defausse newDefausseJoueur1 = plateau.getJoueur1().getDefausse();
         MainJoueur updatedMainJ1 = plateau.getJoueur1().getMain(); // copie modifiable
@@ -205,7 +214,7 @@ void Plateau::run(Plateau& plateau) {
         std::cout << plateau.getJoueur2().getMain().getGemmesDeFeu().size() << " gemmes de feu :" << std::endl;
         
         
-        if(!plateau.getJoueur2().getMain().getCartesDeBase().empty()) {
+        if(!plateau.getJoueur2().getMain().getCartes().empty()) {
             idx = 1;
             std::cout << "La main du joueur 2 est composée des cartes :" << std::endl;
             for (auto* carte : plateau.getJoueur2().getMain().getCartes()) {
@@ -258,11 +267,14 @@ void Plateau::run(Plateau& plateau) {
 
                     }
                 }
+
                 else if(choixGemme == 2){
                     Effet& effetAttaque = gemme->UtiliserAttaque();
                     std::cout << "Le joueur 2 utilise l'effet d'attaque de la gemme de feu numéro " << idx << " : " << effetAttaque.toString() << std::endl;
                     plateau.getJoueur1().setPointDeVie(plateau.getJoueur1().getPointDeVie() - effetAttaque.getValeur());
-                    
+                    std::cout << "Le joueur 1 perd " << effetAttaque.getValeur() << " points de vie, il a maintenant " << plateau.getJoueur1().getPointDeVie() << " points de vie." << std::endl;
+
+
                     gemmesASupprimer.push_back(gemme);
                     
                     // Déplacer la gemme de feu vers la zone de sacrifice après utilisation de l'attaque
@@ -287,29 +299,39 @@ void Plateau::run(Plateau& plateau) {
 
         std::cout << "Il y a " << plateau.getMarche().getGemmes().size() << " gemmes dans le marché." << std::endl;
 
-        int choixGemmeDeFeuJ2;
-        std::cout << "Joueur 2 appuyez sur 1 si vous voulez acheter une gemme de feu." << std::endl;
-        std::cin >> choixGemmeDeFeuJ2;
-
-        while (choixGemmeDeFeuJ2 == 1 && plateau.getJoueur2().getArgent() > 2 && plateau.getMarche().getGemmes().size() > 0)
-        {
-            plateau.getJoueur2().setArgent(plateau.getJoueur2().getArgent() - 3);
-            Defausse newDefausseJoueur2 = plateau.getJoueur2().getDefausse();
-            newDefausseJoueur2.addCarte(plateau.getMarche().acheterGemme());
-            plateau.getJoueur2().setDefausse(newDefausseJoueur2);
-            std::cout << "Le Joueur 2 achète une gemme de feu et dépense 3 pièces d'or." << std::endl;
-            std::cout << "Il reste " << plateau.getJoueur2().getArgent() << " pièces d'or au Joueur 2." << std::endl;
-            std::cout << "Le marché contient maintenant " << plateau.getMarche().getGemmes().size() << " gemmes de feu." << std::endl;
-            std::cout << "Joueur 2 appuyez sur 1 si vous voulez acheter une autre gemme de feu." << std::endl;
+        if (plateau.getJoueur2().getArgent()>2){
+            int choixGemmeDeFeuJ2;
+            std::cout << "Joueur 2 appuyez sur 1 si vous voulez acheter une gemme de feu." << std::endl;
             std::cin >> choixGemmeDeFeuJ2;
+
+            while (choixGemmeDeFeuJ2 == 1 && plateau.getJoueur2().getArgent() > 2 && plateau.getMarche().getGemmes().size() > 0)
+            {
+                plateau.getJoueur2().setArgent(plateau.getJoueur2().getArgent() - 3);
+                Defausse newDefausseJoueur2 = plateau.getJoueur2().getDefausse();
+                newDefausseJoueur2.addCarte(plateau.getMarche().acheterGemme());
+                plateau.getJoueur2().setDefausse(newDefausseJoueur2);
+                std::cout << "Le Joueur 2 achète une gemme de feu et dépense 3 pièces d'or." << std::endl;
+                std::cout << "Il reste " << plateau.getJoueur2().getArgent() << " pièces d'or au Joueur 2." << std::endl;
+                std::cout << "Le marché contient maintenant " << plateau.getMarche().getGemmes().size() << " gemmes de feu." << std::endl;
+                if (plateau.getJoueur2().getArgent() < 3)
+                {
+                    std::cout << "Le Joueur 2 n'a plus assez d'argent pour acheter une autre gemme de feu." << std::endl;
+                    break;
+                }
+
+                std::cout << "Joueur 2 appuyez sur 1 si vous voulez acheter une autre gemme de feu." << std::endl;
+                std::cin >> choixGemmeDeFeuJ2;
+            }
         }
+        
+        
         
 
         // Déplacement propre des cartes de la main vers la défausse (Joueur2)
         Defausse newDefausseJoueur2 = plateau.getJoueur2().getDefausse();
         MainJoueur updatedMainJ2 = plateau.getJoueur2().getMain(); // copie modifiable
 
-        auto cartesMain2 = updatedMainJ2.getCartesDeBase();
+        auto cartesMain2 = updatedMainJ2.getCartes();
         for (auto* carte : cartesMain2) {
             newDefausseJoueur2.addCarte(carte);
             updatedMainJ2.removeCarte(carte);
@@ -351,6 +373,8 @@ void Plateau::run(Plateau& plateau) {
 
         plateau.getJoueur2().setMain(newMainJoueur2);
         plateau.getJoueur2().setPioche(newPiocheJoueur2);
+        j2.setArgent(0);
+        std::cout << "Le solde du Joueur 2 retombe à 0" << std::endl;
 
         std::cout << "Affichage de la pioche du joueur 2" << std::endl;
         for (size_t i = 0; i < plateau.getJoueur2().getPioche().getCartes().size(); i++)

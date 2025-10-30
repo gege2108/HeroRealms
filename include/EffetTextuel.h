@@ -24,6 +24,7 @@ public:
     void drawACard(Joueur& joueur); // id : 1
     void discardOpponentCard(Joueur& opponent);  // id : 2
     void stunChampion(Joueur& opponent) const;  // id : 3
+    void drawAndDiscard(Joueur& joueur); // id : 4
     static void handleIdEffetTextuel(int id, Joueur& joueur);
 
 private:

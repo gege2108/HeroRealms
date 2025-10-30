@@ -23,7 +23,7 @@ void EffetTextuel::drawACard(Joueur& joueur) {
 }
 
 
-//2 Target opponent discards a card. (Supprimer const de la signature)
+//id : 2 - Défausser une carte de la main de l'adversaire
 void EffetTextuel::discardOpponentCard(Joueur& opponent) {
     MainJoueur& mainOpponent = opponent.getMain();
     if (mainOpponent.getCartes().empty()) {
@@ -59,7 +59,6 @@ void EffetTextuel::discardOpponentCard(Joueur& opponent) {
 }
 
 
-// Implémentation de la méthode statique de classe (PAS une fonction libre)
 void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueur) {
     EffetTextuel effet;
     switch (id) {    
@@ -72,13 +71,22 @@ void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueur) {
             effet.discardOpponentCard(joueur);
             break;
         }
+        case 3: {
+            //Dans ce contexte, joueur correspond à l'adversaire
+            effet.stunChampion(joueur);
+            break;
+        }
+        case 4: {
+            effet.drawAndDiscard(joueur);
+            break;
+        }
         default:
             std::cout << "Effet textuel inconnu avec l'ID: " << id << std::endl;
             break;
     }
 }
 
-
+//id : 3 - Étourdir un champion adversaire
 void EffetTextuel::stunChampion(Joueur& opponent) const {
     if (opponent.getStackChampion().getChampions().empty()) {
         std::cout << "L'adversaire n'a pas de champions à étourdir." << std::endl;
@@ -92,7 +100,7 @@ void EffetTextuel::stunChampion(Joueur& opponent) const {
     }
     
     int nombre;
-    std::cout << "Choose a champion to stun (0 to " << champions.size() - 1 << "): ";
+    std::cout << "Choisissez un champion à étourdir (0 à " << champions.size() - 1 << "): ";
     std::cin >> nombre;
     
     if (nombre < 0 || nombre >= static_cast<int>(champions.size())) {
@@ -109,4 +117,38 @@ void EffetTextuel::stunChampion(Joueur& opponent) const {
     opponent.getDefausse().addCarte(champion);
     
     std::cout << "Le champion " << champion->getNom() << " est étourd. Il perd sa défense et retourne dans la defausse du joueur." << std::endl;
+}
+
+
+//id : 4 - Vous pouvez piocher une carte, puis en défausser une
+void EffetTextuel::drawAndDiscard(Joueur& joueur) {
+    // Piocher une carte
+    drawACard(joueur);
+    
+    // Vérifier s'il y a des cartes à défausser
+    if (joueur.getMain().getCartes().empty()) {
+        std::cout << "Pas de cartes en main à défausser." << std::endl;
+        return;
+    }
+    
+    // Défausser une carte
+    std::cout << "\nChoisissez une carte à défausser de votre main :" << std::endl;
+    for (size_t i = 0; i < joueur.getMain().getCartes().size(); ++i) {
+        std::cout << "  [" << i << "] " << joueur.getMain().getCartes()[i]->getNom() << std::endl;
+    }
+    
+    int choix;
+    std::cout << "Choisissez une carte (0 à " << joueur.getMain().getCartes().size() - 1 << "): ";
+    std::cin >> choix;
+    
+    if (choix < 0 || choix >= static_cast<int>(joueur.getMain().getCartes().size())) {
+        std::cout << "Choix invalide. Aucune carte défaussée." << std::endl;
+        return;
+    }
+    
+    Carte* carte = joueur.getMain().getCartes()[choix];
+    joueur.getMain().removeCarte(carte);
+    const_cast<Defausse&>(joueur.getDefausse()).addCarte(carte);
+    
+    std::cout << "Vous défaussez : " << carte->getNom() << std::endl;
 }

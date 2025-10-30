@@ -16,7 +16,8 @@ void runAllTests() {
     testMiseAJourActionsVendables();
     testEffetTextuel();
     testDiscardOpponentCard();
-    testStunChampion();  // Ajouter le nouveau test
+    testStunChampion();
+    testDrawAndDiscard();  // Ajouter le nouveau test
     std::cout << "=== FIN DE TOUS LES TESTS ===" << std::endl;
 }
 
@@ -299,4 +300,65 @@ void testStunChampion() {
     }
     
     std::cout << "\n=== Fin du test de stunChampion ===" << std::endl;
+}
+
+void testDrawAndDiscard() {
+    std::cout << "\n=== Test de drawAndDiscard ===" << std::endl;
+    
+    // Instancier un effet textuel avec id=4 et description appropriée
+    EffetTextuel effetDrawDiscard(4, "Piocher une carte puis défausser une carte");
+    
+    std::cout << "Effet textuel créé :" << std::endl;
+    std::cout << "  ID: " << effetDrawDiscard.getId() << std::endl;
+    std::cout << "  Description: " << effetDrawDiscard.toString() << std::endl;
+    
+    // Créer un joueur de test
+    Joueur joueurTest;
+    joueurTest.setPointDeVie(20);
+    
+    // Donner quelques cartes en main au joueur
+    MainJoueur mainTest;
+    mainTest.addCarte(new CarteDeBase("Carte Main 1", {Effet(1, OR)}));
+    mainTest.addCarte(new CarteDeBase("Carte Main 2", {Effet(2, DEGAT)}));
+    joueurTest.setMain(mainTest);
+    
+    // Créer une pioche avec des cartes
+    Pioche piocheTest;
+    piocheTest.addCarte(new CarteDeBase("Carte Pioche 1", {Effet(1, SOIN)}));
+    piocheTest.addCarte(new CarteDeBase("Carte Pioche 2", {Effet(3, OR)}));
+    joueurTest.setPioche(piocheTest);
+    
+    // Afficher l'état AVANT l'utilisation de l'effet textuel
+    std::cout << "\n--- État AVANT drawAndDiscard ---" << std::endl;
+    std::cout << "Main du joueur : " << joueurTest.getMain().getCartes().size() << " cartes" << std::endl;
+    for (size_t i = 0; i < joueurTest.getMain().getCartes().size(); ++i) {
+        std::cout << "  - " << joueurTest.getMain().getCartes()[i]->getNom() << std::endl;
+    }
+    std::cout << "Pioche du joueur : " << joueurTest.getPioche().getCartes().size() << " cartes" << std::endl;
+    std::cout << "Défausse du joueur : " << joueurTest.getDefausse().getCartes().size() << " cartes" << std::endl;
+    
+    // Utiliser l'effet textuel drawAndDiscard
+    std::cout << "\n--- Utilisation de drawAndDiscard (piocher puis défausser carte 1) ---" << std::endl;
+    EffetTextuel::handleIdEffetTextuel(effetDrawDiscard.getId(), joueurTest);
+    
+    // Afficher l'état APRÈS l'utilisation de l'effet textuel
+    std::cout << "\n--- État APRÈS drawAndDiscard ---" << std::endl;
+    std::cout << "Main du joueur : " << joueurTest.getMain().getCartes().size() << " cartes" << std::endl;
+    if (!joueurTest.getMain().getCartes().empty()) {
+        for (size_t i = 0; i < joueurTest.getMain().getCartes().size(); ++i) {
+            std::cout << "  - " << joueurTest.getMain().getCartes()[i]->getNom() << std::endl;
+        }
+    } else {
+        std::cout << "  (main vide)" << std::endl;
+    }
+    
+    std::cout << "Pioche du joueur : " << joueurTest.getPioche().getCartes().size() << " cartes" << std::endl;
+    std::cout << "Défausse du joueur : " << joueurTest.getDefausse().getCartes().size() << " cartes" << std::endl;
+    if (!joueurTest.getDefausse().getCartes().empty()) {
+        for (size_t i = 0; i < joueurTest.getDefausse().getCartes().size(); ++i) {
+            std::cout << "  - " << joueurTest.getDefausse().getCartes()[i]->getNom() << std::endl;
+        }
+    }
+    
+    std::cout << "\n=== Fin du test de drawAndDiscard ===" << std::endl;
 }

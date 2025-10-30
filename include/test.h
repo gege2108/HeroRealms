@@ -9,6 +9,7 @@ void testMelangeActions();
 void testMiseAJourActionsVendables();
 void testEffetTextuel();
 void testDiscardOpponentCard();
-void testStunChampion();  // Nouvelle fonction
+void testStunChampion();
+void testDrawAndDiscard();  // Nouvelle fonction
 
 #endif // TEST_H

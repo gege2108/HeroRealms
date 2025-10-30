@@ -15,7 +15,8 @@ void runAllTests() {
     testMelangeActions();
     testMiseAJourActionsVendables();
     testEffetTextuel();
-    testDiscardOpponentCard();  // Ajouter le nouveau test
+    testDiscardOpponentCard();
+    testStunChampion();  // Ajouter le nouveau test
     std::cout << "=== FIN DE TOUS LES TESTS ===" << std::endl;
 }
 
@@ -231,4 +232,71 @@ void testDiscardOpponentCard() {
     }
     
     std::cout << "\n=== Fin du test de discardOpponentCard ===" << std::endl;
+}
+
+void testStunChampion() {
+    std::cout << "\n=== Test de stunChampion ===" << std::endl;
+    
+    // Instancier un effet textuel avec id=3 et description appropriée
+    EffetTextuel effetStun(3, "Étourdir un champion adversaire");
+    
+    std::cout << "Effet textuel créé :" << std::endl;
+    std::cout << "  ID: " << effetStun.getId() << std::endl;
+    std::cout << "  Description: " << effetStun.toString() << std::endl;
+    
+    // Créer un adversaire avec des champions
+    Joueur adversaire;
+    adversaire.setPointDeVie(20);
+    
+    // Créer des champions pour l'adversaire
+    Champion* champion1 = new Champion("Champion Guerrier");
+    champion1->setPointDeVie(5);
+    champion1->setIsDefense(true);
+    
+    Champion* champion2 = new Champion("Champion Mage");
+    champion2->setPointDeVie(3);
+    champion2->setIsDefense(true);
+    
+    // Ajouter les champions à la stack de l'adversaire
+    StackChampion stackAdversaire;
+    stackAdversaire.push(champion1);
+    stackAdversaire.push(champion2);
+    adversaire.setStackChampion(stackAdversaire);
+    
+    // Afficher l'état AVANT l'utilisation de l'effet textuel
+    std::cout << "\n--- État AVANT l'effet d'étourdissement ---" << std::endl;
+    std::cout << "Champions de l'adversaire : " << adversaire.getStackChampion().getChampions().size() << " champions" << std::endl;
+    auto championsAvant = adversaire.getStackChampion().getChampions();
+    for (size_t i = 0; i < championsAvant.size(); ++i) {
+        std::cout << "  - " << championsAvant[i]->getNom() 
+                  << " (Défense: " << (championsAvant[i]->getIsDefense() ? "Oui" : "Non") << ")" << std::endl;
+    }
+    std::cout << "Défausse de l'adversaire : " << adversaire.getDefausse().getCartes().size() << " cartes" << std::endl;
+    
+    // Utiliser l'effet textuel stunChampion
+    std::cout << "\n--- Utilisation de l'effet d'étourdissement (choisir champion 0) ---" << std::endl;
+    EffetTextuel effet;
+    effet.stunChampion(adversaire);
+    
+    // Afficher l'état APRÈS l'utilisation de l'effet textuel
+    std::cout << "\n--- État APRÈS l'effet d'étourdissement ---" << std::endl;
+    std::cout << "Champions de l'adversaire : " << adversaire.getStackChampion().getChampions().size() << " champions" << std::endl;
+    auto championsApres = adversaire.getStackChampion().getChampions();
+    if (!championsApres.empty()) {
+        for (size_t i = 0; i < championsApres.size(); ++i) {
+            std::cout << "  - " << championsApres[i]->getNom() 
+                      << " (Défense: " << (championsApres[i]->getIsDefense() ? "Oui" : "Non") << ")" << std::endl;
+        }
+    } else {
+        std::cout << "  (aucun champion restant)" << std::endl;
+    }
+    
+    std::cout << "Défausse de l'adversaire : " << adversaire.getDefausse().getCartes().size() << " cartes" << std::endl;
+    if (!adversaire.getDefausse().getCartes().empty()) {
+        for (size_t i = 0; i < adversaire.getDefausse().getCartes().size(); ++i) {
+            std::cout << "  - " << adversaire.getDefausse().getCartes()[i]->getNom() << std::endl;
+        }
+    }
+    
+    std::cout << "\n=== Fin du test de stunChampion ===" << std::endl;
 }

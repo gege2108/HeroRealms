@@ -3,11 +3,8 @@
 
 #include <string>
 
-#include "Joueur.h" 
-#include <iostream>
-
-
 // Forward declaration pour éviter l'inclusion circulaire
+class Joueur;
 
 class EffetTextuel {
 public:
@@ -18,14 +15,15 @@ public:
     std::string getDescription() const { return description; }
     void setDescription(const std::string& desc) { description = desc; }
 
-    // Méthode toString pour afficher la description
+    
     std::string toString() const {
         return description;
     }
 
     // Méthodes utilisant Joueur
-    void drawACard(Joueur& joueur);
-    void discardOpponentCard(Joueur& opponent);  // Supprimer const ici aussi
+    void drawACard(Joueur& joueur); // id : 1
+    void discardOpponentCard(Joueur& opponent);  // id : 2
+    void stunChampion(Joueur& opponent) const;  // id : 3
     static void handleIdEffetTextuel(int id, Joueur& joueur);
 
 private:

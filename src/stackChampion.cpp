@@ -20,3 +20,35 @@ bool StackChampion::pop(Carte* c) {
 }
 
 void StackChampion::clear() { cartes.clear(); }
+
+std::vector<Champion*> StackChampion::getChampions() const {
+    std::vector<Champion*> champions;
+    for (Carte* carte : cartes) {
+        Champion* champion = dynamic_cast<Champion*>(carte);
+        if (champion != nullptr) {
+            champions.push_back(champion);
+        }
+    }
+    return champions;
+}
+
+std::vector<Champion*> StackChampion::getChampions() {
+    std::vector<Champion*> champions;
+    for (Carte* carte : cartes) {
+        Champion* champion = dynamic_cast<Champion*>(carte);
+        if (champion != nullptr) {
+            champions.push_back(champion);
+        }
+    }
+    return champions;
+}
+
+bool StackChampion::removeChampion(Champion* champion) {
+    for (auto it = cartes.begin(); it != cartes.end(); ++it) {
+        if (*it == champion) {
+            cartes.erase(it);
+            return true;
+        }
+    }
+    return false;
+}

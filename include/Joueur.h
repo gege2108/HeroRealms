@@ -23,22 +23,22 @@ public:
 	MainJoueur& getMain();
 	Pioche& getPioche();
 	Defausse& getDefausse();
+	StackChampion& getStackChampion();
 
 	// Versions const  
 	const MainJoueur& getMain() const;
 	const Pioche& getPioche() const;
 	const Defausse& getDefausse() const;
+	const StackChampion& getStackChampion() const;
 
 	// Setters
 	void setMain(const MainJoueur& m);
 	void setPioche(const Pioche& p);
 	void setDefausse(const Defausse& d);
+	void setStackChampion(const StackChampion& s);
 
 	int getArgent() const;
 	void setArgent(int a);
-
-	const StackChampion& getStackChampion() const;
-	void setStackChampion(const StackChampion& s);
 
 private:
 	MainJoueur mainJoueur;

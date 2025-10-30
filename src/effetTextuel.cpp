@@ -77,3 +77,36 @@ void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueur) {
             break;
     }
 }
+
+
+void EffetTextuel::stunChampion(Joueur& opponent) const {
+    if (opponent.getStackChampion().getChampions().empty()) {
+        std::cout << "L'adversaire n'a pas de champions à étourdir." << std::endl;
+        return;
+    }
+    
+    std::cout << "Champions de l'adversaire :" << std::endl;
+    auto champions = opponent.getStackChampion().getChampions();
+    for (size_t i = 0; i < champions.size(); ++i) {
+        std::cout << "  [" << i << "] " << champions[i]->getNom() << std::endl;
+    }
+    
+    int nombre;
+    std::cout << "Choose a champion to stun (0 to " << champions.size() - 1 << "): ";
+    std::cin >> nombre;
+    
+    if (nombre < 0 || nombre >= static_cast<int>(champions.size())) {
+        std::cout << "Indice invalide. Aucun champion étourdi." << std::endl;
+        return;
+    }
+    
+    // Utiliser un pointeur au lieu d'une référence
+    Champion* champion = champions[nombre];
+    champion->setIsDefense(false);
+    
+    // Utiliser const_cast pour obtenir une référence non-const
+    const_cast<StackChampion&>(opponent.getStackChampion()).removeChampion(champion);
+    opponent.getDefausse().addCarte(champion);
+    
+    std::cout << "Le champion " << champion->getNom() << " est étourd. Il perd sa défense et retourne dans la defausse du joueur." << std::endl;
+}

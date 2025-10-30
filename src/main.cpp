@@ -16,7 +16,7 @@
 
 int main() {
     // Exécuter tous les tests en une seule ligne
-    testDiscardOpponentCard();
+    testStunChampion();
     
 
 

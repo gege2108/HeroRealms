@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Carte.h"
+#include "Champion.h"
 
 class StackChampion {
 public:
@@ -15,6 +16,13 @@ public:
     void push(Carte* c);
     bool pop(Carte* c);
     void clear();
+
+    // Fonction pour récupérer les champions de la stack
+    std::vector<Champion*> getChampions() const;
+    std::vector<Champion*> getChampions();
+
+    // Fonction pour enlever un champion spécifique
+    bool removeChampion(Champion* champion);
 
 private:
     std::vector<Carte*> cartes;

@@ -847,3 +847,42 @@ void Plateau::appliquerEffetsJ1(const std::vector<Effet>& effetsBasique, const s
     }
     std::cout << "--- Fin application des effets textuels du Joueur 1 ---" << std::endl;
 }
+
+void Plateau::appliquerEffetsJ2(const std::vector<Effet>& effetsBasique, const std::vector<EffetTextuel>& effetsTextuel){
+    std::cout << "\n--- Application des effets basiques du Joueur 2 ---" << std::endl;
+    for (const auto& effet : effetsBasique) {
+        switch (effet.getType()) {
+            case DEGAT: {
+                int before = joueur1.getPointDeVie();
+                joueur1.setPointDeVie(before - effet.getValeur());
+                std::cout << " => -" << effet.getValeur()
+                          << " PV à Joueur1 ( " << before << " -> " << joueur1.getPointDeVie() << " )" << std::endl;
+                break;
+            }
+            case SOIN: {
+                int before = joueur2.getPointDeVie();
+                joueur2.setPointDeVie(before + effet.getValeur());
+                std::cout << " => +" << effet.getValeur()
+                          << " PV à Joueur2 ( " << before << " -> " << joueur2.getPointDeVie() << " )" << std::endl;
+                break;
+            }
+            case OR: {
+                int before = joueur2.getArgent();
+                joueur2.setArgent(before + effet.getValeur());
+                std::cout << " => +" << effet.getValeur()
+                    << " Or à Joueur2 ( " << before << " -> " << joueur2.getArgent() << " )" << std::endl;
+                break;
+            }
+            default:
+                std::cout << " => effet non géré pour l'instant." << std::endl;
+                break;
+        }
+    }
+    std::cout << "--- Fin application des effets basiques du Joueur 2 ---" << std::endl;
+
+    std::cout << "\n--- Application des effets textuels du Joueur 2 ---" << std::endl;
+    for (const auto& effetTextuel : effetsTextuel) {
+        EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur2, joueur1);
+    }
+    std::cout << "--- Fin application des effets textuels du Joueur 2 ---" << std::endl;
+}

@@ -23,7 +23,9 @@ void runAllTests() {
     testDrawAndDiscard();
     testPeuxActiverCombo();
     testChoixUtilisationEffetJ1();
-    testChoixUtilisationEffetJ2();  // Ajouter le nouveau test
+    testChoixUtilisationEffetJ2();
+    testAppliquerEffetsJ1();
+    testAppliquerEffetsJ2();
     std::cout << "=== FIN DE TOUS LES TESTS ===" << std::endl;
 }
 
@@ -680,6 +682,119 @@ void testChoixUtilisationEffetJ2() {
     }
     
     std::cout << "\n=== Fin du test de choixUtilisationEffetJ2 ===" << std::endl;
+}
+
+void testAppliquerEffetsJ1() {
+    std::cout << "\n=== Test de appliquerEffetsJ1 ===" << std::endl;
+    
+    // Créer un plateau de test
+    Plateau plateauTest;
+    
+    // Créer deux joueurs
+    Joueur joueur1Test;
+    joueur1Test.setPointDeVie(20);
+    joueur1Test.setArgent(5);
+    
+    Joueur joueur2Test;
+    joueur2Test.setPointDeVie(25);
+    
+    plateauTest.setJoueur1(joueur1Test);
+    plateauTest.setJoueur2(joueur2Test);
+    
+    // Créer des effets basiques à tester
+    std::vector<Effet> effetsBasiques;
+    effetsBasiques.push_back(Effet(3, DEGAT));
+    effetsBasiques.push_back(Effet(2, SOIN));
+    effetsBasiques.push_back(Effet(4, OR));
+    
+    // Créer des effets textuels à tester
+    std::vector<EffetTextuel> effetsTextuels;
+    effetsTextuels.push_back(EffetTextuel(1, "Piocher une carte"));
+    effetsTextuels.push_back(EffetTextuel(4, "Piocher puis défausser"));
+    
+    // Afficher l'état AVANT l'application des effets
+    std::cout << "\n--- État AVANT appliquerEffetsJ1 ---" << std::endl;
+    std::cout << "Joueur 1: " << plateauTest.getJoueur1().getPointDeVie() << " PV, " 
+              << plateauTest.getJoueur1().getArgent() << " Or" << std::endl;
+    std::cout << "Joueur 2: " << plateauTest.getJoueur2().getPointDeVie() << " PV" << std::endl;
+    
+    std::cout << "\nEffets basiques à appliquer:" << std::endl;
+    for (const auto& effet : effetsBasiques) {
+        std::cout << "  - " << effet.toString() << std::endl;
+    }
+    
+    std::cout << "\nEffets textuels à appliquer:" << std::endl;
+    for (const auto& effet : effetsTextuels) {
+        std::cout << "  - " << effet.toString() << std::endl;
+    }
+    
+    // Appliquer les effets
+    std::cout << "\n--- Application des effets ---" << std::endl;
+    plateauTest.appliquerEffetsJ1(effetsBasiques, effetsTextuels);
+    
+    // Afficher l'état APRÈS l'application des effets
+    std::cout << "\n--- État APRÈS appliquerEffetsJ1 ---" << std::endl;
+    std::cout << "Joueur 1: " << plateauTest.getJoueur1().getPointDeVie() << " PV, " 
+              << plateauTest.getJoueur1().getArgent() << " Or" << std::endl;
+    std::cout << "Joueur 2: " << plateauTest.getJoueur2().getPointDeVie() << " PV" << std::endl;
+    
+    std::cout << "\n=== Fin du test de appliquerEffetsJ1 ===" << std::endl;
+}
+
+void testAppliquerEffetsJ2() {
+    std::cout << "\n=== Test de appliquerEffetsJ2 ===" << std::endl;
+    
+    // Créer un plateau de test
+    Plateau plateauTest;
+    
+    // Créer deux joueurs
+    Joueur joueur1Test;
+    joueur1Test.setPointDeVie(18);
+    
+    Joueur joueur2Test;
+    joueur2Test.setPointDeVie(22);
+    joueur2Test.setArgent(3);
+    
+    plateauTest.setJoueur1(joueur1Test);
+    plateauTest.setJoueur2(joueur2Test);
+    
+    // Créer des effets basiques à tester (différents de J1)
+    std::vector<Effet> effetsBasiques;
+    effetsBasiques.push_back(Effet(5, DEGAT));
+    effetsBasiques.push_back(Effet(3, SOIN));
+    effetsBasiques.push_back(Effet(2, OR));
+    
+    // Créer des effets textuels à tester
+    std::vector<EffetTextuel> effetsTextuels;
+    effetsTextuels.push_back(EffetTextuel(2, "Défausser adversaire"));
+    
+    // Afficher l'état AVANT l'application des effets
+    std::cout << "\n--- État AVANT appliquerEffetsJ2 ---" << std::endl;
+    std::cout << "Joueur 1: " << plateauTest.getJoueur1().getPointDeVie() << " PV" << std::endl;
+    std::cout << "Joueur 2: " << plateauTest.getJoueur2().getPointDeVie() << " PV, " 
+              << plateauTest.getJoueur2().getArgent() << " Or" << std::endl;
+    
+    std::cout << "\nEffets basiques à appliquer:" << std::endl;
+    for (const auto& effet : effetsBasiques) {
+        std::cout << "  - " << effet.toString() << std::endl;
+    }
+    
+    std::cout << "\nEffets textuels à appliquer:" << std::endl;
+    for (const auto& effet : effetsTextuels) {
+        std::cout << "  - " << effet.toString() << std::endl;
+    }
+    
+    // Appliquer les effets
+    std::cout << "\n--- Application des effets ---" << std::endl;
+    plateauTest.appliquerEffetsJ2(effetsBasiques, effetsTextuels);
+    
+    // Afficher l'état APRÈS l'application des effets
+    std::cout << "\n--- État APRÈS appliquerEffetsJ2 ---" << std::endl;
+    std::cout << "Joueur 1: " << plateauTest.getJoueur1().getPointDeVie() << " PV" << std::endl;
+    std::cout << "Joueur 2: " << plateauTest.getJoueur2().getPointDeVie() << " PV, " 
+              << plateauTest.getJoueur2().getArgent() << " Or" << std::endl;
+    
+    std::cout << "\n=== Fin du test de appliquerEffetsJ2 ===" << std::endl;
 }
 
 

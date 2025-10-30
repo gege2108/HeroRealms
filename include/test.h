@@ -13,6 +13,8 @@ void testStunChampion();
 void testDrawAndDiscard();
 void testPeuxActiverCombo();
 void testChoixUtilisationEffetJ1();
-void testChoixUtilisationEffetJ2();  // Nouvelle fonction
+void testChoixUtilisationEffetJ2();
+void testAppliquerEffetsJ1();
+void testAppliquerEffetsJ2();
 
 #endif // TEST_H

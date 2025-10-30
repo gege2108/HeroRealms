@@ -94,14 +94,10 @@ void Marche::MiseAJourActionsVendables(int nombreActions) {
 void Marche::melangeStackActionEtChampion() {
     if (StackActionEtChampion.empty()) return;
     
-    // Initialiser le générateur aléatoire
     srand(time(nullptr));
-    
+
     for (int i = StackActionEtChampion.size() - 1; i > 0; i--) {
-        // Choisir un index aléatoire entre 0 et i
         int j = rand() % (i + 1);
-        
-        // Échanger les éléments aux positions i et j
         Action* temp = StackActionEtChampion[i];
         StackActionEtChampion[i] = StackActionEtChampion[j];
         StackActionEtChampion[j] = temp;

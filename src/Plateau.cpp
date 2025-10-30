@@ -177,7 +177,13 @@ void Plateau::run(Plateau& plateau) {
         }
         plateau.achatActionChampion(plateau.getJoueur1());
 
+        std::cout << std::string(60, '-') << std::endl;
+        std::cout << "Phase d'utilisation des effets des cartes actions et champions du Joueur 1" << std::endl;
 
+        // Utiliser les effets des cartes de la main (Joueur1)
+        std::cout << "Phase d'utilisation des effets des cartes actions et champions du Joueur 1" << std::endl;
+        auto [effetsBasiqueJ1, effetsTextuelsJ1] = plateau.choixUtilisationEffetJ1();
+        plateau.appliquerEffetsJ1(effetsBasiqueJ1, effetsTextuelsJ1);
 
         // Déplacement propre des cartes de la main vers la défausse (Joueur1)
         Defausse newDefausseJoueur1 = plateau.getJoueur1().getDefausse();
@@ -345,8 +351,16 @@ void Plateau::run(Plateau& plateau) {
             std::cout << "  - " << action->getNom() << " (Prix: " << action->getPrix() << " or)" << std::endl;
         }
         plateau.achatActionChampion(plateau.getJoueur2());
-        
-        
+
+        std::cout << std::string(60, '-') << std::endl;
+        std::cout << "Phase d'utilisation des effets des cartes actions et champions du Joueur 2" << std::endl;
+
+        // Utiliser les effets des cartes de la main (Joueur2)
+        std::cout << "Phase d'utilisation des effets des cartes actions et champions du Joueur 2" << std::endl;
+        auto [effetsBasiqueJ2, effetsTextuelsJ2] = plateau.choixUtilisationEffetJ2();
+        plateau.appliquerEffetsJ2(effetsBasiqueJ2, effetsTextuelsJ2);
+
+
         
 
         // Déplacement propre des cartes de la main vers la défausse (Joueur2)

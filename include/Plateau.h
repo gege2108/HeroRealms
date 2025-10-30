@@ -36,6 +36,15 @@ public:
     // utilise les effets des cartes de base du joueur 2
     void utiliserEffetBasiqueJoueur2(const std::vector<CarteDeBase*>& cartes);
 
+    void afficherEtat() const;
+
+    // Fonction pour choisir les effets du Joueur 1
+    std::pair<std::vector<Effet>, std::vector<EffetTextuel>> choixUtilisationEffetJ1();
+
+    //choix utilisation effet pour une seule carte
+    std::pair<std::vector<Effet>, std::vector<EffetTextuel>> choixUtilisationEffetJ2();
+
+
 
 private:
     Joueur joueur1;

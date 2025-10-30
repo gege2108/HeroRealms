@@ -49,6 +49,8 @@ public:
 
 	// Fonction pour activer les combos selon les factions présentes
 	void peuxActiverCombo();
+	
+
 
 private:
 	MainJoueur mainJoueur;

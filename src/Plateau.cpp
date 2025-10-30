@@ -465,3 +465,160 @@ void Plateau::utiliserEffetBasiqueJoueur2(const std::vector<CarteDeBase*>& carte
     std::cout << "Etat courant : Joueur1 PV=" << joueur1.getPointDeVie()
               << " | Joueur2 PV=" << joueur2.getPointDeVie() << std::endl;
 }
+
+void Plateau::afficherEtat() const {
+    std::cout << "=== État du Plateau ===" << std::endl;
+    std::cout << "Joueur 1: " << joueur1.getPointDeVie() << " PV, " << joueur1.getArgent() << " Or" << std::endl;
+    std::cout << "Joueur 2: " << joueur2.getPointDeVie() << " PV, " << joueur2.getArgent() << " Or" << std::endl;
+    std::cout << "Marché: " << marche.getGemmes().size() << " gemmes disponibles" << std::endl;
+    std::cout << "Zone de Sacrifice: " << zoneDeSacrifice.getCartes().size() << " cartes sacrifiées" << std::endl;
+    std::cout << "======================" << std::endl;
+}
+
+
+std::pair<std::vector<Effet>, std::vector<EffetTextuel>> Plateau::choixUtilisationEffetJ1(){
+    joueur1.peuxActiverCombo();
+
+    std::vector<Effet> effetsBasiqueChoisis;
+    std::vector<EffetTextuel> effetsTextuelsChoisis;
+
+    const auto& cartes = joueur1.getMain().getCartes();
+
+    std::cout << "\n=== Choix des effets pour le Joueur 1 ===" << std::endl;
+
+    for (size_t carteIndex = 0; carteIndex < cartes.size(); ++carteIndex) {
+        Carte* carte = cartes[carteIndex];
+        Action* action = dynamic_cast<Action*>(carte);
+        Champion* champion = dynamic_cast<Champion*>(carte);
+
+        if (action != nullptr || champion != nullptr) {
+            std::cout << "\nCarte " << (carteIndex + 1) << ": " << carte->getNom() << std::endl;
+            
+            // Afficher les choix disponibles
+            std::cout << "Choisissez quels effets utiliser :" << std::endl;
+            std::cout << "  [1] Effets basiques choix 1 + effets textuels choix 1" << std::endl;
+            
+            // Vérifier s'il y a des effets choix 2
+            bool hasChoix2 = false;
+            if (action != nullptr) {
+                hasChoix2 = !action->getListEffetBasiqueChoix2().empty() || !action->getListEffetTextuelChoix2().empty();
+            } else if (champion != nullptr) {
+                hasChoix2 = !champion->getListEffetBasiqueChoix2().empty() || !champion->getListEffetTextuelChoix2().empty();
+            }
+            
+            if (hasChoix2) {
+                std::cout << "  [2] Effets basiques choix 2 + effets textuels choix 2" << std::endl;
+            }
+            
+            // Vérifier si le combo est disponible
+            bool peutCombo = false;
+            if (action != nullptr) {
+                peutCombo = action->getPeutFaireCombo();
+            } else if (champion != nullptr) {
+                peutCombo = champion->getPeutFaireCombo();
+            }
+            
+            if (peutCombo) {
+                std::cout << "  [3] Effets combo basiques + effets combo textuels (disponible!)" << std::endl;
+            }
+            
+            std::cout << "  [0] Aucun effet" << std::endl;
+            
+            int choix;
+            std::cout << "Votre choix: ";
+            std::cin >> choix;
+            
+            // Ajouter les effets choisis selon le choix
+            switch (choix) {
+                case 1: {
+                    // Effets basiques choix 1 + textuels choix 1
+                    const auto& effetsBasiques = carte->getEffetsBasiqueChoix1();
+                    for (const auto& effet : effetsBasiques) {
+                        effetsBasiqueChoisis.push_back(effet);
+                    }
+                    
+                    if (action != nullptr) {
+                        const auto& effetsTextuels = action->getListEffetTextuelChoix1();
+                        for (const auto& effet : effetsTextuels) {
+                            effetsTextuelsChoisis.push_back(effet);
+                        }
+                    } else if (champion != nullptr) {
+                        const auto& effetsTextuels = champion->getListEffetTextuelChoix1();
+                        for (const auto& effet : effetsTextuels) {
+                            effetsTextuelsChoisis.push_back(effet);
+                        }
+                    }
+                    std::cout << "Effets choix 1 ajoutés." << std::endl;
+                    break;
+                }
+                case 2: {
+                    if (hasChoix2) {
+                        // Effets basiques choix 2 + textuels choix 2
+                        if (action != nullptr) {
+                            const auto& effetsBasiques = action->getListEffetBasiqueChoix2();
+                            for (const auto& effet : effetsBasiques) {
+                                effetsBasiqueChoisis.push_back(effet);
+                            }
+                            const auto& effetsTextuels = action->getListEffetTextuelChoix2();
+                            for (const auto& effet : effetsTextuels) {
+                                effetsTextuelsChoisis.push_back(effet);
+                            }
+                        } else if (champion != nullptr) {
+                            const auto& effetsBasiques = champion->getListEffetBasiqueChoix2();
+                            for (const auto& effet : effetsBasiques) {
+                                effetsBasiqueChoisis.push_back(effet);
+                            }
+                            const auto& effetsTextuels = champion->getListEffetTextuelChoix2();
+                            for (const auto& effet : effetsTextuels) {
+                                effetsTextuelsChoisis.push_back(effet);
+                            }
+                        }
+                        std::cout << "Effets choix 2 ajoutés." << std::endl;
+                    } else {
+                        std::cout << "Choix invalide. Aucun effet ajouté." << std::endl;
+                    }
+                    break;
+                }
+                case 3: {
+                    if (peutCombo) {
+                        // Effets combo basiques + textuels
+                        const auto& effetsBasiques = action->getListEffetBasiqueCombo();
+                        for (const auto& effet : effetsBasiques) {
+                            effetsBasiqueChoisis.push_back(effet);
+                        }
+                        
+                        if (action != nullptr) {
+                            const auto& effetsTextuels = action->getListEffetTextuelCombo();
+                            for (const auto& effet : effetsTextuels) {
+                                effetsTextuelsChoisis.push_back(effet);
+                            }
+                        } else if (champion != nullptr) {
+                            const auto& effetsTextuels = champion->getListEffetTextuelCombo();
+                            for (const auto& effet : effetsTextuels) {
+                                effetsTextuelsChoisis.push_back(effet);
+                            }
+                        }
+                        std::cout << "Effets combo ajoutés!" << std::endl;
+                    } else {
+                        std::cout << "Combo non disponible. Aucun effet ajouté." << std::endl;
+                    }
+                    break;
+                }
+                case 0: {
+                    std::cout << "Aucun effet choisi pour cette carte." << std::endl;
+                    break;
+                }
+                default: {
+                    std::cout << "Choix invalide. Aucun effet ajouté." << std::endl;
+                    break;
+                }
+            }
+        }
+    }
+    
+    std::cout << "\n=== Fin du choix des effets ===" << std::endl;
+    std::cout << "Total d'effets basiques choisis: " << effetsBasiqueChoisis.size() << std::endl;
+    std::cout << "Total d'effets textuels choisis: " << effetsTextuelsChoisis.size() << std::endl;
+
+    return {effetsBasiqueChoisis, effetsTextuelsChoisis};
+}

@@ -11,6 +11,7 @@ void testEffetTextuel();
 void testDiscardOpponentCard();
 void testStunChampion();
 void testDrawAndDiscard();
-void testPeuxActiverCombo();  // Nouvelle fonction
+void testPeuxActiverCombo();
+void testChoixUtilisationEffetJ1();  // Nouvelle fonction
 
 #endif // TEST_H

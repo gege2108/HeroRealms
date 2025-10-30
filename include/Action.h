@@ -46,7 +46,10 @@ public:
     std::vector<Effet>& getListEffetBasiqueChoix2() { return ListEffetBasiqueChoix2; }
     std::vector<EffetTextuel>& getListEffetTextuelChoix1() { return ListEffetTextuelChoix1; }
     std::vector<EffetTextuel>& getListEffetTextuelChoix2() { return ListEffetTextuelChoix2; }
-
+    
+    // Getters pour les effets combo
+    const std::vector<Effet>& getListEffetBasiqueCombo() const { return ListEffetBasiqueCombo; }
+    const std::vector<EffetTextuel>& getListEffetTextuelCombo() const { return ListEffetTextuelCombo; }
 
     // Déclaration seulement (implémentation dans action.cpp)
     std::string toString() const override;

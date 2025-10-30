@@ -65,7 +65,7 @@ Marche Initializer::initializeMarche() {
     // Mélanger la stack
     marche.melangeStackActionEtChampion();
     
-    // Mettre 5 cartes en vente
+    // Mettre 5 cartes en vente (préciser le paramètre pour éviter l'ambiguïté)
     marche.MiseAJourActionsVendables(5);
     
     return marche;
@@ -90,7 +90,7 @@ std::vector<CarteDeBase*> Initializer::createCartesDeBase() {
 std::vector<Action*> Initializer::createActions() {
     std::vector<Action*> actions;
     
-    // Actions Faction Impériale (Jaune)
+    // Actions Faction Impériale (Jaune) - 6 actions
     actions.push_back(new Action(Faction::FactionJaune, "Taxation", 1,
         {Effet(2, OR)}, {},
         {}, {},
@@ -101,7 +101,27 @@ std::vector<Action*> Initializer::createActions() {
         {}, {},
         {Effet(2, SOIN)}, {}));
     
-    // Actions Faction Guilde (Bleu)
+    actions.push_back(new Action(Faction::FactionJaune, "Commandement", 2,
+        {Effet(3, DEGAT)}, {},
+        {}, {},
+        {Effet(1, OR)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionJaune, "Diplomatie", 4,
+        {Effet(2, OR), Effet(3, SOIN)}, {},
+        {EffetTextuel(1, "Piocher une carte")}, {},
+        {Effet(4, OR), Effet(5, SOIN)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionJaune, "Garde Royale", 5,
+        {Effet(4, DEGAT)}, {Effet(6, SOIN)},
+        {}, {},
+        {Effet(6, DEGAT), Effet(4, SOIN)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionJaune, "Trésor Impérial", 6,
+        {Effet(5, OR)}, {},
+        {}, {},
+        {Effet(8, OR)}, {}));
+    
+    // Actions Faction Guilde (Bleu) - 6 actions
     actions.push_back(new Action(Faction::FactionBleu, "Pot-de-Vin", 1,
         {Effet(2, OR)}, {},
         {}, {},
@@ -112,17 +132,87 @@ std::vector<Action*> Initializer::createActions() {
         {}, {},
         {Effet(3, OR)}, {}));
     
-    // Actions Faction Nécros (Rouge)
+    actions.push_back(new Action(Faction::FactionBleu, "Espionnage", 3,
+        {Effet(2, OR)}, {Effet(3, DEGAT)},
+        {EffetTextuel(2, "Défausser adversaire")}, {},
+        {Effet(4, OR), Effet(2, DEGAT)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionBleu, "Contrat d'Assassin", 4,
+        {Effet(6, DEGAT)}, {},
+        {EffetTextuel(3, "Étourdir champion")}, {},
+        {Effet(8, DEGAT)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionBleu, "Maître Voleur", 5,
+        {Effet(3, OR), Effet(2, DEGAT)}, {},
+        {EffetTextuel(4, "Piocher puis défausser")}, {},
+        {Effet(5, OR), Effet(4, DEGAT)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionBleu, "Chef de Guilde", 7,
+        {Effet(4, OR), Effet(4, DEGAT)}, {},
+        {}, {},
+        {Effet(6, OR), Effet(6, DEGAT)}, {}));
+    
+    // Actions Faction Nécros (Rouge) - 6 actions
     actions.push_back(new Action(Faction::FactionRouge, "Magie Noire", 2,
         {Effet(3, DEGAT)}, {Effet(2, OR)},
         {EffetTextuel(2, "Défausser adversaire")}, {},
         {Effet(5, DEGAT)}, {}));
     
-    // Actions Faction Sauvage (Vert)
+    actions.push_back(new Action(Faction::FactionRouge, "Drain de Vie", 3,
+        {Effet(2, DEGAT), Effet(2, SOIN)}, {},
+        {}, {},
+        {Effet(4, DEGAT), Effet(4, SOIN)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionRouge, "Malédiction", 4,
+        {Effet(4, DEGAT)}, {},
+        {EffetTextuel(2, "Défausser adversaire")}, {},
+        {Effet(6, DEGAT)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionRouge, "Invocation", 5,
+        {Effet(3, DEGAT)}, {Effet(1, OR)},
+        {EffetTextuel(1, "Piocher une carte")}, {},
+        {Effet(5, DEGAT), Effet(2, OR)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionRouge, "Rituel Sanglant", 6,
+        {Effet(6, DEGAT)}, {},
+        {}, {},
+        {Effet(8, DEGAT), Effet(3, SOIN)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionRouge, "Nécrose", 8,
+        {Effet(5, DEGAT), Effet(4, SOIN)}, {},
+        {EffetTextuel(3, "Étourdir champion")}, {},
+        {Effet(8, DEGAT), Effet(6, SOIN)}, {}));
+    
+    // Actions Faction Sauvage (Vert) - 6 actions
     actions.push_back(new Action(Faction::FactionVert, "Charge Sauvage", 2,
         {Effet(4, DEGAT)}, {},
         {}, {},
         {Effet(6, DEGAT)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionVert, "Rage Primitive", 3,
+        {Effet(5, DEGAT)}, {},
+        {}, {},
+        {Effet(7, DEGAT)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionVert, "Guérison Naturelle", 2,
+        {Effet(1, OR), Effet(4, SOIN)}, {},
+        {}, {},
+        {Effet(2, OR), Effet(6, SOIN)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionVert, "Instinct Animal", 4,
+        {Effet(3, DEGAT), Effet(2, SOIN)}, {},
+        {EffetTextuel(1, "Piocher une carte")}, {},
+        {Effet(5, DEGAT), Effet(3, SOIN)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionVert, "Meute de Loups", 5,
+        {Effet(6, DEGAT)}, {},
+        {}, {},
+        {Effet(9, DEGAT)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionVert, "Druide Ancien", 7,
+        {Effet(2, OR), Effet(3, DEGAT), Effet(4, SOIN)}, {},
+        {EffetTextuel(4, "Piocher puis défausser")}, {},
+        {Effet(4, OR), Effet(5, DEGAT), Effet(6, SOIN)}, {}));
     
     return actions;
 }
@@ -130,26 +220,81 @@ std::vector<Action*> Initializer::createActions() {
 std::vector<Champion*> Initializer::createChampions() {
     std::vector<Champion*> champions;
     
-    // Champions Faction Impériale
+    // Champions Faction Impériale (3 champions)
     champions.push_back(new Champion(Faction::FactionJaune, "Garde Impérial", 4,
         {Effet(3, DEGAT)}, {Effet(2, SOIN)},
         {}, {},
         {Effet(5, DEGAT), Effet(3, SOIN)}, {},
         5, true, true));
     
-    // Champions Faction Guilde
+    champions.push_back(new Champion(Faction::FactionJaune, "Paladin Royal", 6,
+        {Effet(2, DEGAT), Effet(3, SOIN)}, {},
+        {}, {},
+        {Effet(4, DEGAT), Effet(5, SOIN)}, {},
+        7, true, true));
+    
+    champions.push_back(new Champion(Faction::FactionJaune, "Général Impérial", 8,
+        {Effet(5, DEGAT), Effet(2, OR)}, {},
+        {EffetTextuel(1, "Piocher une carte")}, {},
+        {Effet(7, DEGAT), Effet(4, OR)}, {},
+        6, false, true));
+    
+    // Champions Faction Guilde (3 champions)
     champions.push_back(new Champion(Faction::FactionBleu, "Assassin de Guilde", 5,
         {Effet(4, DEGAT)}, {},
         {EffetTextuel(3, "Étourdir champion")}, {},
         {Effet(6, DEGAT)}, {},
         4, false, false));
     
-    // Champions Faction Nécros
+    champions.push_back(new Champion(Faction::FactionBleu, "Maître Espion", 7,
+        {Effet(3, DEGAT), Effet(2, OR)}, {},
+        {EffetTextuel(2, "Défausser adversaire")}, {},
+        {Effet(5, DEGAT), Effet(3, OR)}, {},
+        5, false, false));
+    
+    champions.push_back(new Champion(Faction::FactionBleu, "Seigneur des Voleurs", 9,
+        {Effet(4, DEGAT), Effet(3, OR)}, {},
+        {EffetTextuel(4, "Piocher puis défausser")}, {},
+        {Effet(6, DEGAT), Effet(5, OR)}, {},
+        6, false, true));
+    
+    // Champions Faction Nécros (3 champions)
     champions.push_back(new Champion(Faction::FactionRouge, "Nécromant", 6,
         {Effet(2, DEGAT)}, {Effet(3, SOIN)},
         {EffetTextuel(1, "Piocher une carte")}, {},
         {Effet(4, DEGAT), Effet(2, SOIN)}, {},
         6, false, true));
+    
+    champions.push_back(new Champion(Faction::FactionRouge, "Liche Ancienne", 8,
+        {Effet(4, DEGAT), Effet(2, SOIN)}, {},
+        {EffetTextuel(2, "Défausser adversaire")}, {},
+        {Effet(6, DEGAT), Effet(4, SOIN)}, {},
+        7, false, true));
+    
+    champions.push_back(new Champion(Faction::FactionRouge, "Seigneur Vampire", 10,
+        {Effet(5, DEGAT), Effet(3, SOIN)}, {},
+        {EffetTextuel(3, "Étourdir champion")}, {},
+        {Effet(8, DEGAT), Effet(5, SOIN)}, {},
+        8, false, true));
+    
+    // Champions Faction Sauvage (3 champions)
+    champions.push_back(new Champion(Faction::FactionVert, "Chef de Clan", 5,
+        {Effet(4, DEGAT), Effet(1, SOIN)}, {},
+        {}, {},
+        {Effet(6, DEGAT), Effet(2, SOIN)}, {},
+        5, false, false));
+    
+    champions.push_back(new Champion(Faction::FactionVert, "Druide Suprême", 7,
+        {Effet(2, DEGAT), Effet(4, SOIN)}, {},
+        {EffetTextuel(1, "Piocher une carte")}, {},
+        {Effet(4, DEGAT), Effet(6, SOIN)}, {},
+        6, false, true));
+    
+    champions.push_back(new Champion(Faction::FactionVert, "Alpha des Loups", 9,
+        {Effet(6, DEGAT)}, {},
+        {EffetTextuel(4, "Piocher puis défausser")}, {},
+        {Effet(9, DEGAT), Effet(3, SOIN)}, {},
+        7, true, false));
     
     return champions;
 }

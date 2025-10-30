@@ -166,8 +166,19 @@ void Plateau::run(Plateau& plateau) {
                 std::cin >> choixGemmeDeFeuJ1;
             }
         }
+        std::cout << std::string(60, '-') << std::endl;
 
-        
+        std::cout << "Phase d'achat d'action et de champion du Joueur 1" << std::endl;
+
+        // Afficher les actions disponibles à l'achat
+        for (size_t i = 0; i < plateau.getMarche().getActionsVendables().size(); ++i) {
+            Action* action = plateau.getMarche().getActionsVendables()[i];
+            std::cout << "  - " << action->getNom() << " (Prix: " << action->getPrix() << " or)" << std::endl;
+        }
+        plateau.achatActionChampion(plateau.getJoueur1());
+
+
+
         // Déplacement propre des cartes de la main vers la défausse (Joueur1)
         Defausse newDefausseJoueur1 = plateau.getJoueur1().getDefausse();
         MainJoueur updatedMainJ1 = plateau.getJoueur1().getMain(); // copie modifiable
@@ -323,6 +334,17 @@ void Plateau::run(Plateau& plateau) {
                 std::cin >> choixGemmeDeFeuJ2;
             }
         }
+
+        std::cout << std::string(60, '-') << std::endl;
+
+        std::cout << "Phase d'achat d'action et de champion du Joueur 2" << std::endl;
+
+        // Afficher les actions disponibles à l'achat
+        for (size_t i = 0; i < plateau.getMarche().getActionsVendables().size(); ++i) {
+            Action* action = plateau.getMarche().getActionsVendables()[i];
+            std::cout << "  - " << action->getNom() << " (Prix: " << action->getPrix() << " or)" << std::endl;
+        }
+        plateau.achatActionChampion(plateau.getJoueur2());
         
         
         
@@ -381,6 +403,8 @@ void Plateau::run(Plateau& plateau) {
         {
             std::cout << " - " << plateau.getJoueur2().getPioche().getCartes()[i]->toString() << std::endl;
         }
+
+        plateau.getMarche().MiseAJourActionsVendables(5);
         
 
 

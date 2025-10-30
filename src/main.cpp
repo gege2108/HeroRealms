@@ -13,10 +13,11 @@
 #include "Faction.h"
 #include "EffetTextuel.h"
 #include "test.h"
+#include "Initializer.h"
 
 int main() {
     // Exécuter tous les tests en une seule ligne
-    testAchatActionChampion();
+    /*testAchatActionChampion();
     
 
 
@@ -109,7 +110,7 @@ int main() {
     
     plateau.setMarche(marche);
     
-/*
+
     GemmeDeFeu gemmeTest("Gemme de Feu Test");
     std::cout << "Test de la gemme de feu : " << gemmeTest.toString() << std::endl;
     std::cout << "Prix de la gemme de feu : " << gemmeTest.getPrix() << std::endl;
@@ -122,7 +123,8 @@ int main() {
     std::cout << "Utilisation de l'effet d'or de la gemme de feu test : " << effetGemmeTest.toString() << std::endl;
 */
     // Lancer la boucle de jeu (utilise std::cin pour les choix)
-    //plateau.run(plateau);
+    Plateau plateau = Initializer::initializePlateau();
+    plateau.run(plateau);
 
     return 0;
 }

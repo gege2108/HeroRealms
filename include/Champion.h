@@ -28,6 +28,13 @@ public:
     bool getIsDefense() const { return isDefense; }
     void setIsDefense(bool b) { isDefense = b; }
 
+    // Ajouter les méthodes pour le combo et la faction
+    Faction getFaction() const { return faction; }
+    void setFaction(Faction f) { faction = f; }
+    
+    bool getPeutFaireCombo() const { return peutFaireCombo; }
+    void setPeutFaireCombo(bool b) { peutFaireCombo = b; }
+
     std::string toString() const override {
         std::string result = "Champion: " + nom;
 

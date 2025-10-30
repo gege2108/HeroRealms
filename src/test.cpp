@@ -17,7 +17,8 @@ void runAllTests() {
     testEffetTextuel();
     testDiscardOpponentCard();
     testStunChampion();
-    testDrawAndDiscard();  // Ajouter le nouveau test
+    testDrawAndDiscard();
+    testPeuxActiverCombo();  // Ajouter le nouveau test
     std::cout << "=== FIN DE TOUS LES TESTS ===" << std::endl;
 }
 
@@ -361,4 +362,68 @@ void testDrawAndDiscard() {
     }
     
     std::cout << "\n=== Fin du test de drawAndDiscard ===" << std::endl;
+}
+
+void testPeuxActiverCombo() {
+    std::cout << "\n=== Test de peuxActiverCombo ===" << std::endl;
+    
+    // Créer un joueur de test
+    Joueur joueurTest;
+    joueurTest.setPointDeVie(20);
+    
+    // Créer des actions de différentes factions
+    Action* actionJaune1 = new Action(Faction::FactionJaune, "Taxation", 1, {Effet(2, OR)}, {}, {}, {}, {Effet(6, SOIN)}, {});
+    Action* actionJaune2 = new Action(Faction::FactionJaune, "Recrutement", 3, {Effet(1, OR)}, {}, {}, {}, {Effet(2, SOIN)}, {});
+    Action* actionBleu1 = new Action(Faction::FactionBleu, "Pot-de-Vin", 1, {Effet(2, OR)}, {}, {}, {}, {Effet(4, DEGAT)}, {});
+    Action* actionRouge1 = new Action(Faction::FactionRouge, "Magie Noire", 2, {Effet(3, DEGAT)}, {}, {}, {}, {Effet(2, DEGAT)}, {});
+    
+    // Créer une main avec ces actions
+    MainJoueur mainTest;
+    mainTest.addCarte(actionJaune1);
+    mainTest.addCarte(actionJaune2);
+    mainTest.addCarte(actionBleu1);
+    mainTest.addCarte(actionRouge1);
+    joueurTest.setMain(mainTest);
+    
+    // Afficher l'état AVANT activation des combos
+    std::cout << "\n--- État AVANT peuxActiverCombo ---" << std::endl;
+    std::cout << "Cartes en main :" << std::endl;
+    for (size_t i = 0; i < joueurTest.getMain().getCartes().size(); ++i) {
+        Action* action = dynamic_cast<Action*>(joueurTest.getMain().getCartes()[i]);
+        if (action != nullptr) {
+            std::string factionName;
+            switch(action->getFaction()) {
+                case Faction::FactionJaune: factionName = "Impériale"; break;
+                case Faction::FactionBleu: factionName = "Guilde"; break;
+                case Faction::FactionRouge: factionName = "Nécros"; break;
+                case Faction::FactionVert: factionName = "Sauvage"; break;
+            }
+            std::cout << "  - " << action->getNom() << " (Faction: " << factionName 
+                      << ", Combo: " << (action->getPeutFaireCombo() ? "Activé" : "Désactivé") << ")" << std::endl;
+        }
+    }
+    
+    // Activer la fonction peuxActiverCombo
+    std::cout << "\n--- Activation de peuxActiverCombo ---" << std::endl;
+    joueurTest.peuxActiverCombo();
+    
+    // Afficher l'état APRÈS activation des combos
+    std::cout << "\n--- État APRÈS peuxActiverCombo ---" << std::endl;
+    std::cout << "Cartes en main :" << std::endl;
+    for (size_t i = 0; i < joueurTest.getMain().getCartes().size(); ++i) {
+        Action* action = dynamic_cast<Action*>(joueurTest.getMain().getCartes()[i]);
+        if (action != nullptr) {
+            std::string factionName;
+            switch(action->getFaction()) {
+                case Faction::FactionJaune: factionName = "Impériale"; break;
+                case Faction::FactionBleu: factionName = "Guilde"; break;
+                case Faction::FactionRouge: factionName = "Nécros"; break;
+                case Faction::FactionVert: factionName = "Sauvage"; break;
+            }
+            std::cout << "  - " << action->getNom() << " (Faction: " << factionName 
+                      << ", Combo: " << (action->getPeutFaireCombo() ? "Activé" : "Désactivé") << ")" << std::endl;
+        }
+    }
+    
+    std::cout << "\n=== Fin du test de peuxActiverCombo ===" << std::endl;
 }

@@ -5,6 +5,13 @@
 #include "Pioche.h"
 #include "StackChampion.h"
 #include "Defausse.h"
+#include <map>
+#include <iostream>
+
+// Forward declarations
+class Action;
+class Champion;
+enum class Faction;
 
 class Joueur {
 public:
@@ -39,6 +46,9 @@ public:
 
 	int getArgent() const;
 	void setArgent(int a);
+
+	// Fonction pour activer les combos selon les factions présentes
+	void peuxActiverCombo();
 
 private:
 	MainJoueur mainJoueur;

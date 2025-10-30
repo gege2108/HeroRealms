@@ -16,7 +16,7 @@
 
 int main() {
     // Exécuter tous les tests en une seule ligne
-    testDrawAndDiscard();
+    testPeuxActiverCombo();
     
 
 
@@ -102,6 +102,8 @@ int main() {
             {}
         ));
     }
+
+
 
 
     

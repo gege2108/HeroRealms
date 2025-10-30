@@ -34,11 +34,19 @@ public:
     int getPrix() const { return prix; }
     void setPrix(int p) { prix = p; }
 
+    // Getter pour la faction
+    Faction getFaction() const { return faction; }
     
+    // Setter pour peutFaireCombo
+    void setPeutFaireCombo(bool b) { peutFaireCombo = b; }
+    
+    // Getter pour peutFaireCombo
+    bool getPeutFaireCombo() const { return peutFaireCombo; }
 
     std::vector<Effet>& getListEffetBasiqueChoix2() { return ListEffetBasiqueChoix2; }
     std::vector<EffetTextuel>& getListEffetTextuelChoix1() { return ListEffetTextuelChoix1; }
     std::vector<EffetTextuel>& getListEffetTextuelChoix2() { return ListEffetTextuelChoix2; }
+
 
     // Déclaration seulement (implémentation dans action.cpp)
     std::string toString() const override;

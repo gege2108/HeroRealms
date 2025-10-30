@@ -10,6 +10,7 @@ void testMiseAJourActionsVendables();
 void testEffetTextuel();
 void testDiscardOpponentCard();
 void testStunChampion();
-void testDrawAndDiscard();  // Nouvelle fonction
+void testDrawAndDiscard();
+void testPeuxActiverCombo();  // Nouvelle fonction
 
 #endif // TEST_H

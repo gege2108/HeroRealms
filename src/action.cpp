@@ -1,6 +1,8 @@
 #include "Action.h"
 #include "EffetTextuel.h"
 #include "Joueur.h"
+#include "Champion.h"
+#include <map>
 
 // Implémentation de toString() déplacée ici pour éviter les problèmes d'inclusion
 std::string Action::toString() const {
@@ -53,3 +55,4 @@ std::string Action::toString() const {
     
     return result;
 }
+

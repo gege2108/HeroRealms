@@ -16,7 +16,7 @@
 
 int main() {
     // Exécuter tous les tests en une seule ligne
-    testChoixUtilisationEffetJ1();
+    testChoixUtilisationEffetJ2();
     
 
 

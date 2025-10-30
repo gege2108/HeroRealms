@@ -20,7 +20,8 @@ void runAllTests() {
     testStunChampion();
     testDrawAndDiscard();
     testPeuxActiverCombo();
-    testChoixUtilisationEffetJ1();  // Ajouter le nouveau test
+    testChoixUtilisationEffetJ1();
+    testChoixUtilisationEffetJ2();  // Ajouter le nouveau test
     std::cout << "=== FIN DE TOUS LES TESTS ===" << std::endl;
 }
 
@@ -548,3 +549,124 @@ void testChoixUtilisationEffetJ1() {
     
     std::cout << "\n=== Fin du test de choixUtilisationEffetJ1 ===" << std::endl;
 }
+
+void testChoixUtilisationEffetJ2() {
+    std::cout << "\n=== Test de choixUtilisationEffetJ2 ===" << std::endl;
+    
+    // Créer un plateau de test
+    Plateau plateauTest;
+    
+    // Créer un joueur 2 avec des actions/champions de différentes factions
+    Joueur joueur2Test;
+    joueur2Test.setPointDeVie(30);
+    
+    // Créer des actions avec différents types d'effets pour le Joueur 2
+    Action* actionRouge1 = new Action(Faction::FactionRouge, "Magie Noire", 2, 
+        {Effet(3, DEGAT)}, {Effet(2, OR)}, 
+        {EffetTextuel(2, "Défausser adversaire")}, {EffetTextuel(1, "Piocher une carte")},
+        {Effet(5, DEGAT), Effet(1, OR)}, {EffetTextuel(3, "Combo nécros")});
+    
+    Action* actionRouge2 = new Action(Faction::FactionRouge, "Rituel Sombre", 3,
+        {Effet(2, DEGAT)}, {Effet(3, SOIN)},
+        {}, {},
+        {Effet(4, DEGAT), Effet(2, SOIN)}, {});
+    
+    Action* actionVert1 = new Action(Faction::FactionVert, "Charge Sauvage", 2,
+        {Effet(4, DEGAT)}, {},
+        {}, {},
+        {Effet(6, DEGAT)}, {});
+    
+    Champion* champion2 = new Champion(Faction::FactionRouge, "Champion Nécromant", 5,
+        {Effet(2, DEGAT)}, {Effet(3, SOIN)},
+        {}, {},
+        {Effet(4, DEGAT), Effet(2, SOIN)}, {},
+        4, false, true);
+    
+    // Créer une main avec ces cartes
+    MainJoueur mainTest2;
+    mainTest2.addCarte(actionRouge1);
+    mainTest2.addCarte(actionRouge2);
+    mainTest2.addCarte(actionVert1);
+    mainTest2.addCarte(champion2);
+    
+    joueur2Test.setMain(mainTest2);
+    plateauTest.setJoueur2(joueur2Test);
+    
+    // Créer un joueur 1 pour les tests d'effets
+    Joueur joueur1Test;
+    joueur1Test.setPointDeVie(30);
+    plateauTest.setJoueur1(joueur1Test);
+    
+    // Afficher l'état AVANT le test
+    std::cout << "\n--- État AVANT choixUtilisationEffetJ2 ---" << std::endl;
+    std::cout << "Cartes en main du Joueur 2 :" << std::endl;
+    for (size_t i = 0; i < plateauTest.getJoueur2().getMain().getCartes().size(); ++i) {
+        Carte* carte = plateauTest.getJoueur2().getMain().getCartes()[i];
+        Action* action = dynamic_cast<Action*>(carte);
+        Champion* champion = dynamic_cast<Champion*>(carte);
+        
+        std::string factionName = "Inconnue";
+        if (action != nullptr) {
+            switch(action->getFaction()) {
+                case Faction::FactionJaune: factionName = "Impériale"; break;
+                case Faction::FactionBleu: factionName = "Guilde"; break;
+                case Faction::FactionRouge: factionName = "Nécros"; break;
+                case Faction::FactionVert: factionName = "Sauvage"; break;
+            }
+        } else if (champion != nullptr) {
+            switch(champion->getFaction()) {
+                case Faction::FactionJaune: factionName = "Impériale"; break;
+                case Faction::FactionBleu: factionName = "Guilde"; break;
+                case Faction::FactionRouge: factionName = "Nécros"; break;
+                case Faction::FactionVert: factionName = "Sauvage"; break;
+            }
+        }
+        
+        std::cout << "  - " << carte->getNom() << " (Faction: " << factionName << ")" << std::endl;
+    }
+    
+    std::cout << "\nJoueur 1 PV: " << plateauTest.getJoueur1().getPointDeVie() << std::endl;
+    std::cout << "Joueur 2 PV: " << plateauTest.getJoueur2().getPointDeVie() << std::endl;
+    
+    // Utiliser la fonction choixUtilisationEffetJ2
+    std::cout << "\n--- Utilisation de choixUtilisationEffetJ2 ---" << std::endl;
+    std::cout << "Note: Ce test est interactif. Voici les suggestions de choix :" << std::endl;
+    std::cout << "- Pour les cartes Nécros (combo disponible): choisir [3] pour tester le combo" << std::endl;
+    std::cout << "- Pour les autres cartes: choisir [1] pour les effets de base" << std::endl;
+    
+    auto resultats = plateauTest.choixUtilisationEffetJ2();
+    
+    // Afficher les résultats
+    std::cout << "\n--- Résultats du choix ---" << std::endl;
+    std::cout << "Effets basiques sélectionnés (" << resultats.first.size() << " effets) :" << std::endl;
+    for (const auto& effet : resultats.first) {
+        std::cout << "  - " << effet.toString() << std::endl;
+    }
+    
+    std::cout << "\nEffets textuels sélectionnés (" << resultats.second.size() << " effets) :" << std::endl;
+    for (const auto& effet : resultats.second) {
+        std::cout << "  - " << effet.toString() << std::endl;
+    }
+    
+    // Afficher l'état APRÈS (pour voir les combos activés)
+    std::cout << "\n--- État APRÈS activation des combos ---" << std::endl;
+    for (size_t i = 0; i < plateauTest.getJoueur2().getMain().getCartes().size(); ++i) {
+        Carte* carte = plateauTest.getJoueur2().getMain().getCartes()[i];
+        Action* action = dynamic_cast<Action*>(carte);
+        Champion* champion = dynamic_cast<Champion*>(carte);
+        
+        bool comboActif = false;
+        if (action != nullptr) {
+            comboActif = action->getPeutFaireCombo();
+        } else if (champion != nullptr) {
+            comboActif = champion->getPeutFaireCombo();
+        }
+        
+        std::cout << "  - " << carte->getNom() 
+                  << " (Combo: " << (comboActif ? "Activé" : "Désactivé") << ")" << std::endl;
+    }
+    
+    std::cout << "\n=== Fin du test de choixUtilisationEffetJ2 ===" << std::endl;
+}
+
+

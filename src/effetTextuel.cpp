@@ -45,13 +45,8 @@ void EffetTextuel::discardOpponentCard(Joueur& opponent) {
         return;
     }
     
-    // Utiliser un pointeur au lieu d'une valeur
     Carte* carte = mainOpponent.getCartes()[nombre];
-    
-    // Retirer la carte de la main de l'adversaire
     mainOpponent.removeCarte(carte);
-    
-    // Maintenant cela devrait fonctionner directement
     const Defausse& defausseOpponent = opponent.getDefausse();
     const_cast<Defausse&>(defausseOpponent).addCarte(carte);
     

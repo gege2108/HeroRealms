@@ -34,6 +34,8 @@ public:
     int getPrix() const { return prix; }
     void setPrix(int p) { prix = p; }
 
+    
+
     std::vector<Effet>& getListEffetBasiqueChoix2() { return ListEffetBasiqueChoix2; }
     std::vector<EffetTextuel>& getListEffetTextuelChoix1() { return ListEffetTextuelChoix1; }
     std::vector<EffetTextuel>& getListEffetTextuelChoix2() { return ListEffetTextuelChoix2; }

@@ -886,3 +886,30 @@ void Plateau::appliquerEffetsJ2(const std::vector<Effet>& effetsBasique, const s
     }
     std::cout << "--- Fin application des effets textuels du Joueur 2 ---" << std::endl;
 }
+
+
+void Plateau::achatActionChampion(Joueur& joueur) {
+
+    for (Action* action : marche.getActionsVendables()) {
+        if (action->getPrix() <= joueur.getArgent())
+        {
+            std::cout << "Action disponible : " << action->getNom() << " pour " << action->getPrix() << " pieces d'or." << std::endl;
+            int choix;
+            std::cout << "appuyez sur 1 pour acheter cette action, appuyez sur 0 pour passer." << std::endl;
+            std::cin >> choix;
+            if (choix == 1)
+            {
+                joueur.setArgent(joueur.getArgent() - action->getPrix());
+                marche.removeActionVendable(action);
+                Defausse defausseJ = joueur.getDefausse();
+                defausseJ.addCarte(action);
+                joueur.setDefausse(defausseJ);
+                std::cout << "Vous avez acheté " << action->getNom() << " et dépensé " << action->getPrix() << " pièces d'or." << std::endl;
+                std::cout << "Il vous reste " << joueur.getArgent() << " pièces d'or." << std::endl;
+            }
+        }
+        else{
+            std::cout << "Vous n'avez pas assez d'or pour l'action : " << action->getNom() << " qui coûte " << action->getPrix() << " pièces d'or." << std::endl;
+        }
+    }
+}

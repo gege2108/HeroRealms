@@ -10,6 +10,7 @@
 #include "Pioche.h"
 #include "CarteDeBase.h"
 #include "Plateau.h"
+#include "Initializer.h"
 
 
 
@@ -26,6 +27,8 @@ void runAllTests() {
     testChoixUtilisationEffetJ2();
     testAppliquerEffetsJ1();
     testAppliquerEffetsJ2();
+    testInitializer();
+    testAchatActionChampion();
     std::cout << "=== FIN DE TOUS LES TESTS ===" << std::endl;
 }
 
@@ -795,6 +798,120 @@ void testAppliquerEffetsJ2() {
               << plateauTest.getJoueur2().getArgent() << " Or" << std::endl;
     
     std::cout << "\n=== Fin du test de appliquerEffetsJ2 ===" << std::endl;
+}
+
+void testInitializer() {
+    std::cout << "\n=== Test de l'Initializer ===" << std::endl;
+    
+    // Tester l'initialisation complète du plateau
+    std::cout << "\n--- Initialisation du plateau ---" << std::endl;
+    Plateau plateau = Initializer::initializePlateau();
+    
+    // Vérifier l'état des joueurs
+    std::cout << "Joueur 1:" << std::endl;
+    std::cout << "  - PV: " << plateau.getJoueur1().getPointDeVie() << std::endl;
+    std::cout << "  - Argent: " << plateau.getJoueur1().getArgent() << std::endl;
+    std::cout << "  - Main: " << plateau.getJoueur1().getMain().getCartes().size() << " cartes" << std::endl;
+    std::cout << "  - Pioche: " << plateau.getJoueur1().getPioche().getCartes().size() << " cartes" << std::endl;
+    
+    std::cout << "\nJoueur 2:" << std::endl;
+    std::cout << "  - PV: " << plateau.getJoueur2().getPointDeVie() << std::endl;
+    std::cout << "  - Argent: " << plateau.getJoueur2().getArgent() << std::endl;
+    std::cout << "  - Main: " << plateau.getJoueur2().getMain().getCartes().size() << " cartes" << std::endl;
+    std::cout << "  - Pioche: " << plateau.getJoueur2().getPioche().getCartes().size() << " cartes" << std::endl;
+    
+    // Vérifier le marché
+    std::cout << "\nMarché:" << std::endl;
+    std::cout << "  - Actions vendables: " << plateau.getMarche().getActionsVendables().size() << std::endl;
+    std::cout << "  - Stack restante: " << plateau.getMarche().getStackActions().size() << std::endl;
+    std::cout << "  - Gemmes de feu: " << plateau.getMarche().getGemmes().size() << std::endl;
+    
+    // Afficher les cartes en vente
+    std::cout << "\nCartes en vente:" << std::endl;
+    for (size_t i = 0; i < plateau.getMarche().getActionsVendables().size(); ++i) {
+        std::cout << "  [" << i << "] " << plateau.getMarche().getActionsVendables()[i]->getNom() << std::endl;
+    }
+    
+    std::cout << "\n=== Fin du test de l'Initializer ===" << std::endl;
+}
+
+void testAchatActionChampion() {
+    std::cout << "\n=== Test de achatActionChampion ===" << std::endl;
+    
+    // Créer un plateau de test
+    Plateau plateauTest;
+    
+    // Créer un joueur avec de l'argent
+    Joueur joueurTest;
+    joueurTest.setPointDeVie(50);
+    joueurTest.setArgent(10); // Assez d'argent pour acheter des actions
+    
+    // Créer un marché avec des actions vendables
+    Marche marcheTest;
+    
+    // Créer des actions de différents prix
+    Action* actionPasChere = new Action(Faction::FactionJaune, "Action Bon Marché", 2,
+        {Effet(1, OR)}, {}, {}, {}, {Effet(2, SOIN)}, {});
+    
+    Action* actionMoyenne = new Action(Faction::FactionBleu, "Action Moyenne", 5,
+        {Effet(3, DEGAT)}, {}, {}, {}, {Effet(4, DEGAT)}, {});
+    
+    Action* actionChere = new Action(Faction::FactionRouge, "Action Chère", 12,
+        {Effet(5, DEGAT)}, {}, {}, {}, {Effet(8, DEGAT)}, {});
+    
+    Champion* championAbordable = new Champion(Faction::FactionVert, "Champion Accessible", 4,
+        {Effet(2, DEGAT)}, {}, {}, {}, {Effet(4, DEGAT)}, {}, 3, false, false);
+    
+    // Ajouter les actions/champions au marché comme vendables
+    marcheTest.addActionVendable(actionPasChere);
+    marcheTest.addActionVendable(actionMoyenne);
+    marcheTest.addActionVendable(actionChere);
+    marcheTest.addActionVendable(championAbordable);
+    
+    plateauTest.setMarche(marcheTest);
+    plateauTest.setJoueur1(joueurTest);
+    
+    // Afficher l'état AVANT l'achat
+    std::cout << "\n--- État AVANT achatActionChampion ---" << std::endl;
+    std::cout << "Argent du joueur: " << plateauTest.getJoueur1().getArgent() << " pièces d'or" << std::endl;
+    std::cout << "Défausse du joueur: " << plateauTest.getJoueur1().getDefausse().getCartes().size() << " cartes" << std::endl;
+    std::cout << "Actions vendables: " << plateauTest.getMarche().getActionsVendables().size() << std::endl;
+    
+    std::cout << "\nActions disponibles à l'achat:" << std::endl;
+    for (size_t i = 0; i < plateauTest.getMarche().getActionsVendables().size(); ++i) {
+        Action* action = plateauTest.getMarche().getActionsVendables()[i];
+        std::cout << "  [" << i << "] " << action->getNom() 
+                  << " - Prix: " << action->getPrix() << " or" << std::endl;
+    }
+    
+    // Utiliser la fonction achatActionChampion
+    std::cout << "\n--- Utilisation de achatActionChampion ---" << std::endl;
+    std::cout << "Note: Ce test est interactif. Suggestions:" << std::endl;
+    std::cout << "- Action Bon Marché (2 or): abordable, appuyez sur 1" << std::endl;
+    std::cout << "- Action Moyenne (5 or): abordable, appuyez sur 1" << std::endl;
+    std::cout << "- Champion Accessible (4 or): abordable, appuyez sur 1" << std::endl;
+    std::cout << "- Action Chère (12 or): trop chère, message d'erreur attendu" << std::endl;
+    
+    plateauTest.achatActionChampion(plateauTest.getJoueur1());
+    
+    // Afficher l'état APRÈS l'achat
+    std::cout << "\n--- État APRÈS achatActionChampion ---" << std::endl;
+    std::cout << "Argent du joueur: " << plateauTest.getJoueur1().getArgent() << " pièces d'or" << std::endl;
+    std::cout << "Défausse du joueur: " << plateauTest.getJoueur1().getDefausse().getCartes().size() << " cartes" << std::endl;
+    std::cout << "Actions vendables restantes: " << plateauTest.getMarche().getActionsVendables().size() << std::endl;
+    
+    std::cout << "\nCartes dans la défausse du joueur:" << std::endl;
+    for (size_t i = 0; i < plateauTest.getJoueur1().getDefausse().getCartes().size(); ++i) {
+        std::cout << "  - " << plateauTest.getJoueur1().getDefausse().getCartes()[i]->getNom() << std::endl;
+    }
+    
+    std::cout << "\nActions vendables restantes:" << std::endl;
+    for (size_t i = 0; i < plateauTest.getMarche().getActionsVendables().size(); ++i) {
+        Action* action = plateauTest.getMarche().getActionsVendables()[i];
+        std::cout << "  - " << action->getNom() << " (Prix: " << action->getPrix() << " or)" << std::endl;
+    }
+    
+    std::cout << "\n=== Fin du test de achatActionChampion ===" << std::endl;
 }
 
 

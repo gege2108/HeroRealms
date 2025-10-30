@@ -53,6 +53,7 @@ public:
 
 
 private:
+
 	MainJoueur mainJoueur;
 	Pioche pioche;
 	StackChampion stackChampion;

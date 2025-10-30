@@ -97,7 +97,6 @@ void Marche::melangeStackActionEtChampion() {
     // Initialiser le générateur aléatoire
     srand(time(nullptr));
     
-    // Algorithme de mélange simple (Fisher-Yates)
     for (int i = StackActionEtChampion.size() - 1; i > 0; i--) {
         // Choisir un index aléatoire entre 0 et i
         int j = rand() % (i + 1);

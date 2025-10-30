@@ -44,6 +44,9 @@ public:
     //choix utilisation effet pour une seule carte
     std::pair<std::vector<Effet>, std::vector<EffetTextuel>> choixUtilisationEffetJ2();
 
+    void appliquerEffetsJ1(const std::vector<Effet>& effetsBasique, const std::vector<EffetTextuel>& effetsTextuel);
+    void appliquerEffetsJ2(const std::vector<Effet>& effetsBasique, const std::vector<EffetTextuel>& effetsTextuel);
+
 
 
 private:

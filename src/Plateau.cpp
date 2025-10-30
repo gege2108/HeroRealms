@@ -534,10 +534,10 @@ std::pair<std::vector<Effet>, std::vector<EffetTextuel>> Plateau::choixUtilisati
             if (peutCombo) {
                 std::cout << "  [3] Effets combo (disponible!) :";
             }
-            for(const auto& effet : action->getListEffetBasiqueChoix2()) {
+            for(const auto& effet : action->getListEffetBasiqueCombo()) {
                 std::cout << " - " << effet.toString() << std::endl;
             }
-            for(const auto& effetTextuel : (action != nullptr ? action->getListEffetTextuelChoix2() : champion->getListEffetTextuelChoix2())) {
+            for(const auto& effetTextuel : (action != nullptr ? action->getListEffetTextuelCombo() : champion->getListEffetTextuelChoix2())) {
                 std::cout << "                                   - " << effetTextuel.toString() << std::endl;
             }
             
@@ -701,10 +701,10 @@ std::pair<std::vector<Effet>, std::vector<EffetTextuel>> Plateau::choixUtilisati
             if (peutCombo) {
                 std::cout << "  [3] Effets combo (disponible!) :";
             }
-            for(const auto& effet : action->getListEffetBasiqueChoix2()) {
+            for(const auto& effet : action->getListEffetBasiqueCombo()) {
                 std::cout << " - " << effet.toString() << std::endl;
             }
-            for(const auto& effetTextuel : (action != nullptr ? action->getListEffetTextuelChoix2() : champion->getListEffetTextuelChoix2())) {
+            for(const auto& effetTextuel : (action != nullptr ? action->getListEffetTextuelCombo() : champion->getListEffetTextuelChoix2())) {
                 std::cout << "                                   - " << effetTextuel.toString() << std::endl;
             }
             
@@ -807,4 +807,43 @@ std::pair<std::vector<Effet>, std::vector<EffetTextuel>> Plateau::choixUtilisati
     std::cout << "Total d'effets textuels choisis: " << effetsTextuelsChoisis.size() << std::endl;
 
     return {effetsBasiqueChoisis, effetsTextuelsChoisis};
+}
+
+void Plateau::appliquerEffetsJ1(const std::vector<Effet>& effetsBasique, const std::vector<EffetTextuel>& effetsTextuel){
+    std::cout << "\n--- Application des effets basiques du Joueur 1 ---" << std::endl;
+    for (const auto& effet : effetsBasique) {
+        switch (effet.getType()) {
+            case DEGAT: {
+                int before = joueur2.getPointDeVie();
+                joueur2.setPointDeVie(before - effet.getValeur());
+                std::cout << " => -" << effet.getValeur()
+                          << " PV à Joueur2 ( " << before << " -> " << joueur2.getPointDeVie() << " )" << std::endl;
+                break;
+            }
+            case SOIN: {
+                int before = joueur1.getPointDeVie();
+                joueur1.setPointDeVie(before + effet.getValeur());
+                std::cout << " => +" << effet.getValeur()
+                          << " PV à Joueur1 ( " << before << " -> " << joueur1.getPointDeVie() << " )" << std::endl;
+                break;
+            }
+            case OR: {
+                int before = joueur1.getArgent();
+                joueur1.setArgent(before + effet.getValeur());
+                std::cout << " => +" << effet.getValeur()
+                    << " Or à Joueur1 ( " << before << " -> " << joueur1.getArgent() << " )" << std::endl;
+                break;
+            }
+            default:
+                std::cout << " => effet non géré pour l'instant." << std::endl;
+                break;
+        }
+    }
+    std::cout << "--- Fin application des effets basiques du Joueur 1 ---" << std::endl;
+
+    std::cout << "\n--- Application des effets textuels du Joueur 1 ---" << std::endl;
+    for (const auto& effetTextuel : effetsTextuel) {
+        EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur1,joueur2);
+    }
+    std::cout << "--- Fin application des effets textuels du Joueur 1 ---" << std::endl;
 }

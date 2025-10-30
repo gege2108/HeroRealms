@@ -54,25 +54,25 @@ void EffetTextuel::discardOpponentCard(Joueur& opponent) {
 }
 
 
-void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueur) {
+void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueurJouantLeTour, Joueur& adversaire) {
     EffetTextuel effet;
     switch (id) {    
         case 1: {
-            effet.drawACard(joueur);
+            effet.drawACard(joueurJouantLeTour);
             break;
         }
         case 2: {
             //Dans ce contexte, joueur correspond à l'adversaire
-            effet.discardOpponentCard(joueur);
+            effet.discardOpponentCard(adversaire);
             break;
         }
         case 3: {
             //Dans ce contexte, joueur correspond à l'adversaire
-            effet.stunChampion(joueur);
+            effet.stunChampion(adversaire);
             break;
         }
         case 4: {
-            effet.drawAndDiscard(joueur);
+            effet.drawAndDiscard(joueurJouantLeTour);
             break;
         }
         default:

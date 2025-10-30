@@ -11,6 +11,8 @@
 #include "CarteDeBase.h"
 #include "Plateau.h"
 
+
+
 void runAllTests() {
     std::cout << "=== EXÉCUTION DE TOUS LES TESTS ===" << std::endl;
     testMelangeActions();
@@ -125,9 +127,12 @@ void testEffetTextuel() {
     std::cout << "  ID: " << effetPioche.getId() << std::endl;
     std::cout << "  Description: " << effetPioche.toString() << std::endl;
     
-    // Créer un joueur de test
+    // Créer un joueur de test et un adversaire
     Joueur joueurTest;
     joueurTest.setPointDeVie(20);
+    
+    Joueur adversaire;
+    adversaire.setPointDeVie(20);
     
     // Créer une pioche avec quelques cartes pour le test
     Pioche piocheTest;
@@ -158,7 +163,7 @@ void testEffetTextuel() {
     
     // Utiliser l'effet textuel via handleIdEffetTextuel
     std::cout << "\n--- Utilisation de l'effet textuel ---" << std::endl;
-    EffetTextuel::handleIdEffetTextuel(effetPioche.getId(), joueurTest);
+    EffetTextuel::handleIdEffetTextuel(effetPioche.getId(), joueurTest, adversaire);
     
     // Afficher l'état APRÈS l'utilisation de l'effet textuel
     std::cout << "\n--- État APRÈS l'utilisation de l'effet textuel ---" << std::endl;
@@ -194,6 +199,9 @@ void testDiscardOpponentCard() {
     std::cout << "  Description: " << effetDefausse.toString() << std::endl;
     
     // Créer deux joueurs : un adversaire avec des cartes en main
+    Joueur joueurActuel;
+    joueurActuel.setPointDeVie(20);
+    
     Joueur adversaire;
     adversaire.setPointDeVie(20);
     
@@ -214,7 +222,7 @@ void testDiscardOpponentCard() {
     
     // Utiliser l'effet textuel via handleIdEffetTextuel
     std::cout << "\n--- Utilisation de l'effet de défausse (choisir carte 1) ---" << std::endl;
-    EffetTextuel::handleIdEffetTextuel(effetDefausse.getId(), adversaire);
+    EffetTextuel::handleIdEffetTextuel(effetDefausse.getId(), joueurActuel, adversaire);
     
     // Afficher l'état APRÈS l'utilisation de l'effet textuel
     std::cout << "\n--- État APRÈS l'effet de défausse ---" << std::endl;
@@ -316,9 +324,12 @@ void testDrawAndDiscard() {
     std::cout << "  ID: " << effetDrawDiscard.getId() << std::endl;
     std::cout << "  Description: " << effetDrawDiscard.toString() << std::endl;
     
-    // Créer un joueur de test
+    // Créer un joueur de test et un adversaire
     Joueur joueurTest;
     joueurTest.setPointDeVie(20);
+    
+    Joueur adversaire;
+    adversaire.setPointDeVie(20);
     
     // Donner quelques cartes en main au joueur
     MainJoueur mainTest;
@@ -343,7 +354,7 @@ void testDrawAndDiscard() {
     
     // Utiliser l'effet textuel drawAndDiscard
     std::cout << "\n--- Utilisation de drawAndDiscard (piocher puis défausser carte 1) ---" << std::endl;
-    EffetTextuel::handleIdEffetTextuel(effetDrawDiscard.getId(), joueurTest);
+    EffetTextuel::handleIdEffetTextuel(effetDrawDiscard.getId(), joueurTest, adversaire);
     
     // Afficher l'état APRÈS l'utilisation de l'effet textuel
     std::cout << "\n--- État APRÈS drawAndDiscard ---" << std::endl;
@@ -373,7 +384,9 @@ void testPeuxActiverCombo() {
     // Créer un joueur de test
     Joueur joueurTest;
     joueurTest.setPointDeVie(20);
-    
+    Joueur joueurTest2;
+    joueurTest2.setPointDeVie(20);
+
     // Créer des actions de différentes factions
     Action* actionJaune1 = new Action(Faction::FactionJaune, "Taxation", 1, {Effet(2, OR)}, {}, {}, {}, {Effet(6, SOIN)}, {});
     Action* actionJaune2 = new Action(Faction::FactionJaune, "Recrutement", 3, {Effet(1, OR)}, {}, {}, {}, {Effet(2, SOIN)}, {});

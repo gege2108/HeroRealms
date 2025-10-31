@@ -15,8 +15,13 @@
 #include "test.h"
 #include "Initializer.h"
 
+
+//TODO : changer l'implementation de sorte à ce que les degats d'attaques soient stockés par le joueur avant d'être utilise
+//TODO : faire en sorte que le
+
 int main() {
     // Exécuter tous les tests en une seule ligne
+    //testAchatActionChampionNouveauFonctionnement();
     /*testAchatActionChampion();
     
 

@@ -66,7 +66,7 @@ Marche Initializer::initializeMarche() {
     marche.melangeStackActionEtChampion();
     
     // Mettre 5 cartes en vente (préciser le paramètre pour éviter l'ambiguïté)
-    marche.MiseAJourActionsVendables(5);
+    marche.InitialiserActionsVendables(5);
     
     return marche;
 }
@@ -76,7 +76,7 @@ std::vector<CarteDeBase*> Initializer::createCartesDeBase() {
     
     // 8 Cartes "Rubis" (1 or)
     for (int i = 0; i < 8; ++i) {
-        cartes.push_back(new CarteDeBase("Rubis", {Effet(1, OR)}));
+        cartes.push_back(new CarteDeBase("Rubis", {Effet(8, OR)}));
     }
     
     // 2 Cartes "Dague" (1 dégât)

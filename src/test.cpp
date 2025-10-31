@@ -29,6 +29,7 @@ void runAllTests() {
     testAppliquerEffetsJ2();
     testInitializer();
     testAchatActionChampion();
+    testAchatActionChampionNouveauFonctionnement();
     std::cout << "=== FIN DE TOUS LES TESTS ===" << std::endl;
 }
 
@@ -105,7 +106,7 @@ void testMiseAJourActionsVendables() {
     
     // Mettre à jour les actions vendables (prendre 3 actions de la stack)
     std::cout << "\n--- Mise à jour des actions vendables (3 actions) ---" << std::endl;
-    marcheTest.MiseAJourActionsVendables(3);
+    marcheTest.MiseAJourActionsVendables();
     
     // Afficher les actions vendables après mise à jour
     std::cout << "\nActions vendables APRÈS mise à jour :" << std::endl;
@@ -912,6 +913,109 @@ void testAchatActionChampion() {
     }
     
     std::cout << "\n=== Fin du test de achatActionChampion ===" << std::endl;
+}
+
+void testAchatActionChampionNouveauFonctionnement() {
+    std::cout << "\n=== Test de achatActionChampion (Nouveau Fonctionnement) ===" << std::endl;
+    
+    // Créer un plateau de test
+    Plateau plateauTest;
+    
+    // Créer un joueur avec beaucoup d'argent pour pouvoir acheter
+    Joueur joueurTest;
+    joueurTest.setPointDeVie(50);
+    joueurTest.setArgent(20); // Beaucoup d'argent pour les tests
+    
+    // Créer un marché avec une stack complète
+    Marche marcheTest;
+    
+    // Créer des actions pour la stack (qui seront piochées automatiquement)
+    Action* actionStack1 = new Action(Faction::FactionJaune, "Action Stack 1", 2,
+        {Effet(1, OR)}, {}, {}, {}, {Effet(2, SOIN)}, {});
+    
+    Action* actionStack2 = new Action(Faction::FactionBleu, "Action Stack 2", 4,
+        {Effet(2, DEGAT)}, {}, {}, {}, {Effet(3, DEGAT)}, {});
+    
+    Action* actionStack3 = new Action(Faction::FactionRouge, "Action Stack 3", 6,
+        {Effet(3, DEGAT)}, {}, {}, {}, {Effet(4, DEGAT)}, {});
+    
+    Champion* championStack = new Champion(Faction::FactionVert, "Champion Stack", 8,
+        {Effet(4, DEGAT)}, {}, {}, {}, {Effet(6, DEGAT)}, {}, 5, false, false);
+    
+    // Ajouter à la stack du marché
+    marcheTest.addStackAction(actionStack1);
+    marcheTest.addStackAction(actionStack2);
+    marcheTest.addStackAction(actionStack3);
+    marcheTest.addStackAction(championStack);
+    
+    // Créer des actions vendables initiales (qui seront remplacées lors d'achat)
+    Action* actionVendable1 = new Action(Faction::FactionJaune, "Action Vendable 1", 3,
+        {Effet(2, OR)}, {}, {}, {}, {Effet(3, SOIN)}, {});
+    
+    Action* actionVendable2 = new Action(Faction::FactionBleu, "Action Vendable 2", 5,
+        {Effet(3, DEGAT)}, {}, {}, {}, {Effet(4, DEGAT)}, {});
+    
+    marcheTest.addActionVendable(actionVendable1);
+    marcheTest.addActionVendable(actionVendable2);
+    
+    plateauTest.setMarche(marcheTest);
+    plateauTest.setJoueur1(joueurTest);
+    
+    // Afficher l'état AVANT l'achat
+    std::cout << "\n--- État AVANT achat ---" << std::endl;
+    std::cout << "Argent du joueur: " << plateauTest.getJoueur1().getArgent() << " pièces d'or" << std::endl;
+    std::cout << "Cartes en défausse: " << plateauTest.getJoueur1().getDefausse().getCartes().size() << std::endl;
+    std::cout << "Actions vendables: " << plateauTest.getMarche().getActionsVendables().size() << std::endl;
+    std::cout << "Stack du marché: " << plateauTest.getMarche().getStackActions().size() << " cartes" << std::endl;
+    
+    std::cout << "\nActions actuellement vendables:" << std::endl;
+    for (size_t i = 0; i < plateauTest.getMarche().getActionsVendables().size(); ++i) {
+        Action* action = plateauTest.getMarche().getActionsVendables()[i];
+        std::cout << "  [" << i << "] " << action->getNom() 
+                  << " - Prix: " << action->getPrix() << " or" << std::endl;
+    }
+    
+    std::cout << "\nStack du marché (ordre d'apparition lors d'achats):" << std::endl;
+    for (size_t i = 0; i < plateauTest.getMarche().getStackActions().size(); ++i) {
+        Action* action = plateauTest.getMarche().getStackActions()[i];
+        std::cout << "  [" << i << "] " << action->getNom() 
+                  << " - Prix: " << action->getPrix() << " or" << std::endl;
+    }
+    
+    // Test d'achat
+    std::cout << "\n--- Test d'achat ---" << std::endl;
+    std::cout << "Instructions pour le test:" << std::endl;
+    std::cout << "- Acheter 'Action Vendable 1' (3 or) - devrait être remplacée par 'Action Stack 1'" << std::endl;
+    std::cout << "- Acheter 'Action Vendable 2' (5 or) - devrait être remplacée par 'Action Stack 2'" << std::endl;
+    std::cout << "- Possibilité d'acheter les nouvelles cartes qui apparaissent" << std::endl;
+    
+    plateauTest.achatActionChampion(plateauTest.getJoueur1());
+    
+    // Afficher l'état APRÈS l'achat
+    std::cout << "\n--- État APRÈS achat ---" << std::endl;
+    std::cout << "Argent du joueur: " << plateauTest.getJoueur1().getArgent() << " pièces d'or" << std::endl;
+    std::cout << "Cartes en défausse: " << plateauTest.getJoueur1().getDefausse().getCartes().size() << std::endl;
+    std::cout << "Actions vendables: " << plateauTest.getMarche().getActionsVendables().size() << std::endl;
+    std::cout << "Stack du marché restante: " << plateauTest.getMarche().getStackActions().size() << " cartes" << std::endl;
+    
+    std::cout << "\nCartes achetées (en défausse):" << std::endl;
+    for (size_t i = 0; i < plateauTest.getJoueur1().getDefausse().getCartes().size(); ++i) {
+        std::cout << "  - " << plateauTest.getJoueur1().getDefausse().getCartes()[i]->getNom() << std::endl;
+    }
+    
+    std::cout << "\nActions vendables après achats:" << std::endl;
+    for (size_t i = 0; i < plateauTest.getMarche().getActionsVendables().size(); ++i) {
+        Action* action = plateauTest.getMarche().getActionsVendables()[i];
+        std::cout << "  - " << action->getNom() << " (Prix: " << action->getPrix() << " or)" << std::endl;
+    }
+    
+    std::cout << "\nStack restante:" << std::endl;
+    for (size_t i = 0; i < plateauTest.getMarche().getStackActions().size(); ++i) {
+        Action* action = plateauTest.getMarche().getStackActions()[i];
+        std::cout << "  - " << action->getNom() << " (Prix: " << action->getPrix() << " or)" << std::endl;
+    }
+    
+    std::cout << "\n=== Fin du test de achatActionChampion (Nouveau Fonctionnement) ===" << std::endl;
 }
 
 

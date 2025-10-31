@@ -18,5 +18,6 @@ void testAppliquerEffetsJ1();
 void testAppliquerEffetsJ2();
 void testInitializer();
 void testAchatActionChampion();
+void testAchatActionChampionNouveauFonctionnement();
 
 #endif // TEST_H

@@ -1,6 +1,7 @@
 #include "Marche.h"
 #include <algorithm>
 #include <random>
+#include <iostream>
 #include <chrono>
 
 Marche::Marche() = default;
@@ -68,14 +69,17 @@ void Marche::clear() {
 }
 
 void Marche::MiseAJourActionsVendables() {
-    actionEtChampionVendable.clear();
-    int nombreAAjouter = std::min(5, static_cast<int>(StackActionEtChampion.size()));
-    for (int i = 0; i < nombreAAjouter; ++i) {
-        actionEtChampionVendable.push_back(StackActionEtChampion[i]);
+    std::cout << "Ajout d'une nouvelle carte vendable." << std::endl;
+    if (StackActionEtChampion.empty()) {
+        std::cout << "Plus de nouvelle carte disponible." << std::endl;
+        return;
     }
+    std::cout << "Ajout de la carte : " << StackActionEtChampion[0]->getNom() << " qui coûte : " << StackActionEtChampion[0]->getPrix() << std::endl;
+    actionEtChampionVendable.push_back(StackActionEtChampion[0]);
+    StackActionEtChampion.erase(StackActionEtChampion.begin());
 }
 
-void Marche::MiseAJourActionsVendables(int nombreActions) {
+void Marche::InitialiserActionsVendables(int nombreActions) {
     // Vider les actions vendables actuelles
     actionEtChampionVendable.clear();
     

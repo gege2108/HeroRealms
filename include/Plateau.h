@@ -48,9 +48,7 @@ public:
     void appliquerEffetsJ1(const std::vector<Effet>& effetsBasique, const std::vector<EffetTextuel>& effetsTextuel);
     void appliquerEffetsJ2(const std::vector<Effet>& effetsBasique, const std::vector<EffetTextuel>& effetsTextuel);
 
-    void achatActionChampion(Joueur& acheteur);
-
-
+    void achatActionChampion(Joueur& joueur); 
 
 private:
     Joueur joueur1;

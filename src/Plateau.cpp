@@ -418,7 +418,7 @@ void Plateau::run(Plateau& plateau) {
             std::cout << " - " << plateau.getJoueur2().getPioche().getCartes()[i]->toString() << std::endl;
         }
 
-        plateau.getMarche().MiseAJourActionsVendables(5);
+        //plateau.getMarche().MiseAJourActionsVendables();
         
 
 
@@ -926,28 +926,82 @@ void Plateau::appliquerEffetsJ2(const std::vector<Effet>& effetsBasique, const s
 }
 
 
-void Plateau::achatActionChampion(Joueur& joueur) {
 
-    for (Action* action : marche.getActionsVendables()) {
-        if (action->getPrix() <= joueur.getArgent())
-        {
-            std::cout << "Action disponible : " << action->getNom() << " pour " << action->getPrix() << " pieces d'or." << std::endl;
-            int choix;
-            std::cout << "appuyez sur 1 pour acheter cette action, appuyez sur 0 pour passer." << std::endl;
-            std::cin >> choix;
-            if (choix == 1)
-            {
-                joueur.setArgent(joueur.getArgent() - action->getPrix());
-                marche.removeActionVendable(action);
-                Defausse defausseJ = joueur.getDefausse();
-                defausseJ.addCarte(action);
-                joueur.setDefausse(defausseJ);
-                std::cout << "Vous avez acheté " << action->getNom() << " et dépensé " << action->getPrix() << " pièces d'or." << std::endl;
-                std::cout << "Il vous reste " << joueur.getArgent() << " pièces d'or." << std::endl;
+void Plateau::achatActionChampion(Joueur& joueur) {
+        bool continuerAchat = true;
+        
+        while (continuerAchat && !marche.getActionsVendables().empty()) {
+            bool aAcheteQuelqueChose = false;
+            bool peutAcheter = false;
+            
+            // Créer une copie de la liste des actions vendables pour éviter les modifications pendant l'itération
+            auto actionsVendablesCopie = marche.getActionsVendables();
+            
+            for (Action* action : actionsVendablesCopie) {
+                if (action->getPrix() <= joueur.getArgent())
+                {
+                    peutAcheter = true;
+                    std::cout << "Action disponible : " << action->getNom() << " pour " << action->getPrix() << " pieces d'or." << std::endl;
+                    int choix;
+                    std::cout << "appuyez sur 1 pour acheter cette action, appuyez sur 0 pour passer." << std::endl;
+                    std::cin >> choix;
+                    if (choix == 1)
+                    {
+                        joueur.setArgent(joueur.getArgent() - action->getPrix());
+                        marche.removeActionVendable(action);
+                        Defausse defausseJ = joueur.getDefausse();
+                        defausseJ.addCarte(action);
+                        joueur.setDefausse(defausseJ);
+                        std::cout << "Vous avez acheté " << action->getNom() << " et dépensé " << action->getPrix() << " pièces d'or." << std::endl;
+                        std::cout << "Il vous reste " << joueur.getArgent() << " pièces d'or." << std::endl;
+                        
+                        // ajout dès qu'un joueur vient d'acheter une carte
+                        if (!marche.getStackActions().empty()) {
+                            Action* nouvelleCarte = marche.getStackActions().front();
+                            marche.addActionVendable(nouvelleCarte);
+                            // Créer une copie de la stack sans le premier élément
+                            auto stackCopie = marche.getStackActions();
+                            stackCopie.erase(stackCopie.begin());
+                            marche.setStackActions(stackCopie);
+                            std::cout << "Ajout d'une nouvelle carte vendable." << std::endl;
+                            std::cout << "Ajout de la carte : " << nouvelleCarte->getNom() << std::endl;
+                        } else {
+                            std::cout << "Plus de cartes disponibles dans la stack du marché." << std::endl;
+                        }
+                        
+                        aAcheteQuelqueChose = true;
+                        break; 
+                    }
+                }
+                else{
+                    std::cout << "Vous n'avez pas assez d'or pour l'action : " << action->getNom() << " qui coûte " << action->getPrix() << " pièces d'or." << std::endl;
+                }
             }
+
+            if (!peutAcheter)
+            {
+                std::cout << "Aucune action disponible à l'achat." << std::endl;
+                continuerAchat = false;
+            }
+            
+           
+            // Si le joueur n'a rien acheté dans ce tour, proposer d'arrêter
+            else if (!aAcheteQuelqueChose) {
+                std::cout << "Voulez-vous continuer vos achats ? (1 = oui, 0 = non)" << std::endl;
+                int choixContinuer;
+                std::cin >> choixContinuer;
+                continuerAchat = (choixContinuer == 1);
+            }
+            if (continuerAchat)
+            {
+                std::cout << std::endl;
+                std::cout << std::string(60, '-') << std::endl;
+                std::cout << std::endl;
+                std::cout << "Cartes vendables dans le marche :" << std::endl;
+                for (const auto& action : marche.getActionsVendables()) {
+                    std::cout << " - " << action->getNom() << " (coût : " << action->getPrix() << " pièces d'or)" << std::endl;
+                }
+            }
+
         }
-        else{
-            std::cout << "Vous n'avez pas assez d'or pour l'action : " << action->getNom() << " qui coûte " << action->getPrix() << " pièces d'or." << std::endl;
-        }
-    }
 }

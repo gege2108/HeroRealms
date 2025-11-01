@@ -18,6 +18,7 @@ Joueur Initializer::initializeJoueur() {
     Joueur joueur;
     joueur.setPointDeVie(50);
     joueur.setArgent(0);
+    joueur.setDegatsStockes(0);
     
     // Créer la main de départ (5 cartes)
     MainJoueur main;

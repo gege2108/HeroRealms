@@ -20,8 +20,8 @@ public:
 	       const Pioche& p = Pioche(),
 	       const StackChampion& s = StackChampion(),
 	       const Defausse& d = Defausse(),
-	       int pv = 30, int _argent = 0)
-	    : mainJoueur(m), pioche(p), stackChampion(s), defausse(d), argent(_argent), pointDeVie(pv) {}
+	       int pv = 30, int _argent = 0,int degatsStockes = 0)
+	    : mainJoueur(m), pioche(p), stackChampion(s), defausse(d), argent(_argent), pointDeVie(pv), degatsStockes(degatsStockes) {}
 
 	int getPointDeVie() const;
 	void setPointDeVie(int v);
@@ -47,6 +47,10 @@ public:
 	int getArgent() const;
 	void setArgent(int a);
 
+	int getDegatsStockes() const;
+	void setDegatsStockes(int d);
+	void addDegatsStockes(int d);
+
 	// Fonction pour activer les combos selon les factions présentes
 	void peuxActiverCombo();
 	
@@ -60,6 +64,7 @@ private:
 	Defausse defausse;
 	int argent = 0;      
 	int pointDeVie = 0;
+	int degatsStockes = 0;
 };
 
 #endif // JOUEUR_H

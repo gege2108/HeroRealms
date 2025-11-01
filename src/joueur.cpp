@@ -72,3 +72,6 @@ void Joueur::peuxActiverCombo() {
     }
 }
 
+int Joueur::getDegatsStockes() const { return degatsStockes; }
+void Joueur::setDegatsStockes(int d) { degatsStockes = d; }
+void Joueur::addDegatsStockes(int d) { degatsStockes += d; }

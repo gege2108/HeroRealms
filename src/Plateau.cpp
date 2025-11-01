@@ -117,8 +117,10 @@ void Plateau::run(Plateau& plateau) {
                 else if(choixGemmeP1 == 2){
                     Effet& effetAttaque = gemme->UtiliserAttaque();
                     std::cout << "Le joueur 1 utilise l'effet d'attaque de la gemme de feu numéro " << idx << " : " << effetAttaque.toString() << std::endl;
-                    plateau.getJoueur2().setPointDeVie(plateau.getJoueur2().getPointDeVie() - effetAttaque.getValeur());
-                    std::cout << "Le joueur 2 perd " << effetAttaque.getValeur() << " points de vie, il a maintenant " << plateau.getJoueur2().getPointDeVie() << " points de vie." << std::endl;
+                    plateau.getJoueur1().setDegatsStockes(plateau.getJoueur1().getDegatsStockes() + effetAttaque.getValeur());
+                 //   plateau.getJoueur2().setPointDeVie(plateau.getJoueur2().getPointDeVie() - effetAttaque.getValeur());
+                  //  std::cout << "Le joueur 2 perd " << effetAttaque.getValeur() << " points de vie, il a maintenant " << plateau.getJoueur2().getPointDeVie() << " points de vie." << std::endl;
+                    std::cout << "Le total des dégâts stockés du Joueur 1 est maintenant de " << plateau.getJoueur1().getDegatsStockes() << " dégâts." << std::endl;
                     
                     // Marquer pour suppression après la boucle
                     gemmesASupprimer.push_back(gemme);
@@ -222,7 +224,9 @@ void Plateau::run(Plateau& plateau) {
         plateau.getJoueur1().setMain(newMainJoueur1);
         plateau.getJoueur1().setPioche(newPiocheJoueur1);
         j1.setArgent(0);
+        j1.setDegatsStockes(0);
         std::cout << "Le solde du Joueur 1 retombe à 0" << std::endl;
+        std::cout << "Le total des dégâts stockés du Joueur 1 retombe à 0" << std::endl;
 
         // Tour du joueur 2
         std::cout << "C'est au Joueur2 de jouer" << std::endl;
@@ -289,8 +293,10 @@ void Plateau::run(Plateau& plateau) {
                 else if(choixGemme == 2){
                     Effet& effetAttaque = gemme->UtiliserAttaque();
                     std::cout << "Le joueur 2 utilise l'effet d'attaque de la gemme de feu numéro " << idx << " : " << effetAttaque.toString() << std::endl;
-                    plateau.getJoueur1().setPointDeVie(plateau.getJoueur1().getPointDeVie() - effetAttaque.getValeur());
-                    std::cout << "Le joueur 1 perd " << effetAttaque.getValeur() << " points de vie, il a maintenant " << plateau.getJoueur1().getPointDeVie() << " points de vie." << std::endl;
+                    plateau.getJoueur2().setDegatsStockes(plateau.getJoueur2().getDegatsStockes() + effetAttaque.getValeur());
+                    std::cout << "Le total des dégâts stockés du Joueur 2 est maintenant de " << plateau.getJoueur2().getDegatsStockes() << " dégâts." << std::endl;
+                    //plateau.getJoueur1().setPointDeVie(plateau.getJoueur1().getPointDeVie() - effetAttaque.getValeur());
+                    //std::cout << "Le joueur 1 perd " << effetAttaque.getValeur() << " points de vie, il a maintenant " << plateau.getJoueur1().getPointDeVie() << " points de vie." << std::endl;
 
 
                     gemmesASupprimer.push_back(gemme);
@@ -411,6 +417,8 @@ void Plateau::run(Plateau& plateau) {
         plateau.getJoueur2().setMain(newMainJoueur2);
         plateau.getJoueur2().setPioche(newPiocheJoueur2);
         j2.setArgent(0);
+        j2.setDegatsStockes(0);
+        std::cout << "Le total des dégâts stockés du Joueur 2 retombe à 0" << std::endl;
         std::cout << "Le solde du Joueur 2 retombe à 0" << std::endl;
 
         /*

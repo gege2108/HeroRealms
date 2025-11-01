@@ -82,9 +82,10 @@ void Plateau::run(Plateau& plateau) {
             plateau.utiliserEffetBasiqueJoueur1(plateau.getJoueur1().getMain().getCartesDeBase());
 
             int pv1_apres = plateau.getJoueur1().getPointDeVie();
-            int pv2_apres = plateau.getJoueur2().getPointDeVie();
+            //int pv2_apres = plateau.getJoueur2().getPointDeVie();
             int argent_apres = plateau.getJoueur1().getArgent();
-            std::cout << "-> Résultat : PV après  -> Joueur1: " << pv1_apres << " | Joueur2: " << pv2_apres << " | Argent du Joueur 1: " << argent_apres << std::endl;
+            int degats_stockes_apres = plateau.getJoueur1().getDegatsStockes();
+            std::cout << "-> Résultat : Joueur1 : PV après  -> " << pv1_apres << ", | Argent du Joueur 1: " << argent_apres << ", | Dégâts stockés : " << degats_stockes_apres << std::endl;
             std::cout << std::string(60, '-') << std::endl;
         }
         else{
@@ -252,10 +253,12 @@ void Plateau::run(Plateau& plateau) {
 
                 plateau.utiliserEffetBasiqueJoueur2(plateau.getJoueur2().getMain().getCartesDeBase());
 
-                int pv1_apres = plateau.getJoueur1().getPointDeVie();
+                //int pv1_apres = plateau.getJoueur1().getPointDeVie();
                 int pv2_apres = plateau.getJoueur2().getPointDeVie();
                 int argent_apres = plateau.getJoueur2().getArgent();
-                std::cout << "-> Résultat : PV après  -> Joueur1: " << pv1_apres << " | Joueur2: " << pv2_apres << " | Argent du Joueur 2: " << argent_apres << std::endl;
+                int degats_stockes_apres = plateau.getJoueur2().getDegatsStockes();
+                std::cout << "-> Résultat : Joueur2 : PV après  -> " << pv2_apres << ", | Argent du Joueur 2: " << argent_apres << ", | Dégâts stockés : " << degats_stockes_apres << std::endl;
+                //std::cout << "-> Résultat : PV après  -> Joueur1: " << pv1_apres << " | Joueur2: " << pv2_apres << " | Argent du Joueur 2: " << argent_apres << std::endl;
                 std::cout << std::string(60, '-') << std::endl;
             }
             else{
@@ -449,10 +452,11 @@ void Plateau::utiliserEffetBasiqueJoueur1(const std::vector<CarteDeBase*>& carte
         for (const auto& effet : carte->getEffetsBasiqueChoix1()) {
             switch (effet.getType()) {
                 case DEGAT: {
-                    int before = joueur2.getPointDeVie();
-                    joueur2.setPointDeVie(before - effet.getValeur());
+                    int before = joueur1.getDegatsStockes();
+                    joueur1.setDegatsStockes(before + effet.getValeur());
+                    //joueur2.setPointDeVie(before - effet.getValeur());
                     std::cout << " - " << carte->toString() << " => -" << effet.getValeur()
-                              << " PV à Joueur2 ( " << before << " -> " << joueur2.getPointDeVie() << " )" << std::endl;
+                              << " degat stockés par le Joueur1 ( " << before << " -> " << joueur1.getDegatsStockes() << " )" << std::endl;
                     break;
                 }
                 case SOIN: {
@@ -486,10 +490,10 @@ void Plateau::utiliserEffetBasiqueJoueur2(const std::vector<CarteDeBase*>& carte
         for (const auto& effet : carte->getEffetsBasiqueChoix1()) {
             switch (effet.getType()) {
                 case DEGAT: {
-                    int before = joueur1.getPointDeVie();
-                    joueur1.setPointDeVie(before - effet.getValeur());
+                    int before = joueur2.getDegatsStockes();
+                    joueur2.setDegatsStockes(before + effet.getValeur());
                     std::cout << " - " << carte->toString() << " => -" << effet.getValeur()
-                              << " PV à Joueur1 ( " << before << " -> " << joueur1.getPointDeVie() << " )" << std::endl;
+                              << " degat stockés par le Joueur2 ( " << before << " -> " << joueur2.getDegatsStockes() << " )" << std::endl;
                     break;
                 }
                 case SOIN: {

@@ -914,10 +914,11 @@ void Plateau::appliquerEffetsJ1(const std::vector<Effet>& effetsBasique, const s
     for (const auto& effet : effetsBasique) {
         switch (effet.getType()) {
             case DEGAT: {
-                int before = joueur2.getPointDeVie();
-                joueur2.setPointDeVie(before - effet.getValeur());
-                std::cout << " => -" << effet.getValeur()
-                          << " PV à Joueur2 ( " << before << " -> " << joueur2.getPointDeVie() << " )" << std::endl;
+                int before = joueur1.getDegatsStockes();
+                joueur1.addDegatsStockes(effet.getValeur());
+                //joueur2.setPointDeVie(before - effet.getValeur());
+                std::cout << " => +" << effet.getValeur()
+                          << " Degats stockes à Joueur1 ( " << before << " -> " << joueur1.getDegatsStockes() << " )" << std::endl;
                 break;
             }
             case SOIN: {
@@ -953,10 +954,11 @@ void Plateau::appliquerEffetsJ2(const std::vector<Effet>& effetsBasique, const s
     for (const auto& effet : effetsBasique) {
         switch (effet.getType()) {
             case DEGAT: {
-                int before = joueur1.getPointDeVie();
-                joueur1.setPointDeVie(before - effet.getValeur());
-                std::cout << " => -" << effet.getValeur()
-                          << " PV à Joueur1 ( " << before << " -> " << joueur1.getPointDeVie() << " )" << std::endl;
+                int before = joueur2.getDegatsStockes();
+                joueur2.addDegatsStockes(effet.getValeur());
+                //joueur1.setPointDeVie(before - effet.getValeur());
+                std::cout << " => +" << effet.getValeur()
+                          << " Degats stockes à Joueur1 ( " << before << " -> " << joueur1.getDegatsStockes() << " )" << std::endl;
                 break;
             }
             case SOIN: {

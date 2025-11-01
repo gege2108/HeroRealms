@@ -1,0 +1,43 @@
+[33m612c419[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m marche fix pour rester dans les règles du jeu
+[33m4d2f344[m ajout de fonctionnalite d'utilisation des effets des actions et des champions in game
+[33m1113589[m vente d'action et de champion dans le marche fonctionnelle
+[33m4a304e2[m ajout de fonctionnalite d'achat dans le marche et d'un initializer  du plateau
+[33me3db63a[m applications des effets basiques et textuels d'action et de champion automatisee fonctionnelle
+[33m7e35e5b[m fix des methodes choixUtilisation de plateau.cpp
+[33m9b50320[m la même fonction et ajout d'affichage en plus
+[33m1fe6c59[m choix des effets des cartes par le joueur (depuis la classe plateau) implementer
+[33m699b6fb[m implementation d'activation de combo dans la main du joueur
+[33meeb2166[m suite du commit precedent
+[33mc18609f[m effet de pioche en echange de defausse d'une carte
+[33mef7477b[m reimplementation d'action.cpp
+[33m830fabc[m stun des champions fonctionnel
+[33m7c92a84[m suite de l'implementation
+[33m08eb5f7[m implementation de la fonctionnalite permettant de faire deffausser l'adversaire avec les effets textuels
+[33mace9d14[m refactorisation des tests present dans le main vers  le fichier test.cpp
+[33m051d045[m implementation de la fonctionnalite de pioche avec les effets textuels
+[33m4b9eac8[m ajout de fonctionnalite marche
+[33md81d6a7[m ajout de fonctionnalite dans le marche
+[33m32ca24f[m debut du developpement des actions card (notemment taxation)
+[33m9628980[m version finale des gemmes de feu fonctionnelle
+[33m8308d37[m gemme de feu pour le joueur 1 fonctionnelle
+[33mf103009[m gemmes de feu fonctionnelles
+[33m167d5fb[m ajout des getters et setter pour isJetable (meme si le setter sert a rien)
+[33m1c3331a[m ajout de la logique des gemmes de feu
+[33me26da16[m fix du gitignore pour que le fichier herorealms soit ignorer
+[33m615366b[m Add Plateau.cpp implementation
+[33med942c9[m Ignore herorealms executable
+[33m791f85c[m Stop tracking src/Plateau.cpp
+[33m09723e4[m fix de quelques bugs
+[33m7f64de8[m toute première version du jeu fonctionnelle(avec uniquement les cartes de bases, sans marche, sans battage des cartes de la pioche à l'initialisation)
+[33m1f98f6e[m fin du developpement du jeu avec uniquement les cartes de base Faire les tests
+[33md784223[m je vais essayer de faire en sorte que les fonctions de plateau ne soient plus constantes
+[33m3b9adfe[m premiers tests  des fonctionalites de baseeeee fonctionnels
+[33md5444bd[m modification de effet.h et .cpp
+[33ma4c5a76[m ajout des fonctionnalites du joueur
+[33m08aa999[m debut d'implementation de la logiques de jeu (marche, defausse, etc...)
+[33mcdc749a[m ajout des toString pour les competences
+[33mc215f18[m Ajout/maj des fichiers
+[33m2c955bc[m ajout des fichiers headers tires du nouvel uml
+[33m9fae242[m ajout de l'image du diagramme de classes UML
+[33m9ce413a[m Update README.md
+[33m4f5626f[m Initial commit

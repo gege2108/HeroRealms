@@ -128,6 +128,11 @@ int main() {
     std::cout << "Utilisation de l'effet d'or de la gemme de feu test : " << effetGemmeTest.toString() << std::endl;
 */
     // Lancer la boucle de jeu (utilise std::cin pour les choix)
+
+    //testMainJoueurChampions();
+
+
+    
     Plateau plateau = Initializer::initializePlateau();
     plateau.run(plateau);
 

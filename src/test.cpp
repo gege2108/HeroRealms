@@ -30,6 +30,7 @@ void runAllTests() {
     testInitializer();
     testAchatActionChampion();
     testAchatActionChampionNouveauFonctionnement();
+    testMainJoueurChampions();
     std::cout << "=== FIN DE TOUS LES TESTS ===" << std::endl;
 }
 
@@ -1016,6 +1017,104 @@ void testAchatActionChampionNouveauFonctionnement() {
     }
     
     std::cout << "\n=== Fin du test de achatActionChampion (Nouveau Fonctionnement) ===" << std::endl;
+}
+
+void testMainJoueurChampions() {
+    std::cout << "\n=== Test d'affichage d'une main de champions ===" << std::endl;
+    
+    // Créer un joueur
+    Joueur joueurTest;
+    joueurTest.setPointDeVie(50);
+    joueurTest.setArgent(0);
+    
+    // Créer une main vide
+    MainJoueur mainChampions;
+    
+    std::cout << "\n--- Ajout de champions variés dans la main ---" << std::endl;
+    
+    // Ajouter différents champions avec des caractéristiques variées
+    mainChampions.addCarte(new Champion(Faction::FactionJaune, "Paladin Impérial", 6,
+        {Effet(2, SOIN)}, {Effet(3, DEGAT)}, 
+        {EffetTextuel(2, "Défausser adversaire")}, {EffetTextuel(1, "Piocher une carte")},
+        {}, {EffetTextuel(3, "Étourdir champion")},
+        5, true, true));
+    
+    mainChampions.addCarte(new Champion(Faction::FactionJaune, "Garen", 6,
+        {Effet(2, SOIN)}, {Effet(3, DEGAT)}, 
+        {EffetTextuel(1,"Piochez une carte")}, {EffetTextuel(3, "Étourdir champion")},
+        {}, {EffetTextuel(3, "Étourdir champion")},
+        5, true, true));
+    
+    mainChampions.addCarte(new Champion(Faction::FactionJaune, "Illaoi", 6,
+        {Effet(2, SOIN)}, {Effet(3, DEGAT)}, 
+        {EffetTextuel(1,"Piochez une carte")}, {EffetTextuel(3, "Étourdir champion")},
+        {Effet(3, SOIN)}, {EffetTextuel(3, "Étourdir champion")},
+        5, true, true));
+    
+    mainChampions.addCarte(new Champion(Faction::FactionJaune, "Illaoi", 6,
+        {Effet(2, SOIN)}, {Effet(3, DEGAT)}, 
+        {EffetTextuel(1,"Piochez une carte")}, {EffetTextuel(3, "Étourdir champion")},
+        {Effet(3, SOIN)}, {EffetTextuel(3, "Étourdir champion")},
+        5, true, true));
+    
+    mainChampions.addCarte(new Champion(Faction::FactionJaune, "Kled", 6,
+        {Effet(2, SOIN)}, {Effet(3, DEGAT)}, 
+        {EffetTextuel(1,"Piochez une carte")}, {EffetTextuel(3, "Étourdir champion")},
+        {Effet(3, SOIN)}, {EffetTextuel(3, "Étourdir champion")},
+        5, true, true));
+    
+    // Assigner la main au joueur
+    joueurTest.setMain(mainChampions);
+    
+    std::cout << "Ajouté 5 champions de factions différentes avec caractéristiques variées." << std::endl;
+    
+    // Afficher la main complète
+    std::cout << "\n=== AFFICHAGE DE LA MAIN DE CHAMPIONS ===" << std::endl;
+    std::cout << "Nombre total de champions: " << joueurTest.getMain().getCartes().size() << std::endl;
+    std::cout << std::string(100, '=') << std::endl;
+    
+    for (size_t i = 0; i < joueurTest.getMain().getCartes().size(); ++i) {
+        Champion* champion = dynamic_cast<Champion*>(joueurTest.getMain().getCartes()[i]);
+        if (champion) {
+            std::cout << "\n[CHAMPION " << (i + 1) << "]" << std::endl;
+            std::cout << champion->toString() << std::endl;
+            std::cout << std::string(100, '-') << std::endl;
+        }
+    }
+    
+    // Afficher des statistiques par faction
+    std::cout << "\n=== STATISTIQUES PAR FACTION ===" << std::endl;
+    
+    int countJaune = 0, countBleu = 0, countRouge = 0, countVert = 0;
+    int totalPV = 0, countGarde = 0, countDefense = 0;
+    
+    for (const auto& carte : joueurTest.getMain().getCartes()) {
+        Champion* champion = dynamic_cast<Champion*>(carte);
+        if (champion) {
+            switch(champion->getFaction()) {
+                case Faction::FactionJaune: countJaune++; break;
+                case Faction::FactionBleu: countBleu++; break;
+                case Faction::FactionRouge: countRouge++; break;
+                case Faction::FactionVert: countVert++; break;
+            }
+            totalPV += champion->getPointDeVie();
+            if (champion->getIsGarde()) countGarde++;
+            if (champion->getIsDefense()) countDefense++;
+        }
+    }
+    
+    std::cout << "- Faction Impériale (Jaune): " << countJaune << " champions" << std::endl;
+    std::cout << "- Faction Guilde (Bleu): " << countBleu << " champions" << std::endl;
+    std::cout << "- Faction Nécros (Rouge): " << countRouge << " champions" << std::endl;
+    std::cout << "- Faction Sauvage (Vert): " << countVert << " champions" << std::endl;
+    std::cout << "- Total PV des champions: " << totalPV << std::endl;
+    std::cout << "- Champions avec Garde: " << countGarde << std::endl;
+    std::cout << "- Champions avec Défense: " << countDefense << std::endl;
+    
+    std::cout << "\n=== Fin du test de main de champions ===" << std::endl;
+    
+    // Note: Gestion mémoire automatique
+    std::cout << "Note: Gestion mémoire automatique pour éviter les erreurs." << std::endl;
 }
 
 

@@ -235,7 +235,8 @@ void Plateau::run(Plateau& plateau) {
             idx = 1;
             std::cout << "La main du joueur 2 est composée des cartes :" << std::endl;
             for (auto* carte : plateau.getJoueur2().getMain().getCartes()) {
-                std::cout << "  [" << idx++ << "] " << carte->toString() << std::endl;
+                //tant que je ne fais pas carte->toString() ça ne plante pas
+                std::cout << "  [" << idx++ << "] " << carte->getNom() << std::endl;
             }
             std::cout << "Joueur 2 appuyez sur 1 si vous voulez utiliser les effets de vos cartes de base." << std::endl;
             choix = 0;
@@ -376,11 +377,11 @@ void Plateau::run(Plateau& plateau) {
         plateau.getJoueur2().setDefausse(newDefausseJoueur2);
         plateau.getJoueur2().setMain(updatedMainJ2);
 
-        std::cout << "Affichage de la defausse du joueur 2" << std::endl;
+        /*std::cout << "Affichage de la defausse du joueur 2" << std::endl;
         for (size_t i = 0; i < plateau.getJoueur2().getDefausse().getCartes().size(); i++)
         {
             std::cout << " - " << plateau.getJoueur2().getDefausse().getCartes()[i]->toString() << std::endl;
-        }
+        }*/
         
 
         // Tirage pour Joueur2 (même logique que pour Joueur1)
@@ -412,12 +413,13 @@ void Plateau::run(Plateau& plateau) {
         j2.setArgent(0);
         std::cout << "Le solde du Joueur 2 retombe à 0" << std::endl;
 
+        /*
         std::cout << "Affichage de la pioche du joueur 2" << std::endl;
         for (size_t i = 0; i < plateau.getJoueur2().getPioche().getCartes().size(); i++)
         {
             std::cout << " - " << plateau.getJoueur2().getPioche().getCartes()[i]->toString() << std::endl;
         }
-
+*/
         //plateau.getMarche().MiseAJourActionsVendables();
         
 

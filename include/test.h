@@ -19,5 +19,7 @@ void testAppliquerEffetsJ2();
 void testInitializer();
 void testAchatActionChampion();
 void testAchatActionChampionNouveauFonctionnement();
+void testAffichagePioche();
+void testMainJoueurChampions(); // Nouvelle fonction de test
 
 #endif // TEST_H

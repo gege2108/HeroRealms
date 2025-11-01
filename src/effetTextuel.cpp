@@ -75,14 +75,18 @@ void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueurJouantLeTour, Joue
             effet.drawAndDiscard(joueurJouantLeTour);
             break;
         }
+        case 5: {
+            effet.defenseModActivated(joueurJouantLeTour);
+            break;
+        }
         default:
-            std::cout << "Effet textuel inconnu avec l'ID: " << id << std::endl;
+            std::cout << "Effet textuel avec ID " << id << " non implémenté." << std::endl;
             break;
     }
 }
 
 //id : 3 - Étourdir un champion adversaire
-void EffetTextuel::stunChampion(Joueur& opponent) const {
+void EffetTextuel::stunChampion(Joueur& opponent) {
     if (opponent.getStackChampion().getChampions().empty()) {
         std::cout << "L'adversaire n'a pas de champions à étourdir." << std::endl;
         return;
@@ -146,4 +150,58 @@ void EffetTextuel::drawAndDiscard(Joueur& joueur) {
     const_cast<Defausse&>(joueur.getDefausse()).addCarte(carte);
     
     std::cout << "Vous défaussez : " << carte->getNom() << std::endl;
+}
+
+//id : 5 - Activer le mode défense pour tous les champions en main
+void EffetTextuel::defenseModActivated(Joueur& joueur) {
+    std::cout << "\n=== Activation du mode défense ===" << std::endl;
+    
+    // Récupérer tous les champions de la main du joueur
+    MainJoueur& main = joueur.getMain();
+    std::vector<Carte*> cartesMain = main.getCartes(); 
+    std::vector<Champion*> championsEnMain;
+    
+    // Identifier tous les champions dans la main
+    for (size_t i = 0; i < cartesMain.size(); ++i) {
+        Champion* champion = dynamic_cast<Champion*>(cartesMain[i]);
+        if (champion != nullptr) {
+            championsEnMain.push_back(champion);
+        }
+    }
+    
+    if (championsEnMain.empty()) {
+        std::cout << "Aucun champion dans votre main à mettre en défense." << std::endl;
+        return;
+    }
+    
+    std::cout << "Champions disponibles dans votre main :" << std::endl;
+    for (size_t i = 0; i < championsEnMain.size(); ++i) {
+        std::cout << i + 1 << ". " << championsEnMain[i]->getNom() 
+                  << " (PV: " << championsEnMain[i]->getPointDeVie() 
+                  << ", Garde: " << (championsEnMain[i]->getIsGarde() ? "Oui" : "Non") << ")" << std::endl;
+    }
+    
+    // Activer le mode défense pour tous les champions de la main
+    std::cout << "\nActivation du mode défense pour tous les champions..." << std::endl;
+    
+    for (Champion* champion : championsEnMain) {
+        // Activer le mode défense
+        champion->setIsDefense(true);
+        
+        // Ajouter le champion au StackChampion du joueur
+        joueur.getStackChampion().push(champion);
+        
+        std::cout << "- " << champion->getNom() << " passe en mode défense";
+        if (champion->getIsGarde()) {
+            std::cout << " (GARDE activé)";
+        }
+        std::cout << std::endl;
+        
+        // Retirer le champion de la main
+        joueur.getMain().removeCarte(champion);
+    }
+    
+    std::cout << "\nTous les champions ont été transférés en mode défense." << std::endl;
+    std::cout << "Champions en jeu: " << joueur.getStackChampion().getChampions().size() << std::endl;
+    std::cout << "Gardes actifs: " << joueur.getStackChampion().getGardes().size() << std::endl;
 }

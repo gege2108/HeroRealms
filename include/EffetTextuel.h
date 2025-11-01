@@ -21,12 +21,13 @@ public:
     }
 
     // Méthodes utilisant Joueur
-    //TODO: fix cette methode car elle provoque une erreur à la compilation (invalid pointer)
     void drawACard(Joueur& joueur); // id : 1
-    void discardOpponentCard(Joueur& opponent);  // id : 2
-    void stunChampion(Joueur& opponent) const;  // id : 3
+    void discardOpponentCard(Joueur& adversaire); // id : 2
+    void stunChampion(Joueur& adversaire); // id : 3
     void drawAndDiscard(Joueur& joueur); // id : 4
-    static void handleIdEffetTextuel(int id, Joueur& joueurJouantLeTour, Joueur& adversaire);
+    void defenseModActivated(Joueur& joueur); // id : 5
+
+    static void handleIdEffetTextuel(int id, Joueur& joueur, Joueur& adversaire);
 
 private:
     int id;

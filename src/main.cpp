@@ -136,7 +136,7 @@ int main() {
     //Plateau plateau = Initializer::initializePlateau();
     //plateau.run(plateau);
 
-    testUtiliserDegatsStockes();
+    testDefenseModActivated();
 
     return 0;
 }

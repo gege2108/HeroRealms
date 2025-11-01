@@ -23,5 +23,6 @@ void testAffichagePioche();
 void testMainJoueurChampions();
 void testChoixUtilisationEffetJ1NouvelleFonction();
 void testUtiliserDegatsStockes();
+void testDefenseModActivated();
 
 #endif // TEST_H

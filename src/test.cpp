@@ -32,6 +32,7 @@ void runAllTests() {
     testAchatActionChampionNouveauFonctionnement();
     testMainJoueurChampions();
     testUtiliserDegatsStockes();
+    testDefenseModActivated();
     std::cout << "=== FIN DE TOUS LES TESTS ===" << std::endl;
 }
 
@@ -294,10 +295,9 @@ void testStunChampion() {
     }
     std::cout << "Défausse de l'adversaire : " << adversaire.getDefausse().getCartes().size() << " cartes" << std::endl;
     
-    // Utiliser l'effet textuel stunChampion
+    // Utiliser l'effet textuel stunChampion (sans const)
     std::cout << "\n--- Utilisation de l'effet d'étourdissement (choisir champion 0) ---" << std::endl;
-    EffetTextuel effet;
-    effet.stunChampion(adversaire);
+    effetStun.stunChampion(adversaire);
     
     // Afficher l'état APRÈS l'utilisation de l'effet textuel
     std::cout << "\n--- État APRÈS l'effet d'étourdissement ---" << std::endl;
@@ -1473,6 +1473,154 @@ void testUtiliserDegatsStockes() {
     
     std::cout << "\n=== Fin du test de utiliserDegatsStockes ===" << std::endl;
     std::cout << "Note: Gestion mémoire automatique pour éviter les erreurs." << std::endl;
+}
+
+void testDefenseModActivated() {
+    std::cout << "\n=== Test de defenseModActivated ===" << std::endl;
+    
+    // Créer un joueur de test
+    Joueur joueurTest;
+    joueurTest.setPointDeVie(50);
+    
+    // Créer une main avec plusieurs champions
+    MainJoueur mainTest;
+    
+    // Ajouter des champions variés à la main
+    Champion* champion1 = new Champion(Faction::FactionJaune, "Paladin Impérial", 6,
+        {Effet(2, SOIN)}, {Effet(3, DEGAT)}, 
+        {EffetTextuel(2, "Défausser adversaire")}, {EffetTextuel(1, "Piocher une carte")},
+        {}, {EffetTextuel(3, "Étourdir champion")},
+        5, true, false);  // isGarde = true, isDefense = false
+    
+    Champion* champion2 = new Champion(Faction::FactionBleu, "Mage de Guilde", 4,
+        {Effet(1, DEGAT)}, {Effet(2, SOIN)},
+        {}, {},
+        {Effet(3, DEGAT)}, {},
+        3, false, false);  // isGarde = false, isDefense = false
+    
+    Champion* champion3 = new Champion(Faction::FactionRouge, "Nécromant", 5,
+        {Effet(3, DEGAT)}, {},
+        {}, {},
+        {Effet(4, DEGAT)}, {},
+        4, true, false);  // isGarde = true, isDefense = false
+    
+    // Ajouter aussi une action (qui ne doit pas être affectée)
+    Action* action1 = new Action(Faction::FactionVert, "Charge Sauvage", 3,
+        {Effet(2, DEGAT)}, {},
+        {}, {},
+        {Effet(4, DEGAT)}, {});
+    
+    mainTest.addCarte(champion1);
+    mainTest.addCarte(action1);
+    mainTest.addCarte(champion2);
+    mainTest.addCarte(champion3);
+    
+    joueurTest.setMain(mainTest);
+    
+    // Afficher l'état AVANT l'activation du mode défense
+    std::cout << "\n--- État AVANT defenseModActivated ---" << std::endl;
+    std::cout << "Cartes en main: " << joueurTest.getMain().getCartes().size() << std::endl;
+    std::cout << "  - Actions: 1" << std::endl;
+    std::cout << "  - Champions: 3" << std::endl;
+    
+    std::cout << "\nDétails des champions en main:" << std::endl;
+    for (size_t i = 0; i < joueurTest.getMain().getCartes().size(); ++i) {
+        Champion* champ = dynamic_cast<Champion*>(joueurTest.getMain().getCartes()[i]);
+        if (champ) {
+            std::cout << "  - " << champ->getNom() 
+                      << " (PV: " << champ->getPointDeVie()
+                      << ", Garde: " << (champ->getIsGarde() ? "Oui" : "Non")
+                      << ", Défense: " << (champ->getIsDefense() ? "Oui" : "Non") << ")" << std::endl;
+        }
+    }
+    
+    std::cout << "\nChampions en jeu (StackChampion): " << joueurTest.getStackChampion().getChampions().size() << std::endl;
+    std::cout << "Gardes actifs: " << joueurTest.getStackChampion().getGardes().size() << std::endl;
+    
+    // Créer et utiliser l'effet textuel
+    std::cout << "\n--- Utilisation de defenseModActivated ---" << std::endl;
+    EffetTextuel effetDefense(5, "Activer le mode défense pour tous les champions");
+    effetDefense.defenseModActivated(joueurTest);
+    
+    // Afficher l'état APRÈS l'activation du mode défense
+    std::cout << "\n--- État APRÈS defenseModActivated ---" << std::endl;
+    std::cout << "Cartes en main: " << joueurTest.getMain().getCartes().size() << std::endl;
+    std::cout << "  (Seules les actions devraient rester)" << std::endl;
+    
+    std::cout << "\nCartes restantes en main:" << std::endl;
+    for (size_t i = 0; i < joueurTest.getMain().getCartes().size(); ++i) {
+        std::cout << "  - " << joueurTest.getMain().getCartes()[i]->getNom() << std::endl;
+    }
+    
+    std::cout << "\nChampions en jeu (StackChampion): " << joueurTest.getStackChampion().getChampions().size() << std::endl;
+    std::cout << "Gardes actifs: " << joueurTest.getStackChampion().getGardes().size() << std::endl;
+    
+    std::cout << "\nDétails des champions en jeu:" << std::endl;
+    for (size_t i = 0; i < joueurTest.getStackChampion().getChampions().size(); ++i) {
+        Champion* champ = joueurTest.getStackChampion().getChampions()[i];
+        std::cout << "  - " << champ->getNom() 
+                  << " (PV: " << champ->getPointDeVie()
+                  << ", Garde: " << (champ->getIsGarde() ? "Oui" : "Non")
+                  << ", Défense: " << (champ->getIsDefense() ? "Oui" : "Non") << ")" << std::endl;
+    }
+    
+    if (!joueurTest.getStackChampion().getGardes().empty()) {
+        std::cout << "\nGardes actifs:" << std::endl;
+        for (size_t i = 0; i < joueurTest.getStackChampion().getGardes().size(); ++i) {
+            Champion* garde = joueurTest.getStackChampion().getGardes()[i];
+            std::cout << "  - " << garde->getNom() 
+                      << " (PV: " << garde->getPointDeVie() << ")" << std::endl;
+        }
+    }
+    
+    // Vérifications
+    std::cout << "\n=== VÉRIFICATIONS ===" << std::endl;
+    bool testReussi = true;
+    
+    if (joueurTest.getMain().getCartes().size() != 1) {
+        std::cout << "❌ ERREUR: Il devrait rester 1 carte en main (l'action)" << std::endl;
+        testReussi = false;
+    } else {
+        std::cout << "✓ OK: 1 carte (action) reste en main" << std::endl;
+    }
+    
+    if (joueurTest.getStackChampion().getChampions().size() != 3) {
+        std::cout << "❌ ERREUR: Il devrait y avoir 3 champions en jeu" << std::endl;
+        testReussi = false;
+    } else {
+        std::cout << "✓ OK: 3 champions sont en jeu" << std::endl;
+    }
+    
+    if (joueurTest.getStackChampion().getGardes().size() != 2) {
+        std::cout << "❌ ERREUR: Il devrait y avoir 2 gardes actifs" << std::endl;
+        testReussi = false;
+    } else {
+        std::cout << "✓ OK: 2 gardes sont actifs" << std::endl;
+    }
+    
+    // Vérifier que tous les champions ont isDefense = true
+    bool tousEnDefense = true;
+    for (size_t i = 0; i < joueurTest.getStackChampion().getChampions().size(); ++i) {
+        if (!joueurTest.getStackChampion().getChampions()[i]->getIsDefense()) {
+            tousEnDefense = false;
+            break;
+        }
+    }
+    
+    if (!tousEnDefense) {
+        std::cout << "❌ ERREUR: Tous les champions devraient avoir isDefense = true" << std::endl;
+        testReussi = false;
+    } else {
+        std::cout << "✓ OK: Tous les champions sont en mode défense" << std::endl;
+    }
+    
+    if (testReussi) {
+        std::cout << "\n✓✓✓ Test réussi! ✓✓✓" << std::endl;
+    } else {
+        std::cout << "\n❌❌❌ Test échoué! ❌❌❌" << std::endl;
+    }
+    
+    std::cout << "\n=== Fin du test de defenseModActivated ===" << std::endl;
 }
 
 

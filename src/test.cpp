@@ -1117,4 +1117,158 @@ void testMainJoueurChampions() {
     std::cout << "Note: Gestion mémoire automatique pour éviter les erreurs." << std::endl;
 }
 
+void testChoixUtilisationEffetJ1NouvelleFonction() {
+    std::cout << "\n=== Test de la nouvelle fonction choixUtilisationEffetJ1 ===" << std::endl;
+    
+    // Créer un plateau de test
+    Plateau plateauTest;
+    
+    // Créer un joueur avec des actions/champions variés
+    Joueur joueur1Test;
+    joueur1Test.setPointDeVie(50);
+    joueur1Test.setArgent(0);
+    
+    // Créer un joueur 2 pour les effets
+    Joueur joueur2Test;
+    joueur2Test.setPointDeVie(50);
+    plateauTest.setJoueur2(joueur2Test);
+    
+    // Créer une main avec différentes cartes pour tester toutes les étapes
+    MainJoueur mainTest;
+    
+    // Action avec effets choix 1, choix 2 ET combo
+    Action* actionComplete = new Action(Faction::FactionJaune, "Action Complète", 5,
+        {Effet(2, OR)}, {Effet(3, DEGAT)},
+        {EffetTextuel(1, "Piocher une carte")}, {EffetTextuel(2, "Défausser adversaire")},
+        {Effet(4, OR), Effet(2, DEGAT)}, {EffetTextuel(3, "Étourdir champion")});
+    
+    // Action simple avec seulement choix 1
+    Action* actionSimple = new Action(Faction::FactionBleu, "Action Simple", 3,
+        {Effet(1, DEGAT), Effet(1, OR)}, {}, {},
+        {},
+        {}, {});
+    
+    // Champion avec choix 1, choix 2 et combo
+    Champion* championComplet = new Champion(Faction::FactionRouge, "Champion Puissant", 7,
+        {Effet(3, DEGAT)}, {Effet(2, SOIN)},
+        {EffetTextuel(2, "Défausser adversaire")}, {EffetTextuel(1, "Piocher une carte")},
+        {Effet(5, DEGAT), Effet(3, SOIN)}, {EffetTextuel(4, "Piocher puis défausser")},
+        6, true, false);
+    
+    // Ajouter les cartes à la main
+    mainTest.addCarte(actionComplete);
+    mainTest.addCarte(actionSimple);
+    mainTest.addCarte(championComplet);
+    
+    joueur1Test.setMain(mainTest);
+    plateauTest.setJoueur1(joueur1Test);
+    
+    // Afficher l'état initial
+    std::cout << "\n--- État initial ---" << std::endl;
+    std::cout << "Joueur 1: " << plateauTest.getJoueur1().getPointDeVie() << " PV" << std::endl;
+    std::cout << "Joueur 2: " << plateauTest.getJoueur2().getPointDeVie() << " PV" << std::endl;
+    std::cout << "Cartes en main: " << plateauTest.getJoueur1().getMain().getCartes().size() << std::endl;
+    
+    // Afficher les cartes disponibles
+    std::cout << "\n--- Cartes disponibles pour le test ---" << std::endl;
+    for (size_t i = 0; i < plateauTest.getJoueur1().getMain().getCartes().size(); ++i) {
+        Carte* carte = plateauTest.getJoueur1().getMain().getCartes()[i];
+        std::cout << "Carte " << (i + 1) << ": " << carte->getNom() << std::endl;
+        
+        Action* action = dynamic_cast<Action*>(carte);
+        Champion* champion = dynamic_cast<Champion*>(carte);
+        
+        if (action || champion) {
+            std::cout << "  - Effets Choix 1: ";
+            for (const auto& effet : carte->getEffetsBasiqueChoix1()) {
+                std::cout << effet.toString() << " ";
+            }
+            std::cout << std::endl;
+            
+            if (action) {
+                if (!action->getListEffetBasiqueChoix2().empty()) {
+                    std::cout << "  - Effets Choix 2: ";
+                    for (const auto& effet : action->getListEffetBasiqueChoix2()) {
+                        std::cout << effet.toString() << " ";
+                    }
+                    std::cout << std::endl;
+                }
+                
+                if (!action->getListEffetBasiqueCombo().empty()) {
+                    std::cout << "  - Effets Combo: ";
+                    for (const auto& effet : action->getListEffetBasiqueCombo()) {
+                        std::cout << effet.toString() << " ";
+                    }
+                    std::cout << std::endl;
+                }
+            } else if (champion) {
+                if (!champion->getListEffetBasiqueChoix2().empty()) {
+                    std::cout << "  - Effets Choix 2: ";
+                    for (const auto& effet : champion->getListEffetBasiqueChoix2()) {
+                        std::cout << effet.toString() << " ";
+                    }
+                    std::cout << std::endl;
+                }
+                
+                if (!champion->getListEffetBasiqueCombo().empty()) {
+                    std::cout << "  - Effets Combo: ";
+                    for (const auto& effet : champion->getListEffetBasiqueCombo()) {
+                        std::cout << effet.toString() << " ";
+                    }
+                    std::cout << std::endl;
+                }
+            }
+        }
+    }
+    
+    std::cout << "\n=== INSTRUCTIONS DE TEST ===" << std::endl;
+    std::cout << "Pour chaque carte, vous aurez 3 étapes :" << std::endl;
+    std::cout << "1. Effets de base (Choix 1) - toujours disponibles" << std::endl;
+    std::cout << "2. Effets additionnels (Choix 2) - si la carte en a" << std::endl;
+    std::cout << "3. Effets combo - si le combo est activé pour cette faction" << std::endl;
+    std::cout << "\nSuggestions :" << std::endl;
+    std::cout << "- Action Complète : testez toutes les étapes (1=Oui partout)" << std::endl;
+    std::cout << "- Action Simple : seulement étape 1 disponible" << std::endl;
+    std::cout << "- Champion Puissant : testez selon vos préférences" << std::endl;
+    
+    // Activer le combo pour certaines factions pour le test
+    plateauTest.getJoueur1().peuxActiverCombo();
+    
+    // Lancer le test de la fonction
+    std::cout << "\n=== DÉBUT DU TEST INTERACTIF ===" << std::endl;
+    auto [effetsBasiques, effetsTextuels] = plateauTest.choixUtilisationEffetJ1();
+    
+    // Afficher les résultats
+    std::cout << "\n=== RÉSULTATS DU TEST ===" << std::endl;
+    std::cout << "Effets basiques choisis (" << effetsBasiques.size() << ") :" << std::endl;
+    for (const auto& effet : effetsBasiques) {
+        std::cout << "  - " << effet.toString() << std::endl;
+    }
+    
+    std::cout << "\nEffets textuels choisis (" << effetsTextuels.size() << ") :" << std::endl;
+    for (const auto& effet : effetsTextuels) {
+        std::cout << "  - " << effet.toString() << std::endl;
+    }
+    
+    // Test optionnel d'application
+    std::cout << "\nVoulez-vous appliquer ces effets ? (1=Oui, 0=Non): ";
+    int appliquer;
+    std::cin >> appliquer;
+    
+    if (appliquer == 1) {
+        std::cout << "\n--- Application des effets ---" << std::endl;
+        plateauTest.appliquerEffetsJ1(effetsBasiques, effetsTextuels);
+        
+        std::cout << "\n--- État final ---" << std::endl;
+        std::cout << "Joueur 1: " << plateauTest.getJoueur1().getPointDeVie() << " PV, " 
+                  << plateauTest.getJoueur1().getArgent() << " Or" << std::endl;
+        std::cout << "Joueur 2: " << plateauTest.getJoueur2().getPointDeVie() << " PV" << std::endl;
+    }
+    
+    std::cout << "\n=== Fin du test de choixUtilisationEffetJ1 ===" << std::endl;
+    
+    // Note: Gestion mémoire automatique
+    std::cout << "Note: Gestion mémoire automatique pour éviter les erreurs." << std::endl;
+}
+
 

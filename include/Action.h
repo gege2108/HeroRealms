@@ -51,7 +51,6 @@ public:
     const std::vector<Effet>& getListEffetBasiqueCombo() const { return ListEffetBasiqueCombo; }
     const std::vector<EffetTextuel>& getListEffetTextuelCombo() const { return ListEffetTextuelCombo; }
 
-    // Déclaration seulement (implémentation dans action.cpp)
     std::string toString() const override;
 
 protected:

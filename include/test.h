@@ -20,6 +20,7 @@ void testInitializer();
 void testAchatActionChampion();
 void testAchatActionChampionNouveauFonctionnement();
 void testAffichagePioche();
-void testMainJoueurChampions(); // Nouvelle fonction de test
+void testMainJoueurChampions();
+void testChoixUtilisationEffetJ1NouvelleFonction(); // Nouveau test
 
 #endif // TEST_H

@@ -55,6 +55,17 @@ bool StackChampion::removeChampion(Champion* champion) {
     for (auto it = cartes.begin(); it != cartes.end(); ++it) {
         if (*it == champion) {
             cartes.erase(it);
+            
+            // Si c'est un garde, le retirer aussi du vecteur gardes
+            if (champion->getIsGarde()) {
+                for (auto gardeIt = gardes.begin(); gardeIt != gardes.end(); ++gardeIt) {
+                    if (*gardeIt == champion) {
+                        gardes.erase(gardeIt);
+                        break;
+                    }
+                }
+            }
+            
             return true;
         }
     }

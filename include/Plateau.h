@@ -41,9 +41,6 @@ public:
     // Fonction pour choisir les effets du Joueur 1
     std::pair<std::vector<Effet>, std::vector<EffetTextuel>> choixUtilisationEffetJ1();
 
-
- 
-
     //choix utilisation effet pour une seule carte
     std::pair<std::vector<Effet>, std::vector<EffetTextuel>> choixUtilisationEffetJ2();
 
@@ -54,6 +51,14 @@ public:
     void achatActionChampion(Joueur& joueur); 
 
     void utiliserDegatsStockes(Joueur& joueur, Joueur& adversaire);
+
+
+
+
+
+
+
+    
 
 private:
     Joueur joueur1;

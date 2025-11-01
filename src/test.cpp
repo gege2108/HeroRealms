@@ -1305,7 +1305,7 @@ void testUtiliserDegatsStockes() {
     std::cout << "\n--- Test 2: Champions sans garde ---" << std::endl;
     Joueur joueur3;
     Joueur joueur4;
-    joueur3.setDegatsStockes(4);
+    joueur3.setDegatsStockes(8);
     joueur4.setPointDeVie(25);
     
     // Ajouter des champions non-garde avec le nouveau constructeur
@@ -1352,7 +1352,7 @@ void testUtiliserDegatsStockes() {
     std::cout << "\n--- Test 3: Champions avec gardes ---" << std::endl;
     Joueur joueur5;
     Joueur joueur6;
-    joueur5.setDegatsStockes(4);
+    joueur5.setDegatsStockes(20);
     joueur6.setPointDeVie(30);
     
     // Ajouter des champions avec garde avec le nouveau constructeur
@@ -1439,7 +1439,7 @@ void testUtiliserDegatsStockes() {
     std::cout << "\n--- Test 4: Dégâts insuffisants pour tuer les champions ---" << std::endl;
     Joueur joueur7;
     Joueur joueur8;
-    joueur7.setDegatsStockes(11);
+    joueur7.setDegatsStockes(2);
     joueur8.setPointDeVie(25);
     
     // Ajouter un champion avec beaucoup de PV avec le nouveau constructeur

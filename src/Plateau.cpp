@@ -1126,7 +1126,7 @@ void Plateau::utiliserDegatsStockes(Joueur& joueur, Joueur& adversaire) {
                         Champion* cible = ciblesPossibles[i];
                         int before = cible->getPointDeVie();
                         cible->setPointDeVie(0);
-                        std::cout << "Le champion " << cible->getNom() << " subit " << joueur.getDegatsStockes() << " dégâts stockés (PV : " << before << " -> " << cible->getPointDeVie() << ")" << std::endl;
+                        std::cout << "Le champion " << cible->getNom() << " subit " << joueur.getDegatsStockes() - before << " dégâts stockés (PV : " << before << " -> " << cible->getPointDeVie() << ")" << std::endl;
                         joueur.setDegatsStockes(joueur.getDegatsStockes() - before);
                         break;
                         }
@@ -1157,7 +1157,7 @@ void Plateau::utiliserDegatsStockes(Joueur& joueur, Joueur& adversaire) {
             return;
         }
         else{
-            while (!ciblesPossibles.empty())
+            while (!ciblesPossibles.empty() && joueur.getDegatsStockes() > 0)
             {
                 std::cout << "Choisissez un garde à attaquer parmi les suivants :" << std::endl;
                 for (size_t i = 0; i < ciblesPossibles.size(); ++i) {
@@ -1171,28 +1171,51 @@ void Plateau::utiliserDegatsStockes(Joueur& joueur, Joueur& adversaire) {
                         Champion* cible = ciblesPossibles[i];
                         int before = cible->getPointDeVie();
                         cible->setPointDeVie(0);
-                        std::cout << "Le garde " << cible->getNom() << " subit " << joueur.getDegatsStockes() << " dégâts stockés (PV : " << before << " -> " << cible->getPointDeVie() << ")" << std::endl;
+                        std::cout << "Le garde " << cible->getNom() << " subit " << joueur.getDegatsStockes() - before << " dégâts stockés (PV : " << before << " -> " << cible->getPointDeVie() << ")" << std::endl;
                         joueur.setDegatsStockes(joueur.getDegatsStockes() - before);
                         ciblesPossibles.erase(ciblesPossibles.begin() + i);
                         break;
                     }
                 }
-
-                for (size_t i = 0; i < ciblesPossibles.size(); ++i) {
-                    Champion* garde = ciblesPossibles[i];
-                    std::cout << i + 1 << ". " << garde->getNom() << " (PV : " << garde->getPointDeVie() << ")" << std::endl;
-                    if (garde->getPointDeVie() <= joueur.getDegatsStockes())
-                    {
-                        ciblesPossibles.push_back(garde);
-                    }
-                    else
-                    {
-                        std::cout << "   (Ne peut pas être ciblé, PV trop élevés)" << std::endl;
-                        ciblesPossibles.erase(ciblesPossibles.begin() + i);
-                    }
+                if(ciblesPossibles.empty()){
+                    std::cout << "Il reste " << joueur.getDegatsStockes() << " dégâts stockés à utiliser." << std::endl;
+                    adversaire.setPointDeVie(adversaire.getPointDeVie() - joueur.getDegatsStockes());
+                    std::cout << "Le joueur adverse subit " << joueur.getDegatsStockes() << " dégâts stockés directement." << std::endl;
+                    joueur.setDegatsStockes(0);
+                    return;
                 }
+                else{
+                    std::vector<Champion*> ciblesNewPossibles;
+                    bool found = false;
+                    for (size_t i = 0; i < ciblesPossibles.size(); i++)
+                        {
+                            Champion* garde = ciblesPossibles[i];
+                            if(garde->getPointDeVie() <= joueur.getDegatsStockes())
+                            {
+                                ciblesNewPossibles.push_back(garde);
+                                found = true;
+                            }
+                        }
+                    if (found)
+                        {
+                            ciblesPossibles = ciblesNewPossibles;
+                        }
+                }
+                break;
+                /*
+                //prendre en compte le cas où il reste une cible mais que le joueur n'a plus assez de dégâts stockés, dans ce cas ne pas infliger les degats restants au joueur adverse
+                else if(joueur.getDegatsStockes() > 0 )
+                    {
+
+                        std::cout << "Aucun autre garde ne peut être ciblé avec les dégâts stockés." << std::endl;
+                        adversaire.setPointDeVie(adversaire.getPointDeVie() - joueur.getDegatsStockes());
+                        std::cout << "Le joueur adverse subit " << joueur.getDegatsStockes() << " dégâts stockés directement." << std::endl;
+                        joueur.setDegatsStockes(0);
+                        return;
                 
-            }
+            }*/
         }
     }
+}
+
 }

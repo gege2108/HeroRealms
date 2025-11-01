@@ -1288,8 +1288,17 @@ void testUtiliserDegatsStockes() {
     std::cout << "Joueur1 - Dégâts stockés: " << joueur1.getDegatsStockes() << std::endl;
     std::cout << "Joueur2 - PV avant: " << joueur2.getPointDeVie() << ", Champions: " << joueur2.getStackChampion().getChampions().size() << std::endl;
     
+    // Affichage PV AVANT
+    std::cout << "=== PV AVANT utiliserDegatsStockes ===" << std::endl;
+    std::cout << "Joueur1 PV: " << joueur1.getPointDeVie() << std::endl;
+    std::cout << "Joueur2 PV: " << joueur2.getPointDeVie() << std::endl;
+    
     plateauTest.utiliserDegatsStockes(joueur1, joueur2);
     
+    // Affichage PV APRÈS
+    std::cout << "=== PV APRÈS utiliserDegatsStockes ===" << std::endl;
+    std::cout << "Joueur1 PV: " << joueur1.getPointDeVie() << std::endl;
+    std::cout << "Joueur2 PV: " << joueur2.getPointDeVie() << std::endl;
     std::cout << "Résultat - Joueur2 PV après: " << joueur2.getPointDeVie() << ", Dégâts restants: " << joueur1.getDegatsStockes() << std::endl;
     
     // === TEST 2: Champions sans garde ===
@@ -1318,14 +1327,32 @@ void testUtiliserDegatsStockes() {
         std::cout << "  - " << champ->getNom() << " (PV: " << champ->getPointDeVie() << ")" << std::endl;
     }
     
+    // Affichage PV AVANT
+    std::cout << "=== PV AVANT utiliserDegatsStockes ===" << std::endl;
+    std::cout << "Joueur3 PV: " << joueur3.getPointDeVie() << std::endl;
+    std::cout << "Joueur4 PV: " << joueur4.getPointDeVie() << std::endl;
+    for (size_t i = 0; i < joueur4.getStackChampion().getChampions().size(); ++i) {
+        Champion* champ = joueur4.getStackChampion().getChampions()[i];
+        std::cout << "Champion " << champ->getNom() << " PV: " << champ->getPointDeVie() << std::endl;
+    }
+    
     std::cout << "Instructions: Choisissez un champion à attaquer ou 0 pour dégâts directs" << std::endl;
     plateauTest.utiliserDegatsStockes(joueur3, joueur4);
+    
+    // Affichage PV APRÈS
+    std::cout << "=== PV APRÈS utiliserDegatsStockes ===" << std::endl;
+    std::cout << "Joueur3 PV: " << joueur3.getPointDeVie() << std::endl;
+    std::cout << "Joueur4 PV: " << joueur4.getPointDeVie() << std::endl;
+    for (size_t i = 0; i < joueur4.getStackChampion().getChampions().size(); ++i) {
+        Champion* champ = joueur4.getStackChampion().getChampions()[i];
+        std::cout << "Champion " << champ->getNom() << " PV: " << champ->getPointDeVie() << std::endl;
+    }
     
     // === TEST 3: Champions avec gardes ===
     std::cout << "\n--- Test 3: Champions avec gardes ---" << std::endl;
     Joueur joueur5;
     Joueur joueur6;
-    joueur5.setDegatsStockes(6);
+    joueur5.setDegatsStockes(4);
     joueur6.setPointDeVie(30);
     
     // Ajouter des champions avec garde avec le nouveau constructeur
@@ -1379,14 +1406,40 @@ void testUtiliserDegatsStockes() {
         }
     }
     
+    // Affichage PV AVANT
+    std::cout << "=== PV AVANT utiliserDegatsStockes ===" << std::endl;
+    std::cout << "Joueur5 PV: " << joueur5.getPointDeVie() << std::endl;
+    std::cout << "Joueur6 PV: " << joueur6.getPointDeVie() << std::endl;
+    for (size_t i = 0; i < joueur6.getStackChampion().getChampions().size(); ++i) {
+        Champion* champ = joueur6.getStackChampion().getChampions()[i];
+        std::cout << "Champion " << champ->getNom() << " PV: " << champ->getPointDeVie() << std::endl;
+    }
+    for (size_t i = 0; i < joueur6.getStackChampion().getGardes().size(); ++i) {
+        Champion* garde = joueur6.getStackChampion().getGardes()[i];
+        std::cout << "Garde " << garde->getNom() << " PV: " << garde->getPointDeVie() << std::endl;
+    }
+    
     std::cout << "Instructions: Les dégâts doivent cibler les gardes en priorité" << std::endl;
     plateauTest.utiliserDegatsStockes(joueur5, joueur6);
+    
+    // Affichage PV APRÈS
+    std::cout << "=== PV APRÈS utiliserDegatsStockes ===" << std::endl;
+    std::cout << "Joueur5 PV: " << joueur5.getPointDeVie() << std::endl;
+    std::cout << "Joueur6 PV: " << joueur6.getPointDeVie() << std::endl;
+    for (size_t i = 0; i < joueur6.getStackChampion().getChampions().size(); ++i) {
+        Champion* champ = joueur6.getStackChampion().getChampions()[i];
+        std::cout << "Champion " << champ->getNom() << " PV: " << champ->getPointDeVie() << std::endl;
+    }
+    for (size_t i = 0; i < joueur6.getStackChampion().getGardes().size(); ++i) {
+        Champion* garde = joueur6.getStackChampion().getGardes()[i];
+        std::cout << "Garde " << garde->getNom() << " PV: " << garde->getPointDeVie() << std::endl;
+    }
     
     // === TEST 4: Dégâts insuffisants ===
     std::cout << "\n--- Test 4: Dégâts insuffisants pour tuer les champions ---" << std::endl;
     Joueur joueur7;
     Joueur joueur8;
-    joueur7.setDegatsStockes(2);
+    joueur7.setDegatsStockes(11);
     joueur8.setPointDeVie(25);
     
     // Ajouter un champion avec beaucoup de PV avec le nouveau constructeur
@@ -1401,7 +1454,22 @@ void testUtiliserDegatsStockes() {
     std::cout << "Joueur8 - Champion: " << championResistant->getNom() << " (PV: " << championResistant->getPointDeVie() << ")" << std::endl;
     std::cout << "Les dégâts sont insuffisants pour tuer le champion" << std::endl;
     
+    // Affichage PV AVANT
+    std::cout << "=== PV AVANT utiliserDegatsStockes ===" << std::endl;
+    std::cout << "Joueur7 PV: " << joueur7.getPointDeVie() << std::endl;
+    std::cout << "Joueur8 PV: " << joueur8.getPointDeVie() << std::endl;
+    std::cout << "Champion " << championResistant->getNom() << " PV: " << championResistant->getPointDeVie() << std::endl;
+    
     plateauTest.utiliserDegatsStockes(joueur7, joueur8);
+    
+    // Affichage PV APRÈS
+    std::cout << "=== PV APRÈS utiliserDegatsStockes ===" << std::endl;
+    std::cout << "Joueur7 PV: " << joueur7.getPointDeVie() << std::endl;
+    std::cout << "Joueur8 PV: " << joueur8.getPointDeVie() << std::endl;
+    for (size_t i = 0; i < joueur8.getStackChampion().getChampions().size(); ++i) {
+        Champion* champ = joueur8.getStackChampion().getChampions()[i];
+        std::cout << "Champion " << champ->getNom() << " PV: " << champ->getPointDeVie() << std::endl;
+    }
     
     std::cout << "\n=== Fin du test de utiliserDegatsStockes ===" << std::endl;
     std::cout << "Note: Gestion mémoire automatique pour éviter les erreurs." << std::endl;

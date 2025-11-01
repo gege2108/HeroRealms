@@ -1352,7 +1352,7 @@ void testUtiliserDegatsStockes() {
     std::cout << "\n--- Test 3: Champions avec gardes ---" << std::endl;
     Joueur joueur5;
     Joueur joueur6;
-    joueur5.setDegatsStockes(20);
+    joueur5.setDegatsStockes(5);
     joueur6.setPointDeVie(30);
     
     // Ajouter des champions avec garde avec le nouveau constructeur

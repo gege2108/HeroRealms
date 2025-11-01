@@ -133,8 +133,10 @@ int main() {
 
 
     
-    Plateau plateau = Initializer::initializePlateau();
-    plateau.run(plateau);
+    //Plateau plateau = Initializer::initializePlateau();
+    //plateau.run(plateau);
+
+    testUtiliserDegatsStockes();
 
     return 0;
 }

@@ -21,6 +21,7 @@ public:
     }
 
     // Méthodes utilisant Joueur
+    //TODO: fix cette methode car elle provoque une erreur à la compilation (invalid pointer)
     void drawACard(Joueur& joueur); // id : 1
     void discardOpponentCard(Joueur& opponent);  // id : 2
     void stunChampion(Joueur& opponent) const;  // id : 3

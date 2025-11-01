@@ -53,6 +53,8 @@ public:
 
     void achatActionChampion(Joueur& joueur); 
 
+    void utiliserDegatsStockes(Joueur& joueur, Joueur& adversaire);
+
 private:
     Joueur joueur1;
     Joueur joueur2;

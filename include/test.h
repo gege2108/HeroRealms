@@ -21,6 +21,7 @@ void testAchatActionChampion();
 void testAchatActionChampionNouveauFonctionnement();
 void testAffichagePioche();
 void testMainJoueurChampions();
-void testChoixUtilisationEffetJ1NouvelleFonction(); // Nouveau test
+void testChoixUtilisationEffetJ1NouvelleFonction();
+void testUtiliserDegatsStockes();
 
 #endif // TEST_H

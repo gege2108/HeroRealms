@@ -21,11 +21,17 @@ public:
     std::vector<Champion*> getChampions() const;
     std::vector<Champion*> getChampions();
 
+    std::vector<Champion*>& getGardes();
+    //const std::vector<Champion*>& getGardes() const;
+    void setGardes(const std::vector<Champion*>& g);
+    void addGarde(Champion* c);
+
     // Fonction pour enlever un champion spécifique
     bool removeChampion(Champion* champion);
 
 private:
     std::vector<Carte*> cartes;
+    std::vector<Champion*> gardes;
 };
 
 #endif // STACKCHAMPION_H

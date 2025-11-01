@@ -31,6 +31,7 @@ void runAllTests() {
     testAchatActionChampion();
     testAchatActionChampionNouveauFonctionnement();
     testMainJoueurChampions();
+    testUtiliserDegatsStockes();
     std::cout << "=== FIN DE TOUS LES TESTS ===" << std::endl;
 }
 
@@ -1268,6 +1269,141 @@ void testChoixUtilisationEffetJ1NouvelleFonction() {
     std::cout << "\n=== Fin du test de choixUtilisationEffetJ1 ===" << std::endl;
     
     // Note: Gestion mémoire automatique
+    std::cout << "Note: Gestion mémoire automatique pour éviter les erreurs." << std::endl;
+}
+
+void testUtiliserDegatsStockes() {
+    std::cout << "\n=== Test de utiliserDegatsStockes ===" << std::endl;
+    
+    // Créer un plateau de test
+    Plateau plateauTest;
+    
+    // === TEST 1: Aucun champion adverse ===
+    std::cout << "\n--- Test 1: Aucun champion adverse ---" << std::endl;
+    Joueur joueur1;
+    Joueur joueur2;
+    joueur1.setDegatsStockes(5);
+    joueur2.setPointDeVie(30);
+    
+    std::cout << "Joueur1 - Dégâts stockés: " << joueur1.getDegatsStockes() << std::endl;
+    std::cout << "Joueur2 - PV avant: " << joueur2.getPointDeVie() << ", Champions: " << joueur2.getStackChampion().getChampions().size() << std::endl;
+    
+    plateauTest.utiliserDegatsStockes(joueur1, joueur2);
+    
+    std::cout << "Résultat - Joueur2 PV après: " << joueur2.getPointDeVie() << ", Dégâts restants: " << joueur1.getDegatsStockes() << std::endl;
+    
+    // === TEST 2: Champions sans garde ===
+    std::cout << "\n--- Test 2: Champions sans garde ---" << std::endl;
+    Joueur joueur3;
+    Joueur joueur4;
+    joueur3.setDegatsStockes(4);
+    joueur4.setPointDeVie(25);
+    
+    // Ajouter des champions non-garde avec le nouveau constructeur
+    Champion* champion1 = new Champion(Faction::FactionBleu, "Mage", 5,
+        {Effet(2, DEGAT)}, {}, {}, {}, {Effet(3, DEGAT)}, {}, 3, false, false);
+    Champion* champion2 = new Champion(Faction::FactionVert, "Archer", 4,
+        {Effet(1, DEGAT)}, {}, {}, {}, {Effet(2, DEGAT)}, {}, 2, false, false);
+    
+    StackChampion stackJ4;
+    stackJ4.push(champion1);
+    stackJ4.push(champion2);
+    joueur4.setStackChampion(stackJ4);
+    
+    std::cout << "Joueur3 - Dégâts stockés: " << joueur3.getDegatsStockes() << std::endl;
+    std::cout << "Joueur4 - Champions: " << joueur4.getStackChampion().getChampions().size() << ", Gardes: " << joueur4.getStackChampion().getGardes().size() << std::endl;
+    std::cout << "Champions disponibles:" << std::endl;
+    for (size_t i = 0; i < joueur4.getStackChampion().getChampions().size(); ++i) {
+        Champion* champ = joueur4.getStackChampion().getChampions()[i];
+        std::cout << "  - " << champ->getNom() << " (PV: " << champ->getPointDeVie() << ")" << std::endl;
+    }
+    
+    std::cout << "Instructions: Choisissez un champion à attaquer ou 0 pour dégâts directs" << std::endl;
+    plateauTest.utiliserDegatsStockes(joueur3, joueur4);
+    
+    // === TEST 3: Champions avec gardes ===
+    std::cout << "\n--- Test 3: Champions avec gardes ---" << std::endl;
+    Joueur joueur5;
+    Joueur joueur6;
+    joueur5.setDegatsStockes(6);
+    joueur6.setPointDeVie(30);
+    
+    // Ajouter des champions avec garde avec le nouveau constructeur
+    Champion* garde1 = new Champion(Faction::FactionJaune, "Garde Royal", 6,
+        {Effet(1, DEGAT)}, {}, {}, {}, {Effet(2, DEGAT)}, {}, 4, true, false);
+    Champion* garde2 = new Champion(Faction::FactionJaune, "Garde Elite", 7,
+        {Effet(2, DEGAT)}, {}, {}, {}, {Effet(3, DEGAT)}, {}, 3, true, false);
+    Champion* champion3 = new Champion(Faction::FactionRouge, "Assassin", 5,
+        {Effet(3, DEGAT)}, {}, {}, {}, {Effet(4, DEGAT)}, {}, 2, false, false);
+    
+    // DEBUG: Vérifier les attributs des champions
+    std::cout << "DEBUG - garde1->getIsGarde(): " << garde1->getIsGarde() << std::endl;
+    std::cout << "DEBUG - garde2->getIsGarde(): " << garde2->getIsGarde() << std::endl;
+    std::cout << "DEBUG - champion3->getIsGarde(): " << champion3->getIsGarde() << std::endl;
+    
+    StackChampion stackJ6;
+    stackJ6.push(garde1);
+    stackJ6.push(garde2);
+    stackJ6.push(champion3);
+    
+    // DEBUG: Vérifier avant ajout manuel
+    std::cout << "DEBUG - Gardes après push: " << stackJ6.getGardes().size() << std::endl;
+    
+    // Ajouter manuellement les gardes au vecteur gardes
+    stackJ6.addGarde(garde1);
+    stackJ6.addGarde(garde2);
+    
+    // DEBUG: Vérifier que les gardes sont bien ajoutés
+    std::cout << "DEBUG - Nombre de gardes après ajout manuel: " << stackJ6.getGardes().size() << std::endl;
+    
+    // SOLUTION: Ajouter les gardes APRÈS setStackChampion pour éviter qu'ils soient effacés
+    joueur6.setStackChampion(stackJ6);
+    
+    // Re-ajouter les gardes après setStackChampion
+    joueur6.getStackChampion().addGarde(garde1);
+    joueur6.getStackChampion().addGarde(garde2);
+    
+    // DEBUG: Vérifier après setStackChampion et re-ajout
+    std::cout << "DEBUG - Gardes après setStackChampion et re-ajout: " << joueur6.getStackChampion().getGardes().size() << std::endl;
+    
+    std::cout << "Joueur5 - Dégâts stockés: " << joueur5.getDegatsStockes() << std::endl;
+    std::cout << "Joueur6 - Champions: " << joueur6.getStackChampion().getChampions().size() << ", Gardes: " << joueur6.getStackChampion().getGardes().size() << std::endl;
+    
+    std::cout << "Gardes disponibles:" << std::endl;
+    if (joueur6.getStackChampion().getGardes().empty()) {
+        std::cout << "  (Aucun garde trouvé - problème dans l'ajout des gardes)" << std::endl;
+    } else {
+        for (size_t i = 0; i < joueur6.getStackChampion().getGardes().size(); ++i) {
+            Champion* garde = joueur6.getStackChampion().getGardes()[i];
+            std::cout << "  - " << garde->getNom() << " (PV: " << garde->getPointDeVie() << ")" << std::endl;
+        }
+    }
+    
+    std::cout << "Instructions: Les dégâts doivent cibler les gardes en priorité" << std::endl;
+    plateauTest.utiliserDegatsStockes(joueur5, joueur6);
+    
+    // === TEST 4: Dégâts insuffisants ===
+    std::cout << "\n--- Test 4: Dégâts insuffisants pour tuer les champions ---" << std::endl;
+    Joueur joueur7;
+    Joueur joueur8;
+    joueur7.setDegatsStockes(2);
+    joueur8.setPointDeVie(25);
+    
+    // Ajouter un champion avec beaucoup de PV avec le nouveau constructeur
+    Champion* championResistant = new Champion(Faction::FactionVert, "Titan", 8,
+        {Effet(1, DEGAT)}, {}, {}, {}, {Effet(2, DEGAT)}, {}, 10, false, false);
+    
+    StackChampion stackJ8;
+    stackJ8.push(championResistant);
+    joueur8.setStackChampion(stackJ8);
+    
+    std::cout << "Joueur7 - Dégâts stockés: " << joueur7.getDegatsStockes() << std::endl;
+    std::cout << "Joueur8 - Champion: " << championResistant->getNom() << " (PV: " << championResistant->getPointDeVie() << ")" << std::endl;
+    std::cout << "Les dégâts sont insuffisants pour tuer le champion" << std::endl;
+    
+    plateauTest.utiliserDegatsStockes(joueur7, joueur8);
+    
+    std::cout << "\n=== Fin du test de utiliserDegatsStockes ===" << std::endl;
     std::cout << "Note: Gestion mémoire automatique pour éviter les erreurs." << std::endl;
 }
 

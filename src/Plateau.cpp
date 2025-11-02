@@ -625,9 +625,41 @@ void Plateau::achatActionChampion(Joueur& joueur) {
         for (Action* action : actionsVendablesCopie) {
             if (action->getPrix() <= joueur.getArgent()) {
                 peutAcheter = true;
+                
+                // ✅ Déterminer la faction et son symbole
+                std::string factionStr;
+                std::string factionEmoji;
+                switch(action->getFaction()) {
+                    case Faction::FactionJaune:
+                        factionStr = "Impériale";
+                        factionEmoji = "👑";
+                        break;
+                    case Faction::FactionBleu:
+                        factionStr = "Guilde";
+                        factionEmoji = "🗡️";
+                        break;
+                    case Faction::FactionRouge:
+                        factionStr = "Nécros";
+                        factionEmoji = "💀";
+                        break;
+                    case Faction::FactionVert:
+                        factionStr = "Sauvage";
+                        factionEmoji = "🐺";
+                        break;
+                    default:
+                        factionStr = "Neutre";
+                        factionEmoji = "⚪";
+                        break;
+                }
+                
+                // Vérifier si c'est un champion
+                Champion* champion = dynamic_cast<Champion*>(action);
+                std::string typeStr = champion ? "🎖️  Champion" : "📜 Action";
+                
                 std::cout << "\n" << std::string(60, '-') << std::endl;
-                std::cout << "💳 Action disponible : " << action->getNom() 
-                          << " pour " << action->getPrix() << " 💰" << std::endl;
+                std::cout << "💳 " << typeStr << " : " << action->getNom() << std::endl;
+                std::cout << "   " << factionEmoji << " Faction: " << factionStr << std::endl;
+                std::cout << "   💰 Prix: " << action->getPrix() << std::endl;
                 std::cout << std::string(60, '-') << std::endl;
                 std::cout << "→ [1] Acheter  [0] Passer : ";
                 
@@ -703,8 +735,18 @@ void Plateau::achatActionChampion(Joueur& joueur) {
                     break; 
                 }
             } else {
-                std::cout << "❌ " << action->getNom() << " (coût : " << action->getPrix() 
-                          << " 💰) - Trop cher pour vous !" << std::endl;
+                // ✅ Afficher aussi la faction pour les cartes trop chères
+                std::string factionEmoji;
+                switch(action->getFaction()) {
+                    case Faction::FactionJaune: factionEmoji = "👑"; break;
+                    case Faction::FactionBleu: factionEmoji = "🗡️"; break;
+                    case Faction::FactionRouge: factionEmoji = "💀"; break;
+                    case Faction::FactionVert: factionEmoji = "🐺"; break;
+                    default: factionEmoji = "⚪"; break;
+                }
+                
+                std::cout << "❌ " << factionEmoji << " " << action->getNom() 
+                          << " (coût : " << action->getPrix() << " 💰) - Trop cher pour vous !" << std::endl;
             }
         }
 
@@ -724,8 +766,21 @@ void Plateau::achatActionChampion(Joueur& joueur) {
             std::cout << std::string(60, '=') << std::endl;
             int idx = 1;
             for (const auto& action : marche.getActionsVendables()) {
-                std::cout << "   " << idx++ << ". " << action->getNom() 
-                          << " - " << action->getPrix() << " 💰" << std::endl;
+                // ✅ Afficher faction et type
+                std::string factionEmoji;
+                switch(action->getFaction()) {
+                    case Faction::FactionJaune: factionEmoji = "👑"; break;
+                    case Faction::FactionBleu: factionEmoji = "🗡️"; break;
+                    case Faction::FactionRouge: factionEmoji = "💀"; break;
+                    case Faction::FactionVert: factionEmoji = "🐺"; break;
+                    default: factionEmoji = "⚪"; break;
+                }
+                
+                Champion* champ = dynamic_cast<Champion*>(action);
+                std::string typeIcon = champ ? "🎖️" : "📜";
+                
+                std::cout << "   " << idx++ << ". " << factionEmoji << " " << typeIcon << " " 
+                          << action->getNom() << " - " << action->getPrix() << " 💰" << std::endl;
             }
             std::cout << std::string(60, '=') << std::endl;
         }

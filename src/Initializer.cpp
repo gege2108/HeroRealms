@@ -8,7 +8,8 @@ void Initializer::initializePlateauRef(Plateau& plateau) {
     
     std::cout << "DEBUG: Création des effets" << std::endl;
     Effet soinPetit(2, SOIN);
-    Effet orPetit(2, OR);
+    //temporaire
+    Effet orPetit(8, OR);
     Effet degatPetit(3, DEGAT);
 
     std::cout << "DEBUG: Initialisation directe Joueur1" << std::endl;

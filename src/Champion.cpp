@@ -14,9 +14,10 @@ Champion::Champion(const Faction& faction, const std::string& nom, int prix,
     : Action(faction, nom, prix, effetsBasiqueChoix1, effetsBasiqueChoix2,
              effetsTextuelChoix1, effetsTextuelChoix2, effetsAllie, effetsTextuelAllie),
       pointDeVie(pointDeVie), 
-      pointDeVieMax(pointDeVieMax),  // ✅ Initialiser avec le paramètre
+      pointDeVieMax(pointDeVieMax),
       isGarde(isGarde), 
-      isDefense(isDefense) {}
+      isDefense(isDefense),
+      effetsUtilisesCeTour(false) {}  // ✅ Initialiser à false
 
 int Champion::getPointDeVie() const { return pointDeVie; }
 void Champion::setPointDeVie(int pv) { 
@@ -40,3 +41,7 @@ void Champion::setIsGarde(bool garde) { isGarde = garde; }
 
 bool Champion::getIsDefense() const { return isDefense; }
 void Champion::setIsDefense(bool defense) { isDefense = defense; }
+
+bool Champion::getEffetsUtilisesCeTour() const { return effetsUtilisesCeTour; }
+void Champion::setEffetsUtilisesCeTour(bool utilises) { effetsUtilisesCeTour = utilises; }
+void Champion::resetEffetsTour() { effetsUtilisesCeTour = false; }

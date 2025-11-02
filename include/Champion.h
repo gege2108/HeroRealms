@@ -6,9 +6,10 @@
 class Champion : public Action {
 private:
     int pointDeVie;
-    int pointDeVieMax;  // NOUVEAU: PV maximum du champion
+    int pointDeVieMax;
     bool isGarde;
     bool isDefense;
+    bool effetsUtilisesCeTour;  // ✅ NOUVEAU: Suivre si les effets ont déjà été utilisés ce tour
 
 public:
     Champion(const Faction& faction, const std::string& nom, int prix,
@@ -31,6 +32,10 @@ public:
     
     bool getIsDefense() const;
     void setIsDefense(bool defense);
+    
+    bool getEffetsUtilisesCeTour() const;
+    void setEffetsUtilisesCeTour(bool utilises);
+    void resetEffetsTour();  // Réinitialiser pour le prochain tour
 };
 
 #endif // CHAMPION_H

@@ -216,6 +216,12 @@ void Game::phaseAchatActions(const std::string& /* nomJoueur */, Joueur& joueur)
     std::cout << "│ 💰 Or disponible: " << std::setw(2) << joueur.getArgent() << "                                 │" << std::endl;
     std::cout << "└─────────────────────────────────────────────────────────┘" << std::endl;
     
+    // S'assurer qu'il y a toujours 5 cartes vendables
+    while (plateau.getMarche().getActionsVendables().size() < 5 && 
+           !plateau.getMarche().getStackActions().empty()) {
+        plateau.getMarche().MiseAJourActionsVendables();
+    }
+    
     std::cout << "\n🛒 Cartes disponibles:" << std::endl;
     for (size_t i = 0; i < plateau.getMarche().getActionsVendables().size(); ++i) {
         Action* action = plateau.getMarche().getActionsVendables()[i];

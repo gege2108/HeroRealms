@@ -158,7 +158,7 @@ std::vector<CarteDeBase*> Initializer::createCartesDeBase() {
 std::vector<Action*> Initializer::createActions() {
     std::vector<Action*> actions;
     
-    // Actions Faction Impériale (Jaune) - 6 actions
+    // ========== Actions Faction Impériale (Jaune) - 10 actions ==========
     actions.push_back(new Action(Faction::FactionJaune, "Taxation", 1,
         {Effet(2, OR)}, {},
         {}, {},
@@ -189,7 +189,27 @@ std::vector<Action*> Initializer::createActions() {
         {}, {},
         {Effet(8, OR)}, {}));
     
-    // Actions Faction Guilde (Bleu) - 6 actions
+    actions.push_back(new Action(Faction::FactionJaune, "Héraut Impérial", 2,
+        {Effet(1, OR), Effet(2, SOIN)}, {},
+        {}, {},
+        {Effet(3, OR), Effet(4, SOIN)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionJaune, "Stratège", 4,
+        {Effet(3, OR)}, {},
+        {EffetTextuel(1, "Piocher une carte")}, {},
+        {Effet(5, OR)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionJaune, "Médecin de Guerre", 3,
+        {Effet(2, SOIN)}, {Effet(2, OR)},
+        {}, {},
+        {Effet(5, SOIN)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionJaune, "Bannière Impériale", 5,
+        {Effet(3, DEGAT), Effet(3, SOIN)}, {},
+        {}, {},
+        {Effet(5, DEGAT), Effet(5, SOIN)}, {}));
+    
+    // ========== Actions Faction Guilde (Bleu) - 10 actions ==========
     actions.push_back(new Action(Faction::FactionBleu, "Pot-de-Vin", 1,
         {Effet(2, OR)}, {},
         {}, {},
@@ -220,7 +240,27 @@ std::vector<Action*> Initializer::createActions() {
         {}, {},
         {Effet(6, OR), Effet(6, DEGAT)}, {}));
     
-    // Actions Faction Nécros (Rouge) - 6 actions
+    actions.push_back(new Action(Faction::FactionBleu, "Racketteur", 2,
+        {Effet(3, OR)}, {},
+        {}, {},
+        {Effet(5, OR)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionBleu, "Pickpocket", 1,
+        {Effet(1, OR)}, {Effet(2, DEGAT)},
+        {}, {},
+        {Effet(3, OR)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionBleu, "Coup de Poignard", 3,
+        {Effet(4, DEGAT)}, {},
+        {}, {},
+        {Effet(6, DEGAT)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionBleu, "Marché Noir", 4,
+        {Effet(3, OR)}, {},
+        {EffetTextuel(1, "Piocher une carte")}, {},
+        {Effet(5, OR)}, {}));
+    
+    // ========== Actions Faction Nécros (Rouge) - 10 actions ==========
     actions.push_back(new Action(Faction::FactionRouge, "Magie Noire", 2,
         {Effet(3, DEGAT)}, {Effet(2, OR)},
         {EffetTextuel(2, "Défausser adversaire")}, {},
@@ -251,7 +291,27 @@ std::vector<Action*> Initializer::createActions() {
         {EffetTextuel(3, "Étourdir champion")}, {},
         {Effet(8, DEGAT), Effet(6, SOIN)}, {}));
     
-    // Actions Faction Sauvage (Vert) - 6 actions
+    actions.push_back(new Action(Faction::FactionRouge, "Âme Tourmentée", 2,
+        {Effet(3, DEGAT)}, {},
+        {}, {},
+        {Effet(5, DEGAT)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionRouge, "Pacte des Ténèbres", 4,
+        {Effet(2, OR), Effet(3, DEGAT)}, {},
+        {}, {},
+        {Effet(4, OR), Effet(5, DEGAT)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionRouge, "Vampirisme", 5,
+        {Effet(4, DEGAT), Effet(3, SOIN)}, {},
+        {}, {},
+        {Effet(6, DEGAT), Effet(5, SOIN)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionRouge, "Résurrection", 3,
+        {Effet(2, SOIN)}, {Effet(2, DEGAT)},
+        {EffetTextuel(1, "Piocher une carte")}, {},
+        {Effet(4, SOIN), Effet(3, DEGAT)}, {}));
+    
+    // ========== Actions Faction Sauvage (Vert) - 10 actions ==========
     actions.push_back(new Action(Faction::FactionVert, "Charge Sauvage", 2,
         {Effet(4, DEGAT)}, {},
         {}, {},
@@ -281,6 +341,26 @@ std::vector<Action*> Initializer::createActions() {
         {Effet(2, OR), Effet(3, DEGAT), Effet(4, SOIN)}, {},
         {EffetTextuel(4, "Piocher puis défausser")}, {},
         {Effet(4, OR), Effet(5, DEGAT), Effet(6, SOIN)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionVert, "Griffes Acérées", 1,
+        {Effet(3, DEGAT)}, {},
+        {}, {},
+        {Effet(5, DEGAT)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionVert, "Hurlement de Guerre", 3,
+        {Effet(4, DEGAT)}, {},
+        {}, {},
+        {Effet(6, DEGAT), Effet(2, SOIN)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionVert, "Régénération", 4,
+        {Effet(5, SOIN)}, {},
+        {}, {},
+        {Effet(7, SOIN), Effet(2, OR)}, {}));
+    
+    actions.push_back(new Action(Faction::FactionVert, "Traqueur des Bois", 2,
+        {Effet(2, DEGAT), Effet(2, SOIN)}, {},
+        {}, {},
+        {Effet(4, DEGAT), Effet(3, SOIN)}, {}));
     
     return actions;
 }

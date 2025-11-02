@@ -19,8 +19,8 @@ std::string Effet::toString() const {
         case SOIN: typeStr = "Soin"; break;
         default: typeStr = "Unknown"; break;
     }
-    if (description== "")
-    {
+    
+    if (description.empty()) {
         return std::to_string(valeur) + " (" + typeStr + ")";
     }
     

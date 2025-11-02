@@ -1012,28 +1012,51 @@ void Plateau::utiliserDegatsStockes(Joueur& joueur, Joueur& adversaire) {
         
         // Après élimination des gardes, traiter les champions restants
         if(joueur.getDegatsStockes() > 0 && adversaire.getStackChampion().getGardes().empty()) {
-            std::cout << "\n✅ Tous les gardes sont éliminés! Vous pouvez maintenant cibler les autres champions." << std::endl;
+            std::cout << "\n✅ Tous les gardes sont éliminés! Il reste " << joueur.getDegatsStockes() << " dégâts." << std::endl;
+            
+            // Vérifier s'il y a encore des champions en jeu
+            if(adversaire.getStackChampion().getChampions().empty()) {
+                std::cout << "Plus aucun champion en jeu. Le joueur adverse subit " 
+                          << joueur.getDegatsStockes() << " dégâts directement." << std::endl;
+                adversaire.setPointDeVie(adversaire.getPointDeVie() - joueur.getDegatsStockes());
+                joueur.setDegatsStockes(0);
+                return;
+            }
+            
+            std::cout << "Vous pouvez maintenant cibler les autres champions ou infliger les dégâts au joueur." << std::endl;
             
             while(joueur.getDegatsStockes() > 0 && !adversaire.getStackChampion().getChampions().empty()){
                 const auto& championsRestants = adversaire.getStackChampion().getChampions();
                 
-                if(championsRestants.empty()){
-                    adversaire.setPointDeVie(adversaire.getPointDeVie() - joueur.getDegatsStockes());
-                    std::cout << "Tous les champions éliminés. Le joueur subit " << joueur.getDegatsStockes() << " dégâts." << std::endl;
-                    joueur.setDegatsStockes(0);
-                    break;
-                }
-                
                 std::cout << "\n=== Dégâts restants: " << joueur.getDegatsStockes() << " ===" << std::endl;
                 std::cout << "0. Infliger tous les dégâts au joueur adverse" << std::endl;
                 
+                bool aucunChampionEliminable = true;
                 for (size_t i = 0; i < championsRestants.size(); ++i) {
                     std::cout << i + 1 << ". Attaquer " << championsRestants[i]->getNom() 
                               << " (PV : " << championsRestants[i]->getPointDeVie() << ")";
                     if (championsRestants[i]->getPointDeVie() <= joueur.getDegatsStockes()) {
                         std::cout << " [Peut être éliminé]";
+                        aucunChampionEliminable = false;
+                    } else {
+                        std::cout << " (Pas assez de dégâts pour l'éliminer)";  // ✅ AJOUTÉ
                     }
                     std::cout << std::endl;
+                }
+                
+                // ✅ NOUVEAU: Si aucun champion ne peut être éliminé, proposer directement d'attaquer le joueur
+                if (aucunChampionEliminable) {
+                    std::cout << "\n⚠️  Aucun champion ne peut être éliminé avec " << joueur.getDegatsStockes() << " dégâts." << std::endl;
+                    std::cout << "Voulez-vous infliger les dégâts au joueur adverse ? (0=Oui, autre=Retour): ";
+                    int choixFinal;
+                    std::cin >> choixFinal;
+                    
+                    if (choixFinal == 0) {
+                        adversaire.setPointDeVie(adversaire.getPointDeVie() - joueur.getDegatsStockes());
+                        std::cout << "Le joueur adverse subit " << joueur.getDegatsStockes() << " dégâts." << std::endl;
+                        joueur.setDegatsStockes(0);
+                    }
+                    break;
                 }
                 
                 int choixFinal;
@@ -1041,7 +1064,7 @@ void Plateau::utiliserDegatsStockes(Joueur& joueur, Joueur& adversaire) {
                 
                 if (choixFinal == 0) {
                     adversaire.setPointDeVie(adversaire.getPointDeVie() - joueur.getDegatsStockes());
-                    std::cout << "Le joueur subit " << joueur.getDegatsStockes() << " dégâts." << std::endl;
+                    std::cout << "Le joueur adverse subit " << joueur.getDegatsStockes() << " dégâts." << std::endl;
                     joueur.setDegatsStockes(0);
                     break;
                 }
@@ -1049,12 +1072,10 @@ void Plateau::utiliserDegatsStockes(Joueur& joueur, Joueur& adversaire) {
                     Champion* cibleChamp = championsRestants[choixFinal - 1];
                     if(cibleChamp->getPointDeVie() <= joueur.getDegatsStockes()){
                         int pvAvant = cibleChamp->getPointDeVie();
-                        cibleChamp->setPointDeVie(0);
                         joueur.setDegatsStockes(joueur.getDegatsStockes() - pvAvant);
                         
-                        // Réinitialiser isDefense et restaurer les PV
+                        cibleChamp->restaurerPointsDeVie();
                         cibleChamp->setIsDefense(false);
-                        cibleChamp->restaurerPointsDeVie();  // ✅ RESTAURER LES PV
                         
                         Defausse defausse = adversaire.getDefausse();
                         defausse.addCarte(cibleChamp);
@@ -1066,7 +1087,7 @@ void Plateau::utiliserDegatsStockes(Joueur& joueur, Joueur& adversaire) {
                                   << " est éliminé et retourne dans la défausse avec " 
                                   << cibleChamp->getPointDeVie() << " PV restaurés." << std::endl;
                     } else {
-                        std::cout << "Pas assez de dégâts pour éliminer ce champion." << std::endl;
+                        std::cout << "❌ Pas assez de dégâts pour éliminer ce champion. Choisissez une autre option." << std::endl;
                     }
                 }
             }

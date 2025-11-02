@@ -609,6 +609,14 @@ void Plateau::achatActionChampion(Joueur& joueur) {
                     // Effectuer l'achat
                     joueur.setArgent(joueur.getArgent() - action->getPrix());
                     marche.removeActionVendable(action);
+                    
+                    // Si c'est un champion, s'assurer que isDefense = false
+                    Champion* champion = dynamic_cast<Champion*>(action);
+                    if (champion != nullptr) {
+                        champion->setIsDefense(false);
+                        std::cout << "  ℹ️  Champion acheté avec isDefense=false" << std::endl;
+                    }
+                    
                     Defausse defausseJ = joueur.getDefausse();
                     defausseJ.addCarte(action);
                     joueur.setDefausse(defausseJ);
@@ -865,7 +873,6 @@ void Plateau::utiliserDegatsStockes(Joueur& joueur, Joueur& adversaire) {
         while(joueur.getDegatsStockes() > 0){
             std::cout << "\n=== Dégâts restants: " << joueur.getDegatsStockes() << " ===" << std::endl;
             
-            // Vérifier s'il reste des champions non-gardes
             const auto& champions = adversaire.getStackChampion().getChampions();
             if(champions.empty()){
                 std::cout << "Tous les champions sont éliminés." << std::endl;
@@ -878,16 +885,11 @@ void Plateau::utiliserDegatsStockes(Joueur& joueur, Joueur& adversaire) {
             std::cout << "Choisissez votre action :" << std::endl;
             std::cout << "0. Infliger tous les dégâts restants (" << joueur.getDegatsStockes() << ") directement au joueur adverse" << std::endl;
             
-            std::vector<Champion*> ciblesPossibles;
             for (size_t i = 0; i < champions.size(); ++i) {
                 std::cout << i + 1 << ". Attaquer " << champions[i]->getNom() << " (PV : " << champions[i]->getPointDeVie() << ")";
-                if (champions[i]->getPointDeVie() <= joueur.getDegatsStockes())
-                {
+                if (champions[i]->getPointDeVie() <= joueur.getDegatsStockes()) {
                     std::cout << " [Peut être éliminé]" << std::endl;
-                    ciblesPossibles.push_back(champions[i]);
-                }
-                else
-                {
+                } else {
                     std::cout << " (Ne peut pas être éliminé, PV trop élevés)" << std::endl;
                 }
             }
@@ -897,30 +899,36 @@ void Plateau::utiliserDegatsStockes(Joueur& joueur, Joueur& adversaire) {
             std::cin >> choix;
             
             if (choix == 0) {
-                std::cout << "Le joueur adverse subit " << joueur.getDegatsStockes() << " dégâts directement." << std::endl;
                 adversaire.setPointDeVie(adversaire.getPointDeVie() - joueur.getDegatsStockes());
+                std::cout << "Le joueur adverse subit " << joueur.getDegatsStockes() << " dégâts directement." << std::endl;
                 joueur.setDegatsStockes(0);
                 break;
             } 
             else if(choix > 0 && choix <= static_cast<int>(champions.size())){
                 Champion* cible = champions[choix - 1];
                 
-                // Vérifier si le champion peut être éliminé
                 if(cible->getPointDeVie() <= joueur.getDegatsStockes()){
-                    int before = cible->getPointDeVie();
-                    cible->setPointDeVie(0);
-                    std::cout << "Le champion " << cible->getNom() << " subit " << before << " dégâts (PV : " << before << " -> " << cible->getPointDeVie() << ")" << std::endl;
-                    joueur.setDegatsStockes(joueur.getDegatsStockes() - before);
+                    int pvAvant = cible->getPointDeVie();
+                    joueur.setDegatsStockes(joueur.getDegatsStockes() - pvAvant);
                     
-                    // Retirer le champion éliminé du stackChampion
+                    std::cout << "Le champion " << cible->getNom() << " subit " << pvAvant << " dégâts" << std::endl;
+                    
+                    // Quand un champion est éliminé, restaurer ses PV avant de le défausser
+                    cible->restaurerPointsDeVie();
+                    cible->setIsDefense(false);
+                    
+                    Defausse defausse = adversaire.getDefausse();
+                    defausse.addCarte(cible);
+                    adversaire.setDefausse(defausse);
+                    
                     adversaire.getStackChampion().removeChampion(cible);
-                    std::cout << "Le champion " << cible->getNom() << " est éliminé et retiré du jeu." << std::endl;
+                    
+                    std::cout << "💀 " << cible->getNom() << " éliminé et retourne en défausse avec " 
+                              << cible->getPointDeVie() << " PV restaurés." << std::endl;
+                } else {
+                    std::cout << "Vous n'avez pas assez de dégâts pour éliminer ce champion." << std::endl;
                 }
-                else{
-                    std::cout << "Vous n'avez pas assez de dégâts pour éliminer ce champion. Veuillez choisir une autre cible." << std::endl;
-                }
-            }
-            else{
+            } else {
                 std::cout << "Choix invalide. Veuillez réessayer." << std::endl;
             }
         }
@@ -928,139 +936,138 @@ void Plateau::utiliserDegatsStockes(Joueur& joueur, Joueur& adversaire) {
     else{
         std::cout << "Le joueur a " << adversaire.getStackChampion().getGardes().size() << " garde(s) en jeu." << std::endl;
         std::cout << "Les dégâts stockés DOIVENT être infligés aux gardes en priorité." << std::endl;
+        
         std::vector<Champion*> ciblesPossibles;
-        for (size_t i = 0; i < adversaire.getStackChampion().getGardes().size(); ++i) {
-            Champion* garde = adversaire.getStackChampion().getGardes()[i];
-            std::cout << i + 1 << ". " << garde->getNom() << " (PV : " << garde->getPointDeVie() << ")";
-            if (garde->getPointDeVie() <= joueur.getDegatsStockes())
-            {
-                std::cout << " [Peut être éliminé]" << std::endl;
+        for (Champion* garde : adversaire.getStackChampion().getGardes()) {
+            if (garde->getPointDeVie() <= joueur.getDegatsStockes()) {
                 ciblesPossibles.push_back(garde);
-            }
-            else
-            {
-                std::cout << " (PV trop élevés)" << std::endl;
             }
         }
 
         if (ciblesPossibles.empty()) {
-            std::cout << "Aucun garde ne peut être éliminé avec les dégâts stockés." << std::endl;
+            std::cout << "Aucun garde ne peut être éliminé avec les dégâts stockés (" << joueur.getDegatsStockes() << ")." << std::endl;
             std::cout << "Les dégâts restants sont perdus." << std::endl;
             joueur.setDegatsStockes(0);
             return;
         }
-        else{
-            while (!ciblesPossibles.empty() && joueur.getDegatsStockes() > 0)
-            {
-                std::cout << "\nDégâts restants: " << joueur.getDegatsStockes() << std::endl;
-                std::cout << "Choisissez un garde à attaquer parmi les suivants :" << std::endl;
-                for (size_t i = 0; i < ciblesPossibles.size(); ++i) {
-                    std::cout << i + 1 << ". " << ciblesPossibles[i]->getNom() << " (PV : " << ciblesPossibles[i]->getPointDeVie() << ")" << std::endl;
-                }
-                int choix;
-                std::cin >> choix;
+        
+        while (!ciblesPossibles.empty() && joueur.getDegatsStockes() > 0) {
+            std::cout << "\nDégâts restants: " << joueur.getDegatsStockes() << std::endl;
+            std::cout << "Choisissez un garde à attaquer parmi les suivants :" << std::endl;
+            
+            for (size_t i = 0; i < ciblesPossibles.size(); ++i) {
+                std::cout << i + 1 << ". " << ciblesPossibles[i]->getNom() 
+                          << " (PV : " << ciblesPossibles[i]->getPointDeVie() << ")" << std::endl;
+            }
+            
+            int choix;
+            std::cin >> choix;
+            
+            if(choix > 0 && choix <= static_cast<int>(ciblesPossibles.size())){
+                Champion* cible = ciblesPossibles[choix - 1];
+                int pvAvant = cible->getPointDeVie();
+                cible->setPointDeVie(0);
+                joueur.setDegatsStockes(joueur.getDegatsStockes() - pvAvant);
                 
-                if(choix > 0 && choix <= static_cast<int>(ciblesPossibles.size())){
-                    Champion* cible = ciblesPossibles[choix - 1];
-                    int before = cible->getPointDeVie();
-                    cible->setPointDeVie(0);
-                    std::cout << "Le garde " << cible->getNom() << " subit " << before << " dégâts (PV : " << before << " -> " << cible->getPointDeVie() << ")" << std::endl;
-                    joueur.setDegatsStockes(joueur.getDegatsStockes() - before);
-                    
-                    // Retirer le garde éliminé du stackChampion (et du vecteur gardes automatiquement)
-                    adversaire.getStackChampion().removeChampion(cible);
-                    std::cout << "Le garde " << cible->getNom() << " est éliminé et retiré du jeu." << std::endl;
-                    
-                    ciblesPossibles.erase(ciblesPossibles.begin() + (choix - 1));
-                }
-                else{
-                    std::cout << "Choix invalide. Veuillez réessayer." << std::endl;
-                    continue;
-                }
+                // Réinitialiser isDefense et restaurer les PV
+                cible->setIsDefense(false);
+                cible->restaurerPointsDeVie();  // ✅ RESTAURER LES PV
                 
-                if(joueur.getDegatsStockes() > 0 && !ciblesPossibles.empty()){
-                    // Mettre à jour les cibles possibles
-                    std::vector<Champion*> ciblesNewPossibles;
-                    for (size_t i = 0; i < ciblesPossibles.size(); i++)
-                    {
-                        Champion* garde = ciblesPossibles[i];
-                        if(garde->getPointDeVie() <= joueur.getDegatsStockes())
-                        {
-                            ciblesNewPossibles.push_back(garde);
+                // Ajouter à la défausse
+                Defausse defausse = adversaire.getDefausse();
+                defausse.addCarte(cible);
+                adversaire.setDefausse(defausse);
+                
+                // Retirer du StackChampion (et automatiquement du vecteur gardes)
+                adversaire.getStackChampion().removeChampion(cible);
+                
+                std::cout << "💀 Le garde " << cible->getNom() << " est éliminé et retourne dans la défausse avec " 
+                          << cible->getPointDeVie() << " PV restaurés." << std::endl;
+                
+                // Retirer de la liste des cibles possibles
+                ciblesPossibles.erase(ciblesPossibles.begin() + (choix - 1));
+                
+                // Mettre à jour les cibles possibles
+                if(joueur.getDegatsStockes() > 0) {
+                    std::vector<Champion*> nouvellesCibles;
+                    for (Champion* garde : ciblesPossibles) {
+                        if(garde->getPointDeVie() <= joueur.getDegatsStockes()) {
+                            nouvellesCibles.push_back(garde);
                         }
                     }
                     
-                    if(ciblesNewPossibles.empty() && !ciblesPossibles.empty()){
-                        std::cout << "Aucun autre garde ne peut être éliminé avec les dégâts restants (" << joueur.getDegatsStockes() << ")." << std::endl;
+                    if(nouvellesCibles.empty() && !ciblesPossibles.empty()){
+                        std::cout << "Aucun autre garde ne peut être éliminé avec les dégâts restants." << std::endl;
                         std::cout << "Les dégâts restants sont perdus." << std::endl;
                         joueur.setDegatsStockes(0);
                         break;
                     }
-                    ciblesPossibles = ciblesNewPossibles;
+                    ciblesPossibles = nouvellesCibles;
                 }
-                else if(joueur.getDegatsStockes() > 0 && ciblesPossibles.empty()){
-                    std::cout << "Tous les gardes sont éliminés. Il reste " << joueur.getDegatsStockes() << " dégâts stockés." << std::endl;
-                    
-                    // Maintenant on peut choisir entre champions et joueur
-                    const auto& championsRestants = adversaire.getStackChampion().getChampions();
-                    if(championsRestants.empty()){
-                        std::cout << "Le joueur adverse subit " << joueur.getDegatsStockes() << " dégâts stockés directement." << std::endl;
-                        adversaire.setPointDeVie(adversaire.getPointDeVie() - joueur.getDegatsStockes());
-                        joueur.setDegatsStockes(0);
-                        break;
-                    }
-                    
-                    // Retour au cas "pas de gardes" pour gérer les champions restants
-                    std::cout << "Plus de gardes ! Vous pouvez maintenant cibler les autres champions ou le joueur." << std::endl;
-                    while(joueur.getDegatsStockes() > 0 && !adversaire.getStackChampion().getChampions().empty()){
-                        std::cout << "\n=== Dégâts restants: " << joueur.getDegatsStockes() << " ===" << std::endl;
-                        std::cout << "Choisissez votre action :" << std::endl;
-                        std::cout << "0. Infliger tous les dégâts restants au joueur adverse" << std::endl;
-                        
-                        const auto& champs = adversaire.getStackChampion().getChampions();
-                        for (size_t i = 0; i < champs.size(); ++i) {
-                            std::cout << i + 1 << ". Attaquer " << champs[i]->getNom() << " (PV : " << champs[i]->getPointDeVie() << ")";
-                            if (champs[i]->getPointDeVie() <= joueur.getDegatsStockes()) {
-                                std::cout << " [Peut être éliminé]" << std::endl;
-                            } else {
-                                std::cout << " (PV trop élevés)" << std::endl;
-                            }
-                        }
-                        
-                        int choixFinal;
-                        std::cout << "\nVotre choix: ";
-                        std::cin >> choixFinal;
-                        
-                        if (choixFinal == 0) {
-                            adversaire.setPointDeVie(adversaire.getPointDeVie() - joueur.getDegatsStockes());
-                            std::cout << "Le joueur adverse subit " << joueur.getDegatsStockes() << " dégâts directement." << std::endl;
-                            joueur.setDegatsStockes(0);
-                            break;
-                        }
-                        else if(choixFinal > 0 && choixFinal <= static_cast<int>(champs.size())){
-                            Champion* cibleChamp = champs[choixFinal - 1];
-                            if(cibleChamp->getPointDeVie() <= joueur.getDegatsStockes()){
-                                int pvBefore = cibleChamp->getPointDeVie();
-                                cibleChamp->setPointDeVie(0);
-                                joueur.setDegatsStockes(joueur.getDegatsStockes() - pvBefore);
-                                adversaire.getStackChampion().removeChampion(cibleChamp);
-                                std::cout << "Le champion " << cibleChamp->getNom() << " est éliminé (" << pvBefore << " dégâts)." << std::endl;
-                            }
-                            else{
-                                std::cout << "Pas assez de dégâts pour éliminer ce champion." << std::endl;
-                            }
-                        }
-                    }
-                    
-                    if(joueur.getDegatsStockes() > 0 && adversaire.getStackChampion().getChampions().empty()){
-                        adversaire.setPointDeVie(adversaire.getPointDeVie() - joueur.getDegatsStockes());
-                        std::cout << "Tous les champions éliminés. Le joueur adverse subit " << joueur.getDegatsStockes() << " dégâts." << std::endl;
-                        joueur.setDegatsStockes(0);
-                    }
+            } else {
+                std::cout << "Choix invalide. Veuillez réessayer." << std::endl;
+                continue;
+            }
+        }
+        
+        // Après élimination des gardes, traiter les champions restants
+        if(joueur.getDegatsStockes() > 0 && adversaire.getStackChampion().getGardes().empty()) {
+            std::cout << "\n✅ Tous les gardes sont éliminés! Vous pouvez maintenant cibler les autres champions." << std::endl;
+            
+            while(joueur.getDegatsStockes() > 0 && !adversaire.getStackChampion().getChampions().empty()){
+                const auto& championsRestants = adversaire.getStackChampion().getChampions();
+                
+                if(championsRestants.empty()){
+                    adversaire.setPointDeVie(adversaire.getPointDeVie() - joueur.getDegatsStockes());
+                    std::cout << "Tous les champions éliminés. Le joueur subit " << joueur.getDegatsStockes() << " dégâts." << std::endl;
+                    joueur.setDegatsStockes(0);
                     break;
                 }
-                else{
+                
+                std::cout << "\n=== Dégâts restants: " << joueur.getDegatsStockes() << " ===" << std::endl;
+                std::cout << "0. Infliger tous les dégâts au joueur adverse" << std::endl;
+                
+                for (size_t i = 0; i < championsRestants.size(); ++i) {
+                    std::cout << i + 1 << ". Attaquer " << championsRestants[i]->getNom() 
+                              << " (PV : " << championsRestants[i]->getPointDeVie() << ")";
+                    if (championsRestants[i]->getPointDeVie() <= joueur.getDegatsStockes()) {
+                        std::cout << " [Peut être éliminé]";
+                    }
+                    std::cout << std::endl;
+                }
+                
+                int choixFinal;
+                std::cin >> choixFinal;
+                
+                if (choixFinal == 0) {
+                    adversaire.setPointDeVie(adversaire.getPointDeVie() - joueur.getDegatsStockes());
+                    std::cout << "Le joueur subit " << joueur.getDegatsStockes() << " dégâts." << std::endl;
+                    joueur.setDegatsStockes(0);
                     break;
+                }
+                else if(choixFinal > 0 && choixFinal <= static_cast<int>(championsRestants.size())){
+                    Champion* cibleChamp = championsRestants[choixFinal - 1];
+                    if(cibleChamp->getPointDeVie() <= joueur.getDegatsStockes()){
+                        int pvAvant = cibleChamp->getPointDeVie();
+                        cibleChamp->setPointDeVie(0);
+                        joueur.setDegatsStockes(joueur.getDegatsStockes() - pvAvant);
+                        
+                        // Réinitialiser isDefense et restaurer les PV
+                        cibleChamp->setIsDefense(false);
+                        cibleChamp->restaurerPointsDeVie();  // ✅ RESTAURER LES PV
+                        
+                        Defausse defausse = adversaire.getDefausse();
+                        defausse.addCarte(cibleChamp);
+                        adversaire.setDefausse(defausse);
+                        
+                        adversaire.getStackChampion().removeChampion(cibleChamp);
+                        
+                        std::cout << "💀 Le champion " << cibleChamp->getNom() 
+                                  << " est éliminé et retourne dans la défausse avec " 
+                                  << cibleChamp->getPointDeVie() << " PV restaurés." << std::endl;
+                    } else {
+                        std::cout << "Pas assez de dégâts pour éliminer ce champion." << std::endl;
+                    }
                 }
             }
         }

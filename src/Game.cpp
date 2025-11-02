@@ -296,12 +296,22 @@ void Game::phaseUtilisationDegats(const std::string& /* nomJoueur */, Joueur& jo
 void Game::phaseFinTour(const std::string& /* nomJoueur */, Joueur& joueur) {
     std::cout << "\n┌─ FIN DU TOUR ───────────────────────────────────────────┐" << std::endl;
     
-    // Déplacer cartes vers défausse
+    // Déplacer cartes vers défausse (et réinitialiser isDefense pour les champions)
     Defausse defausse = joueur.getDefausse();
     MainJoueur main = joueur.getMain();
     
     auto cartesMain = main.getCartes();
     for (auto* carte : cartesMain) {
+        // Si c'est un champion, réinitialiser isDefense à false ET restaurer ses PV
+        Champion* champion = dynamic_cast<Champion*>(carte);
+        if (champion != nullptr) {
+            champion->setIsDefense(false);
+            champion->restaurerPointsDeVie();  // ✅ RESTAURER LES PV
+            std::cout << "  ℹ️  Champion " << champion->getNom() 
+                      << " réinitialisé (isDefense=false, PV=" 
+                      << champion->getPointDeVie() << "/" << champion->getPointDeVieMax() << ")" << std::endl;
+        }
+        
         defausse.addCarte(carte);
         main.removeCarte(carte);
     }
@@ -315,7 +325,23 @@ void Game::phaseFinTour(const std::string& /* nomJoueur */, Joueur& joueur) {
     
     for (int i = 0; i < 5; ++i) {
         if (pioche.getCartes().empty()) {
+            // Remettre la défausse dans la pioche
             for (auto* carte : defausse.getCartes()) {
+                // Vérifier que les champions ont bien isDefense=false et PV restaurés
+                Champion* champion = dynamic_cast<Champion*>(carte);
+                if (champion != nullptr) {
+                    if (champion->getIsDefense()) {
+                        std::cout << "  ⚠️  Champion " << champion->getNom() 
+                                  << " avait isDefense=true dans la défausse! Correction..." << std::endl;
+                        champion->setIsDefense(false);
+                    }
+                    if (champion->getPointDeVie() != champion->getPointDeVieMax()) {
+                        std::cout << "  ⚠️  Champion " << champion->getNom() 
+                                  << " avait " << champion->getPointDeVie() << " PV au lieu de " 
+                                  << champion->getPointDeVieMax() << "! Restauration..." << std::endl;
+                        champion->restaurerPointsDeVie();
+                    }
+                }
                 pioche.addCarte(carte);
             }
             defausse.clear();
@@ -325,6 +351,23 @@ void Game::phaseFinTour(const std::string& /* nomJoueur */, Joueur& joueur) {
         if (pioche.getCartes().empty()) break;
         
         Carte* carte = pioche.getCartes()[0];
+        
+        // Vérifier que les champions piochés ont isDefense=false et PV complets
+        Champion* champion = dynamic_cast<Champion*>(carte);
+        if (champion != nullptr) {
+            if (champion->getIsDefense()) {
+                std::cout << "  ⚠️  Champion " << champion->getNom() 
+                          << " pioché avec isDefense=true! Correction..." << std::endl;
+                champion->setIsDefense(false);
+            }
+            if (champion->getPointDeVie() != champion->getPointDeVieMax()) {
+                std::cout << "  ⚠️  Champion " << champion->getNom() 
+                          << " pioché avec " << champion->getPointDeVie() << " PV! Restauration à " 
+                          << champion->getPointDeVieMax() << " PV..." << std::endl;
+                champion->restaurerPointsDeVie();
+            }
+        }
+        
         pioche.tirerCarte(carte);
         nouvelleMain.addCarte(carte);
     }

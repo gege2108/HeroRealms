@@ -20,6 +20,7 @@ private:
     
     // Phases de jeu
     void gererChampionsEnMain(Joueur& joueur, Joueur& adversaire);
+    void utiliserChampionsEnJeu(const std::string& nomJoueur, Joueur& joueur, Joueur& adversaire);  // NOUVELLE MÉTHODE
     void phaseCartesDeBase(const std::string& nomJoueur, Joueur& joueur, Joueur& adversaire);
     void phaseGemmesDeFeu(const std::string& nomJoueur, Joueur& joueur);
     void phaseAchatGemmes(const std::string& nomJoueur, Joueur& joueur);

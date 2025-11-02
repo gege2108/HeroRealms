@@ -78,12 +78,15 @@ void Initializer::initializePlateauRef(Plateau& plateau) {
     }
     
     std::cout << "DEBUG: Ajout d'actions au marché" << std::endl;
+    // TEMPORAIRE: Ne pas ajouter les actions pour tester uniquement les champions
+    /*
     auto actions = createActions();
     for (auto* action : actions) {
         marche.addStackAction(action);
     }
+    */
     
-    std::cout << "DEBUG: Ajout de champions au marché" << std::endl;
+    std::cout << "DEBUG: Ajout de champions au marché (UNIQUEMENT DES CHAMPIONS)" << std::endl;
     auto champions = createChampions();
     for (auto* champion : champions) {
         marche.addStackAction(champion);
@@ -422,76 +425,76 @@ std::vector<Champion*> Initializer::createChampions() {
         {Effet(3, DEGAT)}, {Effet(2, SOIN)},
         {}, {},
         {Effet(5, DEGAT), Effet(3, SOIN)}, {},
-        5, true, true));
+        5, true, false));  // PV=5, isGarde=true, isDefense=false
     
     champions.push_back(new Champion(Faction::FactionJaune, "Paladin Royal", 6,
         {Effet(2, DEGAT), Effet(3, SOIN)}, {},
         {}, {},
         {Effet(4, DEGAT), Effet(5, SOIN)}, {},
-        7, true, true));
+        7, true, false));  // PV=7, isGarde=true, isDefense=false
     
     champions.push_back(new Champion(Faction::FactionJaune, "Général Impérial", 8,
         {Effet(5, DEGAT), Effet(2, OR)}, {},
         {EffetTextuel(1, "Piocher une carte")}, {},
         {Effet(7, DEGAT), Effet(4, OR)}, {},
-        6, false, true));
+        6, false, false));  // PV=6, isGarde=false, isDefense=false
     
     // Champions Faction Guilde (3 champions)
     champions.push_back(new Champion(Faction::FactionBleu, "Assassin de Guilde", 5,
         {Effet(4, DEGAT)}, {},
         {EffetTextuel(3, "Étourdir champion")}, {},
         {Effet(6, DEGAT)}, {},
-        4, false, false));
+        4, false, false));  // PV=4, isGarde=false, isDefense=false
     
     champions.push_back(new Champion(Faction::FactionBleu, "Maître Espion", 7,
         {Effet(3, DEGAT), Effet(2, OR)}, {},
         {EffetTextuel(2, "Défausser adversaire")}, {},
         {Effet(5, DEGAT), Effet(3, OR)}, {},
-        5, false, false));
+        5, false, false));  // PV=5, isGarde=false, isDefense=false
     
     champions.push_back(new Champion(Faction::FactionBleu, "Seigneur des Voleurs", 9,
         {Effet(4, DEGAT), Effet(3, OR)}, {},
         {EffetTextuel(4, "Piocher puis défausser")}, {},
         {Effet(6, DEGAT), Effet(5, OR)}, {},
-        6, false, true));
+        6, false, false));  // PV=6, isGarde=false, isDefense=false
     
     // Champions Faction Nécros (3 champions)
     champions.push_back(new Champion(Faction::FactionRouge, "Nécromant", 6,
         {Effet(2, DEGAT)}, {Effet(3, SOIN)},
         {EffetTextuel(1, "Piocher une carte")}, {},
         {Effet(4, DEGAT), Effet(2, SOIN)}, {},
-        6, false, true));
+        6, false, false));  // PV=6, isGarde=false, isDefense=false
     
     champions.push_back(new Champion(Faction::FactionRouge, "Liche Ancienne", 8,
         {Effet(4, DEGAT), Effet(2, SOIN)}, {},
         {EffetTextuel(2, "Défausser adversaire")}, {},
         {Effet(6, DEGAT), Effet(4, SOIN)}, {},
-        7, false, true));
+        7, false, false));  // PV=7, isGarde=false, isDefense=false
     
     champions.push_back(new Champion(Faction::FactionRouge, "Seigneur Vampire", 10,
         {Effet(5, DEGAT), Effet(3, SOIN)}, {},
         {EffetTextuel(3, "Étourdir champion")}, {},
         {Effet(8, DEGAT), Effet(5, SOIN)}, {},
-        8, false, true));
+        8, false, false));  // PV=8, isGarde=false, isDefense=false
     
     // Champions Faction Sauvage (3 champions)
     champions.push_back(new Champion(Faction::FactionVert, "Chef de Clan", 5,
         {Effet(4, DEGAT), Effet(1, SOIN)}, {},
         {}, {},
         {Effet(6, DEGAT), Effet(2, SOIN)}, {},
-        5, false, false));
+        5, false, false));  // PV=5, isGarde=false, isDefense=false
     
     champions.push_back(new Champion(Faction::FactionVert, "Druide Suprême", 7,
         {Effet(2, DEGAT), Effet(4, SOIN)}, {},
         {EffetTextuel(1, "Piocher une carte")}, {},
         {Effet(4, DEGAT), Effet(6, SOIN)}, {},
-        6, false, true));
+        6, false, false));  // PV=6, isGarde=false, isDefense=false
     
     champions.push_back(new Champion(Faction::FactionVert, "Alpha des Loups", 9,
         {Effet(6, DEGAT)}, {},
         {EffetTextuel(4, "Piocher puis défausser")}, {},
         {Effet(9, DEGAT), Effet(3, SOIN)}, {},
-        7, true, false));
+        7, true, false));  // PV=7, isGarde=true, isDefense=false
     
     return champions;
 }

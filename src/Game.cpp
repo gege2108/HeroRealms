@@ -13,25 +13,57 @@ void Game::run() {
     
     while (round < 10 && !partieTerminee()) {
         ++round;
-        std::cout << "DEBUG: Début du tour " << round << std::endl;
         
         afficherEntete();
         afficherInfosJoueurs();
         
-        std::cout << "DEBUG: Avant tour Joueur 1" << std::endl;
-        // Tour du Joueur 1
-        tourJoueur("Joueur 1", plateau.getJoueur1(), plateau.getJoueur2());
+        // ==================== TOUR JOUEUR 1 ====================
+        std::cout << "\n╔═══════════════════════════════════════════════════════════╗" << std::endl;
+        std::cout << "║         🎮 TOUR DE " << std::left << std::setw(30) << "Joueur 1" << "             ║" << std::endl;
+        std::cout << "╚═══════════════════════════════════════════════════════════╝" << std::endl;
+        
+        afficherMainJoueur("Joueur 1", plateau.getJoueur1());
+        
+        // ===== NOUVELLE PHASE: Gestion des Champions =====
+        std::cout << "\n┌─ PHASE SPÉCIALE: Champions ────────────────────────────┐" << std::endl;
+        std::cout << "│ Gérer vos champions                                     │" << std::endl;
+        std::cout << "└─────────────────────────────────────────────────────────┘" << std::endl;
+        
+        gererChampionsEnMain(plateau.getJoueur1(), plateau.getJoueur2());
+        
+        phaseCartesDeBase("Joueur 1", plateau.getJoueur1(), plateau.getJoueur2());
+        phaseGemmesDeFeu("Joueur 1", plateau.getJoueur1());
+        phaseAchatGemmes("Joueur 1", plateau.getJoueur1());
+        phaseAchatActions("Joueur 1", plateau.getJoueur1());
+        phaseUtilisationEffets("Joueur 1", plateau.getJoueur1(), plateau.getJoueur2());
+        phaseUtilisationDegats("Joueur 1", plateau.getJoueur1(), plateau.getJoueur2());
+        phaseFinTour("Joueur 1", plateau.getJoueur1());
         
         if (partieTerminee()) break;
         
-        std::cout << "DEBUG: Avant tour Joueur 2" << std::endl;
-        // Tour du Joueur 2
-        tourJoueur("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1());
+        // ==================== TOUR JOUEUR 2 ====================
+        std::cout << "\n╔═══════════════════════════════════════════════════════════╗" << std::endl;
+        std::cout << "║         🎮 TOUR DE " << std::left << std::setw(30) << "Joueur 2" << "             ║" << std::endl;
+        std::cout << "╚═══════════════════════════════════════════════════════════╝" << std::endl;
         
-        std::cout << "DEBUG: Fin du tour " << round << std::endl;
+        afficherMainJoueur("Joueur 2", plateau.getJoueur2());
+        
+        // ===== NOUVELLE PHASE: Gestion des Champions =====
+        std::cout << "\n┌─ PHASE SPÉCIALE: Champions ────────────────────────────┐" << std::endl;
+        std::cout << "│ Gérer vos champions                                     │" << std::endl;
+        std::cout << "└─────────────────────────────────────────────────────────┘" << std::endl;
+        
+        gererChampionsEnMain(plateau.getJoueur2(), plateau.getJoueur1());
+        
+        phaseCartesDeBase("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1());
+        phaseGemmesDeFeu("Joueur 2", plateau.getJoueur2());
+        phaseAchatGemmes("Joueur 2", plateau.getJoueur2());
+        phaseAchatActions("Joueur 2", plateau.getJoueur2());
+        phaseUtilisationEffets("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1());
+        phaseUtilisationDegats("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1());
+        phaseFinTour("Joueur 2", plateau.getJoueur2());
     }
     
-    std::cout << "DEBUG: Affichage du gagnant" << std::endl;
     afficherGagnant();
 }
 
@@ -358,4 +390,116 @@ void Game::afficherGagnant() const {
     
     std::cout << "\nStatistiques finales:" << std::endl;
     std::cout << "  Tours joués: " << round << std::endl;
+}
+
+void Game::gererChampionsEnMain(Joueur& joueur, Joueur& adversaire) {
+    auto champions = joueur.getMain().getChampions();
+    
+    if (champions.empty()) {
+        std::cout << "   Aucun champion en main." << std::endl;
+        return;
+    }
+    
+    std::cout << "\n   Vous avez " << champions.size() << " champion(s) en main." << std::endl;
+    
+    // Parcourir tous les champions en main
+    for (size_t i = 0; i < champions.size(); ++i) {
+        Champion* champion = champions[i];
+        
+        // Ignorer les champions déjà en défense
+        if (champion->getIsDefense()) {
+            continue;
+        }
+        
+        std::cout << "\n🎖️  Champion #" << (i + 1) << ": " << champion->getNom() << std::endl;
+        std::cout << "   💰 Prix: " << champion->getPrix() << std::endl;
+        std::cout << "   ❤️  PV: " << champion->getPointDeVie() << std::endl;
+        std::cout << "   🛡️  Garde: " << (champion->getIsGarde() ? "Oui" : "Non") << std::endl;
+        
+        std::cout << "   📋 Effets (Choix 1): ";
+        for (const auto& effet : champion->getEffetsBasiqueChoix1()) {
+            std::cout << effet.toString() << " ";
+        }
+        std::cout << std::endl;
+        
+        if (!champion->getListEffetTextuelChoix1().empty()) {
+            std::cout << "   📜 Effets textuels: ";
+            for (const auto& effet : champion->getListEffetTextuelChoix1()) {
+                std::cout << effet.toString() << " ";
+            }
+            std::cout << std::endl;
+        }
+        
+        std::cout << "\n   Voulez-vous jouer ce champion ce tour?" << std::endl;
+        std::cout << "   [1] Oui  [0] Non" << std::endl;
+        std::cout << "   → Votre choix: ";
+        
+        int choix;
+        std::cin >> choix;
+        
+        if (choix == 1) {
+            std::cout << "\n   ✅ Vous jouez " << champion->getNom() << "!" << std::endl;
+            
+            // 1. Appliquer les effets du champion (Choix 1)
+            std::cout << "   📋 Application des effets:" << std::endl;
+            
+            for (const auto& effet : champion->getEffetsBasiqueChoix1()) {
+                switch (effet.getType()) {
+                    case OR:
+                        joueur.setArgent(joueur.getArgent() + effet.getValeur());
+                        std::cout << "      💰 +" << effet.getValeur() << " or (Total: " << joueur.getArgent() << ")" << std::endl;
+                        break;
+                    case DEGAT:
+                        joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur());
+                        std::cout << "      ⚔️  +" << effet.getValeur() << " dégâts (Total: " << joueur.getDegatsStockes() << ")" << std::endl;
+                        break;
+                    case SOIN:
+                        joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur());
+                        std::cout << "      ❤️  +" << effet.getValeur() << " PV (Total: " << joueur.getPointDeVie() << ")" << std::endl;
+                        break;
+                }
+            }
+            
+            // 2. Appliquer les effets textuels (Choix 1)
+            for (const auto& effetTextuel : champion->getListEffetTextuelChoix1()) {
+                EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur, adversaire);
+            }
+            
+            // 3. Transférer le champion vers StackChampion
+            champion->setIsDefense(true);
+            
+            StackChampion stackChamp = joueur.getStackChampion();
+            stackChamp.push(champion);
+            joueur.setStackChampion(stackChamp);
+            
+            std::cout << "   🎖️  " << champion->getNom() << " est maintenant en jeu (mode défense)!" << std::endl;
+            if (champion->getIsGarde()) {
+                std::cout << "      🛡️  Garde activé!" << std::endl;
+            }
+            
+            // 4. Retirer le champion de la main
+            MainJoueur main = joueur.getMain();
+            main.removeCarte(champion);
+            joueur.setMain(main);
+            
+            // Mettre à jour la liste des champions (car un a été retiré)
+            champions = joueur.getMain().getChampions();
+            --i; // Ajuster l'index car le vecteur a changé
+        } else {
+            std::cout << "   ⏭️  Champion gardé en main." << std::endl;
+        }
+    }
+    
+    // Afficher un résumé des champions en jeu
+    if (!joueur.getStackChampion().getChampions().empty()) {
+        std::cout << "\n   🎖️  Champions actuellement en jeu:" << std::endl;
+        for (const auto& champ : joueur.getStackChampion().getChampions()) {
+            std::cout << "      • " << champ->getNom() 
+                      << " (❤️  " << champ->getPointDeVie() << " PV)";
+            if (champ->getIsGarde()) {
+                std::cout << " 🛡️  [GARDE]";
+            }
+            std::cout << std::endl;
+        }
+    }
 }

@@ -746,7 +746,7 @@ void Game::utiliserChampionsEnJeu(const std::string& /* nomJoueur */, Joueur& jo
     std::cout << "│ Utiliser les compétences de vos champions en jeu     │" << std::endl;
     std::cout << "└─────────────────────────────────────────────────────────┘" << std::endl;
     
-    // Récupérer les factions présentes dans la main
+    // ✅ Récupérer les factions présentes dans la main ET en jeu
     std::set<Faction> factionsEnMain;
     for (auto* carte : joueur.getMain().getCartes()) {
         Action* action = dynamic_cast<Action*>(carte);
@@ -755,11 +755,17 @@ void Game::utiliserChampionsEnJeu(const std::string& /* nomJoueur */, Joueur& jo
         }
     }
     
+    // ✅ Compter le nombre de champions par faction en jeu
+    std::map<Faction, int> compteFactionEnJeu;
+    for (auto* champ : championsEnJeu) {
+        compteFactionEnJeu[champ->getFaction()]++;
+    }
+    
     // Parcourir chaque champion en jeu
     for (size_t i = 0; i < championsEnJeu.size(); ++i) {
         Champion* champion = championsEnJeu[i];
         
-        // ✅ SAUTER le champion s'il a déjà utilisé ses effets ce tour
+        // Sauter le champion s'il a déjà utilisé ses effets ce tour
         if (champion->getEffetsUtilisesCeTour()) {
             std::cout << "\n🎖️  Champion " << (i + 1) << ": " << champion->getNom() << std::endl;
             std::cout << "   ✨ Ce champion a déjà utilisé ses effets ce tour (joué depuis la main)." << std::endl;
@@ -769,17 +775,25 @@ void Game::utiliserChampionsEnJeu(const std::string& /* nomJoueur */, Joueur& jo
         std::cout << "\n🎖️  Champion " << (i + 1) << ": " << champion->getNom() << std::endl;
         std::cout << "   Faction: ";
         switch(champion->getFaction()) {
-            case Faction::FactionJaune: std::cout << "Impériale (Jaune)"; break;
-            case Faction::FactionBleu: std::cout << "Guilde (Bleu)"; break;
-            case Faction::FactionRouge: std::cout << "Nécros (Rouge)"; break;
-            case Faction::FactionVert: std::cout << "Sauvage (Vert)"; break;
-            default: std::cout << "Neutre"; break;
+            case Faction::FactionJaune: std::cout << "Impériale (Jaune) 👑"; break;
+            case Faction::FactionBleu: std::cout << "Guilde (Bleu) 🗡️"; break;
+            case Faction::FactionRouge: std::cout << "Nécros (Rouge) 💀"; break;
+            case Faction::FactionVert: std::cout << "Sauvage (Vert) 🐺"; break;
+            default: std::cout << "Neutre ⚪"; break;
         }
         std::cout << std::endl;
         std::cout << "   ❤️  PV: " << champion->getPointDeVie() << "/" << champion->getPointDeVieMax() << std::endl;
         
-        // Vérifier si le combo est activable
-        bool comboActivable = factionsEnMain.count(champion->getFaction()) > 0;
+        // ✅ Vérifier si le combo est activable
+        // Combo activable si : carte de même faction en main OU plusieurs champions de même faction en jeu
+        bool comboActivable = false;
+        int nbAutresChampionsMêmeFaction = compteFactionEnJeu[champion->getFaction()] - 1; // -1 pour exclure le champion actuel
+        
+        if (factionsEnMain.count(champion->getFaction()) > 0) {
+            comboActivable = true;
+        } else if (nbAutresChampionsMêmeFaction > 0) {
+            comboActivable = true;
+        }
         
         // Afficher les effets disponibles
         std::cout << "\n   📋 Effets (Choix 1): ";
@@ -807,7 +821,16 @@ void Game::utiliserChampionsEnJeu(const std::string& /* nomJoueur */, Joueur& jo
         
         // Afficher les effets combo si activables
         if (comboActivable && (!champion->getListEffetBasiqueCombo().empty() || !champion->getListEffetTextuelCombo().empty())) {
-            std::cout << "   ✨ COMBO ACTIVABLE! (même faction en main)" << std::endl;
+            std::cout << "   ✨ COMBO ACTIVABLE! ";
+            if (factionsEnMain.count(champion->getFaction()) > 0 && nbAutresChampionsMêmeFaction > 0) {
+                std::cout << "(carte en main + " << nbAutresChampionsMêmeFaction << " autre(s) champion(s) en jeu)";
+            } else if (factionsEnMain.count(champion->getFaction()) > 0) {
+                std::cout << "(carte de même faction en main)";
+            } else {
+                std::cout << "(" << nbAutresChampionsMêmeFaction << " autre(s) champion(s) de même faction en jeu)";
+            }
+            std::cout << std::endl;
+            
             std::cout << "   📋 Effets Combo: ";
             for (const auto& effet : champion->getListEffetBasiqueCombo()) {
                 std::cout << effet.toString() << " ";

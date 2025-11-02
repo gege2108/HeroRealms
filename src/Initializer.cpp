@@ -11,62 +11,111 @@ void Initializer::initializePlateauRef(Plateau& plateau) {
     Effet orPetit(2, OR);
     Effet degatPetit(3, DEGAT);
 
-    std::cout << "DEBUG: Initialisation Joueur1" << std::endl;
-    // Créer directement dans le plateau via getJoueur1()
+    std::cout << "DEBUG: Initialisation directe Joueur1" << std::endl;
     plateau.getJoueur1().setPointDeVie(50);
     plateau.getJoueur1().setArgent(0);
     plateau.getJoueur1().setDegatsStockes(0);
     
-    // Créer la main du joueur 1 directement
-    for (int i = 0; i < 5; ++i) {
-        plateau.getJoueur1().getMain().addCarte(new CarteDeBase("Soin & Or", {soinPetit, orPetit}));
+    // Créer une main avec 3 cartes de base et 2 gemmes
+    std::cout << "DEBUG: Création main1" << std::endl;
+    MainJoueur main1;
+    
+    // Ajouter 3 cartes de base
+    for (int i = 0; i < 3; ++i) {
+        main1.addCarte(new CarteDeBase("Soin & Or", {soinPetit, orPetit}));
     }
     
-    // Créer la pioche du joueur 1 directement
-    for (int i = 0; i < 5; ++i) {
-        plateau.getJoueur1().getPioche().addCarte(new CarteDeBase("Frappe", {degatPetit}));
+    // Ajouter 2 gemmes de feu
+    for (int i = 0; i < 2; ++i) {
+        main1.addCarte(new GemmeDeFeu());
     }
+    
+    std::cout << "DEBUG: Main1 créée avec " << main1.getCartes().size() << " cartes" << std::endl;
+    std::cout << "DEBUG: Assignation main1" << std::endl;
+    plateau.getJoueur1().setMain(main1);
+    
+    // Créer une pioche
+    std::cout << "DEBUG: Création pioche1" << std::endl;
+    Pioche pioche1;
+    for (int i = 0; i < 5; ++i) {
+        pioche1.addCarte(new CarteDeBase("Frappe", {degatPetit}));
+    }
+    std::cout << "DEBUG: Assignation pioche1" << std::endl;
+    plateau.getJoueur1().setPioche(pioche1);
 
-    std::cout << "DEBUG: Initialisation Joueur2" << std::endl;
     // Même chose pour joueur 2
+    std::cout << "DEBUG: Initialisation directe Joueur2" << std::endl;
     plateau.getJoueur2().setPointDeVie(50);
     plateau.getJoueur2().setArgent(0);
     plateau.getJoueur2().setDegatsStockes(0);
     
-    for (int i = 0; i < 5; ++i) {
-        plateau.getJoueur2().getMain().addCarte(new CarteDeBase("Soin & Or", {soinPetit, orPetit}));
+    std::cout << "DEBUG: Création main2" << std::endl;
+    MainJoueur main2;
+    
+    for (int i = 0; i < 3; ++i) {
+        main2.addCarte(new CarteDeBase("Soin & Or", {soinPetit, orPetit}));
     }
     
-    for (int i = 0; i < 5; ++i) {
-        plateau.getJoueur2().getPioche().addCarte(new CarteDeBase("Frappe", {degatPetit}));
+    for (int i = 0; i < 2; ++i) {
+        main2.addCarte(new GemmeDeFeu());
     }
+    
+    plateau.getJoueur2().setMain(main2);
+    
+    std::cout << "DEBUG: Création pioche2" << std::endl;
+    Pioche pioche2;
+    for (int i = 0; i < 5; ++i) {
+        pioche2.addCarte(new CarteDeBase("Frappe", {degatPetit}));
+    }
+    plateau.getJoueur2().setPioche(pioche2);
 
     std::cout << "DEBUG: Création du marché" << std::endl;
+    Marche marche;
     
-    // Ajouter les gemmes directement au marché du plateau
-    for (int i = 0; i < 10; ++i) {
-        plateau.getMarche().addGemme(new GemmeDeFeu());
+    std::cout << "DEBUG: Ajout de 16 gemmes" << std::endl;
+    for (int i = 0; i < 16; ++i) {
+        marche.addGemme(new GemmeDeFeu());
     }
     
     std::cout << "DEBUG: Ajout d'actions au marché" << std::endl;
+    auto actions = createActions();
+    for (auto* action : actions) {
+        marche.addStackAction(action);
+    }
     
-    // Ajouter quelques actions
-    for (int i = 0; i < 5; ++i) {
-        plateau.getMarche().addStackAction(new Action(
-            Faction::FactionJaune,
-            "Taxation",
-            1,
-            { Effet(2, OR) },
-            {},
-            {},
-            {},
-            { Effet(6, SOIN) },
-            {}
-        ));
+    std::cout << "DEBUG: Ajout de champions au marché" << std::endl;
+    auto champions = createChampions();
+    for (auto* champion : champions) {
+        marche.addStackAction(champion);
     }
 
-    std::cout << "DEBUG: Mise à jour des actions vendables" << std::endl;
-    plateau.getMarche().MiseAJourActionsVendables();
+    std::cout << "DEBUG: Nombre total de cartes dans la stack : " << marche.getStackActions().size() << std::endl;
+    
+    std::cout << "DEBUG: Mélange du marché" << std::endl;
+    marche.melangeStackActionEtChampion();
+    
+    std::cout << "DEBUG: Affichage des 10 premières cartes après mélange :" << std::endl;
+    for (int i = 0; i < 10 && i < static_cast<int>(marche.getStackActions().size()); ++i) {
+        std::cout << "  - Carte " << (i+1) << " : " << marche.getStackActions()[i]->getNom() << std::endl;
+    }
+    
+    std::cout << "DEBUG: Mise à jour des actions vendables (initialisation à 5 cartes)" << std::endl;
+    // Initialiser avec exactement 5 cartes vendables
+    for (int i = 0; i < 5 && !marche.getStackActions().empty(); ++i) {
+        Action* carte = marche.getStackActions().front();
+        marche.addActionVendable(carte);
+        marche.removeStackAction(carte);
+    }
+    
+    std::cout << "DEBUG: Nombre de cartes vendables initialisées: " << marche.getActionsVendables().size() << std::endl;
+    std::cout << "DEBUG: Cartes vendables au démarrage :" << std::endl;
+    for (size_t i = 0; i < marche.getActionsVendables().size(); ++i) {
+        std::cout << "  " << (i+1) << ". " << marche.getActionsVendables()[i]->getNom() 
+                  << " (" << marche.getActionsVendables()[i]->getPrix() << " 💰)" << std::endl;
+    }
+    
+    std::cout << "DEBUG: Assignation marché au plateau" << std::endl;
+    plateau.setMarche(marche);
     
     std::cout << "DEBUG: Fin initializePlateauRef" << std::endl;
 }

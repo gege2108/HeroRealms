@@ -24,7 +24,10 @@ void Game::run() {
         
         afficherMainJoueur("Joueur 1", plateau.getJoueur1());
         
-        // ===== NOUVELLE PHASE: Gestion des Champions =====
+        // NOUVEL AFFICHAGE: Champions en jeu
+        afficherChampionsEnJeu("Joueur 1", plateau.getJoueur1());
+        
+        // ===== PHASE SPÉCIALE: Gestion des Champions =====
         std::cout << "\n┌─ PHASE SPÉCIALE: Champions ────────────────────────────┐" << std::endl;
         std::cout << "│ Gérer vos champions                                     │" << std::endl;
         std::cout << "└─────────────────────────────────────────────────────────┘" << std::endl;
@@ -48,7 +51,10 @@ void Game::run() {
         
         afficherMainJoueur("Joueur 2", plateau.getJoueur2());
         
-        // ===== NOUVELLE PHASE: Gestion des Champions =====
+        // NOUVEL AFFICHAGE: Champions en jeu
+        afficherChampionsEnJeu("Joueur 2", plateau.getJoueur2());
+        
+        // ===== PHASE SPÉCIALE: Gestion des Champions =====
         std::cout << "\n┌─ PHASE SPÉCIALE: Champions ────────────────────────────┐" << std::endl;
         std::cout << "│ Gérer vos champions                                     │" << std::endl;
         std::cout << "└─────────────────────────────────────────────────────────┘" << std::endl;
@@ -511,4 +517,39 @@ void Game::gererChampionsEnMain(Joueur& joueur, Joueur& adversaire) {
             std::cout << std::endl;
         }
     }
+}
+
+void Game::afficherChampionsEnJeu(const std::string& nomJoueur, Joueur& joueur) {
+    auto champions = joueur.getStackChampion().getChampions();
+    auto gardes = joueur.getStackChampion().getGardes();
+    
+    if (champions.empty()) {
+        std::cout << "\n🎖️  " << nomJoueur << " n'a aucun champion en jeu." << std::endl;
+        return;
+    }
+    
+    std::cout << "\n┌─ 🎖️  CHAMPIONS EN JEU (" << nomJoueur << ") ─────────────┐" << std::endl;
+    std::cout << "│ Total: " << champions.size() << " champion(s)";
+    if (!gardes.empty()) {
+        std::cout << " dont " << gardes.size() << " garde(s) 🛡️";
+    }
+    std::cout << std::endl;
+    std::cout << "└─────────────────────────────────────────────────────────┘" << std::endl;
+    
+    for (size_t i = 0; i < champions.size(); ++i) {
+        Champion* champ = champions[i];
+        std::cout << "   " << (i + 1) << ". " << champ->getNom();
+        std::cout << " (❤️  " << champ->getPointDeVie() << " PV)";
+        
+        if (champ->getIsGarde()) {
+            std::cout << " 🛡️  [GARDE]";
+        }
+        
+        if (champ->getIsDefense()) {
+            std::cout << " [Mode Défense]";
+        }
+        
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
 }

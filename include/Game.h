@@ -15,6 +15,7 @@ private:
     void afficherEntete();
     void afficherInfosJoueurs();
     void afficherMainJoueur(const std::string& nomJoueur, Joueur& joueur);
+    void afficherChampionsEnJeu(const std::string& nomJoueur, Joueur& joueur);  // NOUVELLE MÉTHODE
     void afficherSeparateur(char c = '-', int largeur = 60);
     
     // Phases de jeu

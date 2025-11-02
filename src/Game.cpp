@@ -465,22 +465,31 @@ void Game::gererChampionsEnMain(Joueur& joueur, Joueur& adversaire) {
                 EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur, adversaire);
             }
             
-            // 3. Transférer le champion vers StackChampion
-            champion->setIsDefense(true);
-            
-            StackChampion stackChamp = joueur.getStackChampion();
-            stackChamp.push(champion);
-            joueur.setStackChampion(stackChamp);
-            
-            std::cout << "   🎖️  " << champion->getNom() << " est maintenant en jeu (mode défense)!" << std::endl;
-            if (champion->getIsGarde()) {
-                std::cout << "      🛡️  Garde activé!" << std::endl;
-            }
-            
-            // 4. Retirer le champion de la main
+            // ORDRE IMPORTANT:
+            // 1. Retirer de la main D'ABORD
             MainJoueur main = joueur.getMain();
             main.removeCarte(champion);
             joueur.setMain(main);
+            std::cout << "  ➡️  Champion retiré de la main" << std::endl;
+            
+            // 2. Activer le mode défense
+            champion->setIsDefense(true);
+            std::cout << "  ➡️  Mode défense activé" << std::endl;
+            
+            // 3. Ajouter au StackChampion (qui filtrera automatiquement)
+            StackChampion stackChamp = joueur.getStackChampion();
+            
+            std::cout << "  📊 Avant push(): " << stackChamp.getChampions().size() 
+                      << " champions, " << stackChamp.getGardes().size() << " gardes" << std::endl;
+            
+            stackChamp.push(champion);  // push() vérifie et ajoute aux gardes
+            
+            std::cout << "  📊 Après push(): " << stackChamp.getChampions().size() 
+                      << " champions, " << stackChamp.getGardes().size() << " gardes" << std::endl;
+            
+            joueur.setStackChampion(stackChamp);
+            
+            std::cout << "  ➡️  StackChampion mis à jour" << std::endl;
             
             // Mettre à jour la liste des champions (car un a été retiré)
             champions = joueur.getMain().getChampions();

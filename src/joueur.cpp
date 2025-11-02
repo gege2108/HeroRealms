@@ -1,4 +1,6 @@
 #include "Joueur.h"
+#include "Champion.h"
+#include <iostream>
 
 int Joueur::getPointDeVie() const { return pointDeVie; }
 void Joueur::setPointDeVie(int v) { pointDeVie = v; }
@@ -19,7 +21,39 @@ const StackChampion& Joueur::getStackChampion() const { return stackChampion; }
 void Joueur::setMain(const MainJoueur& m) { mainJoueur = m; }
 void Joueur::setPioche(const Pioche& p) { pioche = p; }
 void Joueur::setDefausse(const Defausse& d) { defausse = d; }
-void Joueur::setStackChampion(const StackChampion& s) { stackChampion = s; }
+void Joueur::setStackChampion(const StackChampion& s) {
+    std::cout << "DEBUG setStackChampion(): Début filtrage" << std::endl;
+    
+    // Réinitialiser complètement le stackChampion
+    stackChampion = StackChampion();
+    
+    // Filtrer et ajouter UNIQUEMENT les vrais Champions
+    int nbChampions = 0;
+    int nbGardes = 0;
+    
+    for (auto* carte : s.getCartes()) {
+        // Vérification STRICTE: c'est bien un Champion ?
+        Champion* champion = dynamic_cast<Champion*>(carte);
+        
+        if (champion != nullptr) {
+            stackChampion.push(carte);
+            nbChampions++;
+            
+            if (champion->getIsGarde()) {
+                nbGardes++;
+                std::cout << "  ✓ Champion garde ajouté: " << champion->getNom() << std::endl;
+            } else {
+                std::cout << "  ✓ Champion ajouté: " << champion->getNom() << std::endl;
+            }
+        } else if (carte != nullptr) {
+            std::cout << "  ⚠️  CARTE NON-CHAMPION REJETÉE: " << carte->getNom() 
+                      << " (type: " << typeid(*carte).name() << ")" << std::endl;
+        }
+    }
+    
+    std::cout << "✅ setStackChampion terminé: " << nbChampions << " champions, " 
+              << nbGardes << " gardes" << std::endl;
+}
 
 int Joueur::getArgent() const { return argent; }
 void Joueur::setArgent(int a) { argent = a; }

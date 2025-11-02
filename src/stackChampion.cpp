@@ -1,20 +1,59 @@
 #include "StackChampion.h"
 #include <algorithm>
+#include <iostream>
 
 StackChampion::StackChampion() = default;
 StackChampion::StackChampion(const std::vector<Carte*>& cartes) : cartes(cartes) {}
 
 const std::vector<Carte*>& StackChampion::getCartes() const { return cartes; }
-void StackChampion::setCartes(const std::vector<Carte*>& c) { cartes = c; }
+void StackChampion::setCartes(const std::vector<Carte*>& c) {
+    std::cout << "DEBUG setCartes(): Filtrage de " << c.size() << " cartes" << std::endl;
+    
+    cartes.clear();
+    gardes.clear();
+    
+    // Filtrer UNIQUEMENT les Champions
+    for (auto* carte : c) {
+        Champion* champion = dynamic_cast<Champion*>(carte);
+        if (champion != nullptr) {
+            cartes.push_back(champion);
+            if (champion->getIsGarde()) {
+                gardes.push_back(champion);
+            }
+        } else if (carte != nullptr) {
+            std::cout << "  ⚠️  Carte non-champion ignorée: " << carte->getNom() << std::endl;
+        }
+    }
+    
+    std::cout << "  ✓ Résultat: " << cartes.size() << " champions, " 
+              << gardes.size() << " gardes" << std::endl;
+}
 
 void StackChampion::push(Carte* c) {
-    cartes.push_back(c);
-    
-    // Vérifier si c'est un champion avec garde et l'ajouter automatiquement
-    Champion* champion = dynamic_cast<Champion*>(c);
-    if (champion != nullptr && champion->getIsGarde()) {
-        gardes.push_back(champion);
+    if (c == nullptr) {
+        std::cout << "⚠️  push(): Carte NULL rejetée" << std::endl;
+        return;
     }
+    
+    // VÉRIFICATION CRITIQUE: C'est bien un Champion ?
+    Champion* champion = dynamic_cast<Champion*>(c);
+    
+    if (champion == nullptr) {
+        std::cout << "❌ push(): REJET de '" << c->getNom() 
+                  << "' - CE N'EST PAS UN CHAMPION!" << std::endl;
+        return;  // NE PAS AJOUTER
+    }
+    
+    // OK, c'est un vrai Champion, on peut l'ajouter
+    cartes.push_back(champion);
+    std::cout << "✅ push(): Champion ajouté: " << champion->getNom();
+    
+    // Si c'est un garde, l'ajouter au vecteur gardes
+    if (champion->getIsGarde()) {
+        gardes.push_back(champion);
+        std::cout << " [GARDE]";
+    }
+    std::cout << std::endl;
 }
 
 bool StackChampion::pop(Carte* c) {
@@ -52,15 +91,22 @@ std::vector<Champion*> StackChampion::getChampions() {
 }
 
 bool StackChampion::removeChampion(Champion* champion) {
+    if (champion == nullptr) return false;
+    
+    std::cout << "DEBUG removeChampion(): Retrait de " << champion->getNom() << std::endl;
+    
+    // Retirer de la liste des cartes
     for (auto it = cartes.begin(); it != cartes.end(); ++it) {
         if (*it == champion) {
             cartes.erase(it);
+            std::cout << "✓ Champion retiré de cartes" << std::endl;
             
             // Si c'est un garde, le retirer aussi du vecteur gardes
             if (champion->getIsGarde()) {
                 for (auto gardeIt = gardes.begin(); gardeIt != gardes.end(); ++gardeIt) {
                     if (*gardeIt == champion) {
                         gardes.erase(gardeIt);
+                        std::cout << "🛡️  Garde retiré (restants: " << gardes.size() << ")" << std::endl;
                         break;
                     }
                 }
@@ -75,10 +121,6 @@ bool StackChampion::removeChampion(Champion* champion) {
 std::vector<Champion*>& StackChampion::getGardes() {
     return gardes;
 }
-
-/*const std::vector<Champion*>& StackChampion::getGardes() const {
-    return gardes;
-}*/
 
 void StackChampion::setGardes(const std::vector<Champion*>& g) {
     gardes = g;

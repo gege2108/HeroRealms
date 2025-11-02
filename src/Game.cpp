@@ -124,34 +124,57 @@ void Game::phaseGemmesDeFeu(const std::string& nomJoueur, Joueur& joueur) {
     std::cout << "└─────────────────────────────────────────────────────────┘" << std::endl;
     
     std::vector<GemmeDeFeu*> gemmesASupprimer;
-    int idx = 1;
     
-    for (auto* gemme : gemmes) {
-        std::cout << "\n💎 Gemme #" << idx << ":" << std::endl;
+    for (size_t idx = 0; idx < gemmes.size(); ++idx) {
+        auto* gemme = gemmes[idx];
+        
+        if (gemme == nullptr) {
+            std::cout << "ERREUR: Gemme nulle!" << std::endl;
+            continue;
+        }
+        
+        if (gemme->estSacrifiee()) {
+            std::cout << "💎 Gemme #" << (idx + 1) << " : Déjà sacrifiée, elle sera défaussée" << std::endl;
+            gemmesASupprimer.push_back(gemme);
+            continue;
+        }
+        
+        std::cout << "\n💎 Gemme #" << (idx + 1) << ":" << std::endl;
+        
+        // Étape 1 : Utiliser l'effet +2 or
         std::cout << "  [1] Utiliser pour de l'or (+2 💰)" << std::endl;
-        std::cout << "  [2] Sacrifier pour des dégâts (+3 ⚔️ )" << std::endl;
-        std::cout << "  [0] Passer" << std::endl;
+        std::cout << "  [0] Ne pas utiliser cet effet" << std::endl;
         std::cout << "→ Votre choix: ";
         
-        int choix;
-        std::cin >> choix;
+        int choixOr;
+        std::cin >> choixOr;
         
-        if (choix == 1) {
-            Effet effet = gemme->getEffetsBasiqueChoix1()[0];
-            joueur.setArgent(joueur.getArgent() + effet.getValeur());
-            std::cout << "✓ +" << effet.getValeur() << " 💰 (Total: " << joueur.getArgent() << ")" << std::endl;
-        } else if (choix == 2) {
-            Effet& effetAttaque = gemme->UtiliserAttaque();
-            joueur.setDegatsStockes(joueur.getDegatsStockes() + effetAttaque.getValeur());
-            std::cout << "✓ +" << effetAttaque.getValeur() << " ⚔️  dégâts (Total: " << joueur.getDegatsStockes() << ")" << std::endl;
-            std::cout << "  🔥 Gemme sacrifiée!" << std::endl;
+        if (choixOr == 1) {
+            joueur.setArgent(joueur.getArgent() + 2);
+            std::cout << "✓ +2 💰 (Total: " << joueur.getArgent() << ")" << std::endl;
+        }
+        
+        // Étape 2 : Demander si le joueur veut sacrifier pour les dégâts
+        std::cout << "\n  Voulez-vous SACRIFIER cette gemme pour +3 ⚔️  dégâts ?" << std::endl;
+        std::cout << "  [1] Oui, sacrifier pour +3 dégâts" << std::endl;
+        std::cout << "  [0] Non, garder la gemme" << std::endl;
+        std::cout << "→ Votre choix: ";
+        
+        int choixSacrifice;
+        std::cin >> choixSacrifice;
+        
+        if (choixSacrifice == 1) {
+            joueur.setDegatsStockes(joueur.getDegatsStockes() + 3);
+            std::cout << "✓ +3 ⚔️  dégâts (Total: " << joueur.getDegatsStockes() << ")" << std::endl;
+            std::cout << "  🔥 Gemme sacrifiée! Elle sera mise dans la zone de sacrifice." << std::endl;
             
             gemmesASupprimer.push_back(gemme);
             ZoneDeSacrifice zone = plateau.getZoneDeSacrifice();
             zone.add(gemme);
             plateau.setZoneDeSacrifice(zone);
+        } else {
+            std::cout << "  Gemme conservée en main." << std::endl;
         }
-        idx++;
     }
     
     if (!gemmesASupprimer.empty()) {

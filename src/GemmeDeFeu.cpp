@@ -2,15 +2,20 @@
 #include <iostream>
 
 // Initialisation des membres statiques
-int GemmeDeFeu::prix = 5;
+int GemmeDeFeu::prix = 3;  // Prix : 3 or
 Effet GemmeDeFeu::attaqueGemmeDeFeu = Effet(3, DEGAT);
+
+GemmeDeFeu::GemmeDeFeu() : Carte("Gemme de Feu"), isJetable(false) {
+    this->effetsBasiqueChoix1 = { Effet(2, OR) };
+}
+
+GemmeDeFeu::GemmeDeFeu(const std::string& nom) : Carte(nom), isJetable(false) {
+    this->effetsBasiqueChoix1 = { Effet(2, OR) };
+}
 
 Effet& GemmeDeFeu::UtiliserAttaque() {
     this->isJetable = true;
     return attaqueGemmeDeFeu;
-
-    // Implémentation de l'attaque
-    // TODO: logique pour utiliser l'attaque puis jeter la carte
 }
 
 const std::string& GemmeDeFeu::getNom() const {

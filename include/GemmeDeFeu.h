@@ -8,22 +8,21 @@ public:
     GemmeDeFeu();
     explicit GemmeDeFeu(const std::string& nom);
 
-    const std::string& getNom() const override;  // Retourner const std::string& au lieu de std::string
+    int getPrix() const { return prix; }
+    void setPrix(int p) { prix = p; }
+
+    const std::string& getNom() const override;
     std::string toString() const override;
     Effet& UtiliserAttaque();
-
-    bool getIsJetable() const { return isJetable; }
-    void setIsJetable(bool jetable) { isJetable = jetable; }
-
-    // Implémentation non-ambiguë : renvoie le vecteur membre hérité, pas une variable locale
+    
     const std::vector<Effet>& getEffetsBasiqueChoix1() const override {
-        return this->effetsBasiqueChoix1; // champ protected de Carte
+        return effetsBasiqueChoix1;
     }
 
 private:
     static int prix;
     static Effet attaqueGemmeDeFeu;
-    bool isJetable = false;
+    bool isJetable;
 };
 
 #endif // GEMMEDEFEU_H

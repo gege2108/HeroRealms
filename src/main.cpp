@@ -14,6 +14,7 @@
 #include "EffetTextuel.h"
 #include "test.h"
 #include "Initializer.h"
+#include "Game.h"
 
 
 //TODO : changer l'implementation de sorte à ce que les degats d'attaques soient stockés par le joueur avant d'être utilise
@@ -22,12 +23,14 @@
 int main() {
     // Exécuter tous les tests en une seule ligne
     //testAchatActionChampionNouveauFonctionnement();
-    /*testAchatActionChampion();
+    //testAchatActionChampion();
     
 
 
     // Créer deux joueurs et initialiser les PV à 30
-    Joueur j1;
+    
+    
+    /* Joueur j1;
     Joueur j2;
     j1.setPointDeVie(30);
     j2.setPointDeVie(30);
@@ -84,59 +87,14 @@ int main() {
     j2.setPioche(pioche2);
 
     // Construire un plateau et y assigner les joueurs
-    Plateau plateau;
-    plateau.setJoueur1(j1);
-    plateau.setJoueur2(j2);
-
-    // Créer un marché avec 100 cartes GemmeDeFeu
-    Marche marche;
-    for (int i = 0; i < 16; ++i) {
-        marche.addGemme(new GemmeDeFeu());
-    }
     
-    // Ajouter 3 exemplaires de Taxation au marché (comme spécifié)
-    for (int i = 0; i < 3; ++i) {
-        marche.addStackAction(new Action(
-            Faction::FactionJaune,
-            "Taxation",
-            1,
-            { Effet(2, OR) },
-            {},
-            {},
-            {},
-            { Effet(6, SOIN) },
-            {}
-        ));
-    }
-
-
-
-
     
-    plateau.setMarche(marche);
+    */
+   Plateau plateau;
+    Initializer::initializePlateauRef(plateau);  // Initialisation par référence
     
-
-    GemmeDeFeu gemmeTest("Gemme de Feu Test");
-    std::cout << "Test de la gemme de feu : " << gemmeTest.toString() << std::endl;
-    std::cout << "Prix de la gemme de feu : " << gemmeTest.getPrix() << std::endl;
-    std::cout << "Effets basiques de la gemme de feu : " << std::endl;
-    for (const auto& effet : gemmeTest.getEffetsBasiqueChoix1()) {
-        std::cout << " - " << effet.toString() << std::endl;
-    }
-
-    Effet effetGemmeTest = gemmeTest.getEffetsBasiqueChoix1()[0];
-    std::cout << "Utilisation de l'effet d'or de la gemme de feu test : " << effetGemmeTest.toString() << std::endl;
-*/
-    // Lancer la boucle de jeu (utilise std::cin pour les choix)
-
-    //testMainJoueurChampions();
-
-
-    
-    //Plateau plateau = Initializer::initializePlateau();
-    //plateau.run(plateau);
-
-    testDefenseModActivated();
+    Game game(plateau);
+    game.run();
 
     return 0;
 }

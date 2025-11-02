@@ -5,6 +5,8 @@
 #include "Carte.h"
 #include "CarteDeBase.h"
 #include "GemmeDeFeu.h"
+#include "Champion.h"
+#include "Action.h"
 
 class MainJoueur {
 public:
@@ -21,6 +23,8 @@ public:
     // Retourne une liste de pointeurs vers les CartesDeBase présentes dans la main
     std::vector<CarteDeBase*> getCartesDeBase() const;
     std::vector<GemmeDeFeu*> getGemmesDeFeu() const;
+    std::vector<Champion*> getChampions() const;  // Ajouter cette ligne
+    std::vector<Action*> getActions() const;      // Ajouter cette ligne
 
 private:
     std::vector<Carte*> cartes;

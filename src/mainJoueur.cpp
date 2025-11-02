@@ -50,3 +50,28 @@ std::vector<GemmeDeFeu*> MainJoueur::getGemmesDeFeu() const {
     }
     return res;
 }
+
+std::vector<Champion*> MainJoueur::getChampions() const {
+    std::vector<Champion*> champions;
+    for (auto* carte : cartes) {
+        Champion* champion = dynamic_cast<Champion*>(carte);
+        if (champion != nullptr) {
+            champions.push_back(champion);
+        }
+    }
+    return champions;
+}
+
+std::vector<Action*> MainJoueur::getActions() const {
+    std::vector<Action*> actions;
+    for (auto* carte : cartes) {
+        // Vérifier que ce n'est pas un Champion avant de caster en Action
+        if (dynamic_cast<Champion*>(carte) == nullptr) {
+            Action* action = dynamic_cast<Action*>(carte);
+            if (action != nullptr) {
+                actions.push_back(action);
+            }
+        }
+    }
+    return actions;
+}

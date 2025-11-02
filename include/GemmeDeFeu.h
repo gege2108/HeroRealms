@@ -5,23 +5,11 @@
 
 class GemmeDeFeu : public Carte {
 public:
-    // Constructeur par défaut : impose l'effet basique { Effet(2, OR) }
-    GemmeDeFeu()
-        : isJetable(false)
-    {
-        this->effetsBasiqueChoix1 = { Effet(2, OR) };
-    }
+    GemmeDeFeu();
+    explicit GemmeDeFeu(const std::string& nom);
 
-    // Nouveau constructeur : initialise le nom et impose l'effet basique { Effet(2, OR) }
-    GemmeDeFeu(const std::string& nom)
-        : Carte(nom), isJetable(false)
-    {
-        this->effetsBasiqueChoix1 = { Effet(2, OR) };
-    }
-
-    int getPrix() const { return prix; }
-    void setPrix(int p) { prix = p; }
-
+    const std::string& getNom() const override;  // Retourner const std::string& au lieu de std::string
+    std::string toString() const override;
     Effet& UtiliserAttaque();
 
     bool getIsJetable() const { return isJetable; }
@@ -32,7 +20,6 @@ public:
         return this->effetsBasiqueChoix1; // champ protected de Carte
     }
 
- 
 private:
     static int prix;
     static Effet attaqueGemmeDeFeu;

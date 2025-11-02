@@ -3,13 +3,78 @@
 #include "Effet.h"
 #include "EffetTextuel.h"
 
-Plateau Initializer::initializePlateau() {
-    Joueur joueur1 = initializeJoueur();
-    Joueur joueur2 = initializeJoueur();
-    Marche marche = initializeMarche();
-    ZoneDeSacrifice zoneDeSacrifice;
-    Plateau plateau(joueur1, joueur2, marche, zoneDeSacrifice);
+void Initializer::initializePlateauRef(Plateau& plateau) {
+    std::cout << "DEBUG: Début initializePlateauRef" << std::endl;
     
+    std::cout << "DEBUG: Création des effets" << std::endl;
+    Effet soinPetit(2, SOIN);
+    Effet orPetit(2, OR);
+    Effet degatPetit(3, DEGAT);
+
+    std::cout << "DEBUG: Initialisation Joueur1" << std::endl;
+    // Créer directement dans le plateau via getJoueur1()
+    plateau.getJoueur1().setPointDeVie(50);
+    plateau.getJoueur1().setArgent(0);
+    plateau.getJoueur1().setDegatsStockes(0);
+    
+    // Créer la main du joueur 1 directement
+    for (int i = 0; i < 5; ++i) {
+        plateau.getJoueur1().getMain().addCarte(new CarteDeBase("Soin & Or", {soinPetit, orPetit}));
+    }
+    
+    // Créer la pioche du joueur 1 directement
+    for (int i = 0; i < 5; ++i) {
+        plateau.getJoueur1().getPioche().addCarte(new CarteDeBase("Frappe", {degatPetit}));
+    }
+
+    std::cout << "DEBUG: Initialisation Joueur2" << std::endl;
+    // Même chose pour joueur 2
+    plateau.getJoueur2().setPointDeVie(50);
+    plateau.getJoueur2().setArgent(0);
+    plateau.getJoueur2().setDegatsStockes(0);
+    
+    for (int i = 0; i < 5; ++i) {
+        plateau.getJoueur2().getMain().addCarte(new CarteDeBase("Soin & Or", {soinPetit, orPetit}));
+    }
+    
+    for (int i = 0; i < 5; ++i) {
+        plateau.getJoueur2().getPioche().addCarte(new CarteDeBase("Frappe", {degatPetit}));
+    }
+
+    std::cout << "DEBUG: Création du marché" << std::endl;
+    
+    // Ajouter les gemmes directement au marché du plateau
+    for (int i = 0; i < 10; ++i) {
+        plateau.getMarche().addGemme(new GemmeDeFeu());
+    }
+    
+    std::cout << "DEBUG: Ajout d'actions au marché" << std::endl;
+    
+    // Ajouter quelques actions
+    for (int i = 0; i < 5; ++i) {
+        plateau.getMarche().addStackAction(new Action(
+            Faction::FactionJaune,
+            "Taxation",
+            1,
+            { Effet(2, OR) },
+            {},
+            {},
+            {},
+            { Effet(6, SOIN) },
+            {}
+        ));
+    }
+
+    std::cout << "DEBUG: Mise à jour des actions vendables" << std::endl;
+    plateau.getMarche().MiseAJourActionsVendables();
+    
+    std::cout << "DEBUG: Fin initializePlateauRef" << std::endl;
+}
+
+// Gardez l'ancienne méthode pour compatibilité
+Plateau Initializer::initializePlateau() {
+    Plateau plateau;
+    initializePlateauRef(plateau);
     return plateau;
 }
 
@@ -49,10 +114,12 @@ Joueur Initializer::initializeJoueur() {
 }
 
 Marche Initializer::initializeMarche() {
+    // Créer et ajouter les gemmes de feu (spécifier le nombre)
+    auto gemmes = createGemmesDeFeu(16);
+    
     // Créer les actions et champions
     auto actions = createActions();
     auto champions = createChampions();
-    auto gemmes = createGemmesDeFeu();
     
     // Combiner actions et champions dans une seule stack
     std::vector<Action*> stackComplete = actions;
@@ -60,13 +127,13 @@ Marche Initializer::initializeMarche() {
         stackComplete.push_back(champion);
     }
     
-    // Créer le marché
+    // Créer le marché avec la stack complète et les gemmes
     Marche marche(stackComplete, gemmes);
     
     // Mélanger la stack
     marche.melangeStackActionEtChampion();
     
-    // Mettre 5 cartes en vente (préciser le paramètre pour éviter l'ambiguïté)
+    // Mettre 5 cartes en vente
     marche.InitialiserActionsVendables(5);
     
     return marche;

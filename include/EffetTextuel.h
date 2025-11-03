@@ -30,9 +30,11 @@ public:
 
     // Nouveaux effets pour les champions
     void gain2HealthPerChampion(Joueur& joueur);      // id : 7
-    //void gainCombatPerOtherGuard(Joueur& joueur);    // id : 8
-   // void gainCombatPerOtherChampion(Joueur& joueur); // id : 9
-    //void gain1HealthPerChampion(Joueur& joueur);    // id : 10
+    void gainCombatPerOtherGuard(Joueur& joueur);    // id : 8
+    void gainCombatPerOtherChampion(Joueur& joueur); // id : 9
+    void gain1HealthPerChampion(Joueur& joueur);    // id : 10
+    void gain2CombatPerChampion(Joueur& joueur);    // id : 11
+    void gain1CombatPerOtherChampionWild(Joueur& joueur);  // id : 12
 
 
     static void handleIdEffetTextuel(int id, Joueur& joueur, Joueur& adversaire);

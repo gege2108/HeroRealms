@@ -87,6 +87,26 @@ void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueurJouantLeTour, Joue
             effet.gain2HealthPerChampion(joueurJouantLeTour);
             break;
         }
+        case 8: {
+            effet.gainCombatPerOtherGuard(joueurJouantLeTour);
+            break;
+        }
+        case 9: {
+            effet.gainCombatPerOtherChampion(joueurJouantLeTour);
+            break;
+        }
+        case 10: {
+            effet.gain1HealthPerChampion(joueurJouantLeTour);
+            break;
+        }
+        case 11: {
+            effet.gain2CombatPerChampion(joueurJouantLeTour);
+            break;
+        }
+        case 12: {
+            effet.gain1CombatPerOtherChampionWild(joueurJouantLeTour);
+            break;
+        }
         default:
             std::cout << "Effet textuel avec ID " << id << " non implémenté." << std::endl;
             break;
@@ -287,3 +307,58 @@ void EffetTextuel::gain2HealthPerChampion(Joueur& joueur) {
     std::cout << "Vous gagnez " << healthGain << " points de vie (2 × " << nbChampions << " champions)" << std::endl;
 }
 
+
+//id : 8 - Gagner 1 combat pour chaque autre garde en jeu
+void EffetTextuel::gainCombatPerOtherGuard(Joueur& joueur) {
+ int nbGardes = joueur.getStackChampion().getGardes().size() - 1; // -1 pour exclure le champion actuel
+ if (nbGardes > 0) {
+ joueur.addCombat(nbGardes);
+ std::cout << "Vous gagnez " << nbGardes << " points de combat (1 × " << nbGardes << " autres gardes)" << std::endl;
+ }
+}
+
+//id : 9 - Gagner 1 combat pour chaque autre champion en jeu
+void EffetTextuel::gainCombatPerOtherChampion(Joueur& joueur) {
+ int nbChampions = joueur.getStackChampion().getChampions().size() - 1; // -1 pour exclure le champion actuel
+ if (nbChampions > 0) {
+ joueur.addCombat(nbChampions);
+ std::cout << "Vous gagnez " << nbChampions << " points de combat (1 × " << nbChampions << " autres champions)" << std::endl;
+ }
+}
+
+//id : 10 - Gagner 1 point de vie pour chaque champion en jeu
+void EffetTextuel::gain1HealthPerChampion(Joueur& joueur) {
+ int nbChampions = joueur.getStackChampion().getChampions().size();
+ joueur.gainHealth(nbChampions);
+ std::cout << "Vous gagnez " << nbChampions << " points de vie (1 × " << nbChampions << " champions)" << std::endl;
+}
+
+//id : 11 - Gagner 2 combat pour chaque champion en jeu
+void EffetTextuel::gain2CombatPerChampion(Joueur& joueur) {
+ int nbChampions = joueur.getStackChampion().getChampions().size(); // -1 pour exclure le champion actuel
+ if (nbChampions > 0) {
+ joueur.addCombat(nbChampions * 2);
+ std::cout << "Vous gagnez " << nbChampions * 2 << " points de combat (2 × " << nbChampions << " autres champions)" << std::endl;
+ }
+}
+
+//id : 12 - Gagner 1 combat pour chaque autre champion de faction Verte en jeu
+void EffetTextuel::gain1CombatPerOtherChampionWild(Joueur& joueur) {
+ int nbChampionsWild = 0;
+ auto champions = joueur.getStackChampion().getChampions();
+ 
+ // Compter les champions de faction Verte, en excluant le champion actuel (-1)
+ for (const auto& champion : champions) {
+ if (champion->getFaction() == Faction::FactionVert) {
+ nbChampionsWild++;
+ }
+ }
+ nbChampionsWild--; // Exclure le champion actuel
+
+ if (nbChampionsWild > 0) {
+ joueur.addCombat(nbChampionsWild);
+ std::cout << "Vous gagnez " << nbChampionsWild 
+ << " points de combat (1 × " << nbChampionsWild 
+ << " autres champions Verts)" << std::endl;
+ }
+}

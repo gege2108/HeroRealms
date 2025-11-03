@@ -88,16 +88,16 @@ int main() {
 
     // Construire un plateau et y assigner les joueurs
     
-    
+    */
     
     Plateau plateau;
     Initializer::initializePlateauRef(plateau);  // Initialisation par référence
     
     Game game(plateau);
     game.run();
-    */
+    
 
-    testPlaceCardFromDiscardOnTopOfDraw();
+    //testPlaceCardFromDiscardOnTopOfDraw();
 
     return 0;
 }

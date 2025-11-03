@@ -276,13 +276,13 @@ std::vector<Action*> Initializer::createActions() {
             {Effet(2, OR)}, {}, {EffetTextuel(13,"Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche")}, {}, {Effet(6, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionJaune, "Recrutement", 3,
-            {Effet(1, OR)}, {Effet(2, DEGAT)}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(2, OR), Effet(3, SOIN)}, {}));
+            {Effet(1, OR)}, {Effet(2, DEGAT)}, {EffetTextuel(14, "Placez la prochaine action que vous acquérez ce tour au sommet de votre deck.")}, {}, {Effet(2, OR), Effet(3, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionJaune, "Commandement", 2,
             {Effet(3, DEGAT)}, {}, {EffetTextuel(13,"Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche")}, {}, {Effet(1, OR)}, {}));
         
         actions.push_back(new Action(Faction::FactionJaune, "Garde Royale", 4,
-            {Effet(2, OR), Effet(2, SOIN)}, {}, {EffetTextuel(6, "Piocher 2 puis défausser 2")}, {}, {Effet(3, OR), Effet(3, SOIN)}, {}));
+            {Effet(2, OR), Effet(2, SOIN)}, {}, {EffetTextuel(14, "Placez la prochaine action que vous acquérez ce tour au sommet de votre deck.")}, {}, {Effet(3, OR), Effet(3, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionJaune, "Bannière Impériale", 5,
             {Effet(3, DEGAT), Effet(2, SOIN)}, {}, {EffetTextuel(13,"Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche")}, {}, {Effet(5, DEGAT), Effet(4, SOIN)}, {}));
@@ -294,16 +294,16 @@ std::vector<Action*> Initializer::createActions() {
             {Effet(2, OR)}, {}, {EffetTextuel(13,"Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche")}, {}, {Effet(4, DEGAT)}, {}));
         
         actions.push_back(new Action(Faction::FactionBleu, "Intimidation", 2,
-            {Effet(5, DEGAT)}, {}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(3, OR)}, {}));
+            {Effet(5, DEGAT)}, {}, {EffetTextuel(14, "Placez la prochaine action que vous acquérez ce tour au sommet de votre deck.")}, {}, {Effet(3, OR)}, {}));
         
         actions.push_back(new Action(Faction::FactionBleu, "Espionnage", 3,
-            {Effet(2, OR), Effet(2, DEGAT)}, {}, {EffetTextuel(6, "Piocher 2 puis défausser 2")}, {}, {Effet(4, OR), Effet(3, DEGAT)}, {}));
+            {Effet(2, OR), Effet(2, DEGAT)}, {}, {EffetTextuel(14, "Placez la prochaine action que vous acquérez ce tour au sommet de votre deck.")}, {}, {Effet(4, OR), Effet(3, DEGAT)}, {}));
         
         actions.push_back(new Action(Faction::FactionBleu, "Contrat d'Assassin", 4,
             {Effet(4, DEGAT)}, {}, {EffetTextuel(13,"Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche")}, {}, {Effet(6, DEGAT), Effet(2, OR)}, {}));
         
         actions.push_back(new Action(Faction::FactionBleu, "Trahison", 5,
-            {Effet(3, DEGAT), Effet(2, OR)}, {}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(5, DEGAT), Effet(4, OR)}, {}));
+            {Effet(3, DEGAT), Effet(2, OR)}, {}, {EffetTextuel(14, "Placez la prochaine action que vous acquérez ce tour au sommet de votre deck.")}, {}, {Effet(5, DEGAT), Effet(4, OR)}, {}));
     }
     
     // Faction Rouge (Nécros) - 5 actions × 3 = 15 cartes
@@ -315,7 +315,7 @@ std::vector<Action*> Initializer::createActions() {
             {Effet(4, DEGAT)}, {Effet(2, SOIN)}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(6, DEGAT), Effet(3, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionRouge, "Rituel Sombre", 4,
-            {Effet(3, DEGAT)}, {Effet(2, SOIN)}, {EffetTextuel(6, "Piocher 2 puis défausser 2")}, {}, {Effet(5, DEGAT), Effet(3, SOIN)}, {}));
+            {Effet(3, DEGAT)}, {Effet(2, SOIN)}, {EffetTextuel(14, "Placez la prochaine action que vous acquérez ce tour au sommet de votre deck.")}, {}, {Effet(5, DEGAT), Effet(3, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionRouge, "Invocation", 5,
             {Effet(5, DEGAT), Effet(2, SOIN)}, {}, {EffetTextuel(13,"Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche")}, {}, {Effet(7, DEGAT), Effet(4, SOIN)}, {}));
@@ -333,13 +333,13 @@ std::vector<Action*> Initializer::createActions() {
             {Effet(3, DEGAT), Effet(2, SOIN)}, {}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(5, DEGAT), Effet(4, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionVert, "Instinct Animal", 4,
-            {Effet(2, DEGAT), Effet(3, SOIN)}, {}, {EffetTextuel(6, "Piocher 2 puis défausser 2")}, {}, {Effet(4, DEGAT), Effet(5, SOIN)}, {}));
+            {Effet(2, DEGAT), Effet(3, SOIN)}, {}, {EffetTextuel(14, "Placez la prochaine action que vous acquérez ce tour au sommet de votre deck.")}, {}, {Effet(4, DEGAT), Effet(5, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionVert, "Hurlement du Pack", 4,
             {Effet(4, DEGAT)}, {}, {EffetTextuel(13,"Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche")}, {}, {Effet(6, DEGAT), Effet(2, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionVert, "Sagesse Druidique", 5,
-            {Effet(2, SOIN), Effet(2, OR)}, {}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(4, SOIN), Effet(4, OR)}, {}));
+            {Effet(2, SOIN), Effet(2, OR)}, {}, {EffetTextuel(14, "Placez la prochaine action que vous acquérez ce tour au sommet de votre deck.")}, {}, {Effet(4, SOIN), Effet(4, OR)}, {}));
     }
     
     std::cout << "✅ " << actions.size() << " actions créées (60 actions TOUTES avec effets de pioche prioritaires)" << std::endl;

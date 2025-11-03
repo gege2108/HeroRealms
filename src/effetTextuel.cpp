@@ -113,6 +113,10 @@ void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueurJouantLeTour, Joue
             effet.placeCardFromDiscardOnTopOfDraw(joueurJouantLeTour);
             break;
         }
+        case 14: { // Put the next action you acquire this turn on top of your deck
+            effet.setNextActionAcquiredOnTop(joueurJouantLeTour);
+            break;
+        }
         default:
             std::cout << "Effet textuel avec ID " << id << " non implémenté." << std::endl;
             break;
@@ -377,7 +381,7 @@ void EffetTextuel::gain1CombatPerOtherChampionWild(Joueur& joueur) {
  }
 }
 
-// AJOUT : id 13 - "Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche"
+// id 13 : "Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche"
 void EffetTextuel::placeCardFromDiscardOnTopOfDraw(Joueur& joueur) {
     std::cout << "\n=== Placer une carte de votre défausse sur le dessus de votre pioche ===" << std::endl;
     
@@ -430,5 +434,12 @@ void EffetTextuel::placeCardFromDiscardOnTopOfDraw(Joueur& joueur) {
     joueur.setPioche(pioche);
     
     std::cout << "✓ Carte '" << carteChoisie->getNom() << "' placée sur le dessus de votre pioche." << std::endl;
+}
+
+// id 14 : Put the next action you acquire this turn on top of your deck
+void EffetTextuel::setNextActionAcquiredOnTop(Joueur& joueur) {
+    // Active un flag sur le joueur pour ce tour
+    joueur.setNextActionOnTop(true);
+    std::cout << "Effet activé : La prochaine action que vous achetez ce tour ira sur le dessus de votre pioche." << std::endl;
 }
 

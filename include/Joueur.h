@@ -21,7 +21,9 @@ public:
            const StackChampion& s = StackChampion(),
            const Defausse& d = Defausse(),
            int pv = 30, int _argent = 0,int degatsStockes = 0)
-        : mainJoueur(m), pioche(p), stackChampion(s), defausse(d), argent(_argent), pointDeVie(pv), degatsStockes(degatsStockes) {}
+        : mainJoueur(m), pioche(p), stackChampion(s), defausse(d), argent(_argent), pointDeVie(pv), degatsStockes(degatsStockes) {
+            nextActionOnTop = false;
+        }
 
     int getPointDeVie() const;
     void setPointDeVie(int v);
@@ -64,6 +66,14 @@ public:
         std::cout << "Gain de " << amount << " points de combat. Total: " << degatsStockes << std::endl;
     }
 
+    void setNextActionOnTop(bool value) {
+        nextActionOnTop = value;
+    }
+
+    bool getNextActionOnTop() const {
+        return nextActionOnTop;
+    }
+
 private:
 
     MainJoueur mainJoueur;
@@ -73,6 +83,7 @@ private:
     int argent = 0;      
     int pointDeVie = 0;
     int degatsStockes = 0;
+    bool nextActionOnTop = false; // Pour l'effet id 14
 };
 
 #endif // JOUEUR_H

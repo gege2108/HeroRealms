@@ -249,6 +249,7 @@ void Game::phaseAchatGemmes(const std::string& /* nomJoueur */, Joueur& joueur) 
         
         joueur.setArgent(joueur.getArgent() - 3);
         Defausse defausse = joueur.getDefausse();
+        
         defausse.addCarte(plateau.getMarche().acheterGemme());
         joueur.setDefausse(defausse);
         
@@ -763,7 +764,7 @@ void Game::phaseUtilisationEffetsPrioritaires(const std::string& /* nomJoueur */
         
         // Vérifier si la carte a des effets de pioche (ID 1, 4, 6)
         for (const auto& effet : action->getListEffetTextuelChoix1()) {
-            if (effet.getId() == 1 || effet.getId() == 4 || effet.getId() == 6) {
+            if (effet.getId() == 1 || effet.getId() == 4 || effet.getId() == 6 || effet.getId() == 14) {
                 carteAEffetsPioche = true;
                 break;
             }
@@ -771,7 +772,7 @@ void Game::phaseUtilisationEffetsPrioritaires(const std::string& /* nomJoueur */
         
         if (!carteAEffetsPioche) {
             for (const auto& effet : action->getListEffetTextuelChoix2()) {
-                if (effet.getId() == 1 || effet.getId() == 4 || effet.getId() == 6) {
+                if (effet.getId() == 1 || effet.getId() == 4 || effet.getId() == 6 || effet.getId() == 14) {
                     carteAEffetsPioche = true;
                     break;
                 }
@@ -780,7 +781,7 @@ void Game::phaseUtilisationEffetsPrioritaires(const std::string& /* nomJoueur */
         
         if (!carteAEffetsPioche && action->getPeutFaireCombo()) {
             for (const auto& effet : action->getListEffetTextuelCombo()) {
-                if (effet.getId() == 1 || effet.getId() == 4 || effet.getId() == 6) {
+                if (effet.getId() == 1 || effet.getId() == 4 || effet.getId() == 6 || effet.getId() == 14) {
                     carteAEffetsPioche = true;
                     break;
                 }

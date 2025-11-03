@@ -783,7 +783,16 @@ void Plateau::achatActionChampion(Joueur& joueur) {
                     }
                     
                     Defausse defausseJ = joueur.getDefausse();
-                    defausseJ.addCarte(action);
+                    if (joueur.getNextActionOnTop() && champion == nullptr){
+                            Pioche piocheJ = joueur.getPioche();
+                            piocheJ.addCarteOnTop(action);
+                            joueur.setPioche(piocheJ);
+                            joueur.setNextActionOnTop(false);
+                    }
+                    else{
+                        defausseJ.addCarte(action);
+                    }
+                    
                     joueur.setDefausse(defausseJ);
                     
                     std::cout << "\n✅ Achat réussi !" << std::endl;

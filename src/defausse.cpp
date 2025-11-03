@@ -31,6 +31,10 @@ void Defausse::removeCarte(Carte* carte) {
     }
 }
 
+void Defausse::addCarteOnTop(Carte* c) {
+    cartes.insert(cartes.begin(), c);
+}
+
 void Defausse::clear() { cartes.clear(); }
 
 void Defausse::melangeDefausse() {

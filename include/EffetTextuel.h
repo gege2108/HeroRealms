@@ -29,13 +29,14 @@ public:
     static void drawTwoAndDiscardTwo(Joueur& joueur);  // id : 6
 
     // Nouveaux effets pour les champions
-    void gain2HealthPerChampion(Joueur& joueur);      // id : 7
-    void gainCombatPerOtherGuard(Joueur& joueur);    // id : 8
-    void gainCombatPerOtherChampion(Joueur& joueur); // id : 9
-    void gain1HealthPerChampion(Joueur& joueur);    // id : 10
-    void gain2CombatPerChampion(Joueur& joueur);    // id : 11
-    void gain1CombatPerOtherChampionWild(Joueur& joueur);  // id : 12
-    void placeCardFromDiscardOnTopOfDraw(Joueur& joueur); // id : 13
+    static void gain2HealthPerChampion(Joueur& joueur);      // id : 7
+    static void gainCombatPerOtherGuard(Joueur& joueur);    // id : 8
+    static void gainCombatPerOtherChampion(Joueur& joueur); // id : 9
+    static void gain1HealthPerChampion(Joueur& joueur);    // id : 10
+    static void gain2CombatPerChampion(Joueur& joueur);    // id : 11
+    static void gain1CombatPerOtherChampionWild(Joueur& joueur);  // id : 12
+    static void placeCardFromDiscardOnTopOfDraw(Joueur& joueur); // id : 13
+    static void setNextActionAcquiredOnTop(Joueur& joueur); // id : 14
 
 
     static void handleIdEffetTextuel(int id, Joueur& joueur, Joueur& adversaire);

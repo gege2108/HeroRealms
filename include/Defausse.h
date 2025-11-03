@@ -17,6 +17,7 @@ public:
     void clear();
     void removeCarte(Carte* carte);
     void melangeDefausse();
+    void addCarteOnTop(Carte* c);
 
 private:
     std::vector<Carte*> cartes;

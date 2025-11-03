@@ -18,4 +18,13 @@ bool Defausse::remove(Carte* c) {
     return false;
 }
 
+void Defausse::removeCarte(Carte* carte) {
+    for (auto it = cartes.begin(); it != cartes.end(); ++it) {
+        if (*it == carte) {
+            cartes.erase(it);
+            return;
+        }
+    }
+}
+
 void Defausse::clear() { cartes.clear(); }

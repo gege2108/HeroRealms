@@ -15,6 +15,7 @@ public:
     void addCarte(Carte* c);
     bool remove(Carte* c);
     void clear();
+    void removeCarte(Carte* carte);
 
 private:
     std::vector<Carte*> cartes;

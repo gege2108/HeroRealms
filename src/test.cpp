@@ -1645,3 +1645,61 @@ void testDefenseModActivated() {
 }
 
 
+
+
+void testPlaceCardFromDiscardOnTopOfDraw() {
+    std::cout << "\n=== Test : placeCardFromDiscardOnTopOfDraw ===" << std::endl;
+
+    // Création d'un joueur
+    Joueur joueur;
+
+    // Création de cartes
+    Carte* carte1 = new CarteDeBase("Rubis", {});
+    Carte* carte2 = new CarteDeBase("Dague", {});
+    Carte* carte3 = new CarteDeBase("Frappe", {});
+
+    // Ajout des cartes à la défausse
+    Defausse defausse;
+    defausse.addCarte(carte1);
+    defausse.addCarte(carte2);
+    defausse.addCarte(carte3);
+    joueur.setDefausse(defausse);
+
+    // Ajout d'une carte à la pioche pour voir le résultat
+    Pioche pioche;
+    Carte* cartePioche = new CarteDeBase("Déjà en pioche", {});
+    pioche.addCarte(cartePioche);
+    joueur.setPioche(pioche);
+
+    // Affichage avant
+    std::cout << "Défausse avant : ";
+    for (auto* c : joueur.getDefausse().getCartes()) {
+        std::cout << c->getNom() << " ";
+    }
+    std::cout << "\nPioche avant : ";
+    for (auto* c : joueur.getPioche().getCartes()) {
+        std::cout << c->getNom() << " ";
+    }
+    std::cout << std::endl;
+
+    // Appel de la fonction à tester
+    EffetTextuel effetest(50,"Test EffetTextuel");
+    effetest.placeCardFromDiscardOnTopOfDraw(joueur);
+
+    // Affichage après
+    std::cout << "Défausse après : ";
+    for (auto* c : joueur.getDefausse().getCartes()) {
+        std::cout << c->getNom() << " ";
+    }
+    std::cout << "\nPioche après : ";
+    for (auto* c : joueur.getPioche().getCartes()) {
+        std::cout << c->getNom() << " ";
+    }
+    std::cout << std::endl;
+
+    // Nettoyage mémoire
+    delete carte1;
+    delete carte2;
+    delete carte3;
+    delete cartePioche;
+}

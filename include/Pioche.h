@@ -17,6 +17,7 @@ public:
     bool tirerCarte(Carte* c);
     void clear();
     void piocher(MainJoueur& main);
+    void addCarteOnTop(Carte* c);
 
 private:
     std::vector<Carte*> cartesPioche;

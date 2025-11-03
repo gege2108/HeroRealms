@@ -9,6 +9,11 @@ void Pioche::setCartes(const std::vector<Carte*>& c) { cartesPioche = c; }
 
 void Pioche::addCarte(Carte* c) { cartesPioche.push_back(c); }
 
+// Ajout : insère la carte en haut de la pioche (index 0), décale les autres cartes
+void Pioche::addCarteOnTop(Carte* c) {
+    cartesPioche.insert(cartesPioche.begin(), c);
+}
+
 bool Pioche::tirerCarte(Carte* c) {
     for (int i = 0; i < (int)cartesPioche.size(); ++i) {
         if (cartesPioche[i] == c) {

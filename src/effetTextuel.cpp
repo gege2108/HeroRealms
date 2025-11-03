@@ -107,6 +107,10 @@ void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueurJouantLeTour, Joue
             effet.gain1CombatPerOtherChampionWild(joueurJouantLeTour);
             break;
         }
+        case 13: { // AJOUT : placer une carte de la défausse sur le dessus de la pioche
+            effet.placeCardFromDiscardOnTopOfDraw(joueurJouantLeTour);
+            break;
+        }
         default:
             std::cout << "Effet textuel avec ID " << id << " non implémenté." << std::endl;
             break;
@@ -149,9 +153,17 @@ void EffetTextuel::stunChampion(Joueur& opponent) {
 
 //id : 4 - Vous pouvez piocher une carte, puis en défausser une
 void EffetTextuel::drawAndDiscard(Joueur& joueur) {
-    // Piocher une carte
-    drawACard(joueur);
-    
+    std::cout << "Voulez-vous piocher une carte ? [1] Oui [0] Non : ";
+    int choixPioche;
+    std::cin >> choixPioche;
+    if (choixPioche == 1) {
+        drawACard(joueur);
+    }
+    else{
+        std::cout << "Vous avez choisi de ne pas piocher de carte." << std::endl;
+        return;
+    }
+
     // Vérifier s'il y a des cartes à défausser
     if (joueur.getMain().getCartes().empty()) {
         std::cout << "Pas de cartes en main à défausser." << std::endl;
@@ -361,4 +373,59 @@ void EffetTextuel::gain1CombatPerOtherChampionWild(Joueur& joueur) {
  << " points de combat (1 × " << nbChampionsWild 
  << " autres champions Verts)" << std::endl;
  }
+}
+
+// AJOUT : id 13 - "Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche"
+void EffetTextuel::placeCardFromDiscardOnTopOfDraw(Joueur& joueur) {
+    std::cout << "\n=== Placer une carte de votre défausse sur le dessus de votre pioche ===" << std::endl;
+    
+    // Récupérer la défausse
+    Defausse def = joueur.getDefausse();
+    auto defCartes = def.getCartes();
+    if (defCartes.empty()) {
+        std::cout << "Votre défausse est vide. Aucune carte à placer." << std::endl;
+        return;
+    }
+    
+    // Afficher les cartes de la défausse
+    std::cout << "Cartes dans votre défausse :" << std::endl;
+    for (size_t i = 0; i < defCartes.size(); ++i) {
+        std::string nom = defCartes[i] ? defCartes[i]->getNom() : "(Carte invalide)";
+        std::cout << "  [" << i << "] " << nom << std::endl;
+    }
+    
+    // Demander le choix (optionnel)
+    std::cout << "Voulez-vous placer une carte de votre défausse sur le dessus de votre pioche ? [1] Oui [0] Non : ";
+    int choixActiver = 0;
+    std::cin >> choixActiver;
+    if (choixActiver != 1) {
+        std::cout << "Vous avez choisi de ne pas déplacer de carte." << std::endl;
+        return;
+    }
+    
+    // Choix de la carte
+    int idx = -1;
+    std::cout << "Choisissez l'indice de la carte à placer (0 à " << defCartes.size() - 1 << "): ";
+    std::cin >> idx;
+    if (idx < 0 || idx >= static_cast<int>(defCartes.size())) {
+        std::cout << "Indice invalide. Opération annulée." << std::endl;
+        return;
+    }
+    
+    Carte* carteChoisie = defCartes[idx];
+    if (!carteChoisie) {
+        std::cout << "Carte invalide. Opération annulée." << std::endl;
+        return;
+    }
+    
+    // Retirer la carte de la défausse (mise à jour locale puis set)
+    def.removeCarte(carteChoisie);
+    joueur.setDefausse(def);
+    
+    // Ajouter la carte sur le dessus de la pioche
+    Pioche pioche = joueur.getPioche();
+    pioche.addCarteOnTop(carteChoisie);
+    joueur.setPioche(pioche);
+    
+    std::cout << "✓ Carte '" << carteChoisie->getNom() << "' placée sur le dessus de votre pioche." << std::endl;
 }

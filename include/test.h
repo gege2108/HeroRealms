@@ -24,5 +24,6 @@ void testMainJoueurChampions();
 void testChoixUtilisationEffetJ1NouvelleFonction();
 void testUtiliserDegatsStockes();
 void testDefenseModActivated();
+void testPlaceCardFromDiscardOnTopOfDraw();
 
 #endif // TEST_H

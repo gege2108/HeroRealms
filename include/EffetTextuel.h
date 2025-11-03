@@ -35,6 +35,7 @@ public:
     void gain1HealthPerChampion(Joueur& joueur);    // id : 10
     void gain2CombatPerChampion(Joueur& joueur);    // id : 11
     void gain1CombatPerOtherChampionWild(Joueur& joueur);  // id : 12
+    void placeCardFromDiscardOnTopOfDraw(Joueur& joueur); // id : 13
 
 
     static void handleIdEffetTextuel(int id, Joueur& joueur, Joueur& adversaire);

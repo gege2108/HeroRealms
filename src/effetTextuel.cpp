@@ -252,9 +252,20 @@ void EffetTextuel::defenseModActivated(Joueur& joueur) {
     std::cout << "Gardes actifs: " << joueur.getStackChampion().getGardes().size() << std::endl;
 }
 
-//id : 6 - Piocher 2 cartes puis en défausser 2
+//id : 6 - Vous pouvez piocher 2 cartes puis en défausser 2
 void EffetTextuel::drawTwoAndDiscardTwo(Joueur& joueur) {
     std::cout << "\n=== Piocher 2 puis défausser 2 ===" << std::endl;
+
+    std::cout << "Voulez-vous piocher 2 cartes ? [1] Oui [0] Non : ";
+    int choixPioche;
+    std::cin >> choixPioche;
+    if (choixPioche != 1) {
+        std::cout << "Vous avez choisi de ne pas piocher de carte." << std::endl;
+        return;
+    }
+    else{
+        
+    
     
     // Piocher 2 cartes
     int cartesPiochees = 0;
@@ -314,6 +325,7 @@ void EffetTextuel::drawTwoAndDiscardTwo(Joueur& joueur) {
     
     std::cout << "\n✅ Effet terminé : " << cartesPiochees << " carte(s) piochée(s), " 
               << cartesADefausser << " carte(s) défaussée(s)." << std::endl;
+    }
 }
 
 

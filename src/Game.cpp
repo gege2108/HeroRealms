@@ -29,12 +29,13 @@ void Game::run() {
         }
         
         afficherMainJoueur("Joueur 1", plateau.getJoueur1());
+        phaseUtilisationEffetsPrioritaires("Joueur 1", plateau.getJoueur1(), plateau.getJoueur2());
         afficherChampionsEnJeu("Joueur 1", plateau.getJoueur1());
         
         gererChampionsEnMain(plateau.getJoueur1(), plateau.getJoueur2());
         utiliserChampionsEnJeu("Joueur 1", plateau.getJoueur1(), plateau.getJoueur2()); // ✅ RESTAURÉ
         
-        phaseUtilisationEffetsPrioritaires("Joueur 1", plateau.getJoueur1(), plateau.getJoueur2());
+        
 
         phaseCartesDeBase("Joueur 1", plateau.getJoueur1(), plateau.getJoueur2());
         phaseGemmesDeFeu("Joueur 1", plateau.getJoueur1());
@@ -60,12 +61,13 @@ void Game::run() {
         }
         
         afficherMainJoueur("Joueur 2", plateau.getJoueur2());
+        phaseUtilisationEffetsPrioritaires("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1());
         afficherChampionsEnJeu("Joueur 2", plateau.getJoueur2());
         
         gererChampionsEnMain(plateau.getJoueur2(), plateau.getJoueur1());
         utiliserChampionsEnJeu("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1()); 
 
-        phaseUtilisationEffetsPrioritaires("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1());
+        
         
         phaseCartesDeBase("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1());
         phaseGemmesDeFeu("Joueur 2", plateau.getJoueur2());
@@ -747,7 +749,7 @@ void Game::afficherChampionsEnJeu(const std::string& nomJoueur, Joueur& joueur) 
 // ✅ NOUVELLE FONCTION : Phase 0 - Effets Prioritaires 
 void Game::phaseUtilisationEffetsPrioritaires(const std::string& /* nomJoueur */, Joueur& joueur, Joueur& adversaire) {
     std::cout << "\n┌─ PHASE 0: Effets Prioritaires (Pioche) ───────────────┐" << std::endl;
-    std::cout << "│ 🎴 Effets de pioche des actions et champions          │" << std::endl;
+    std::cout << "│ 🎴 Effets prioritaires des actions et champions          │" << std::endl;
     std::cout << "└─────────────────────────────────────────────────────────┘" << std::endl;
     
     auto cartes = joueur.getMain().getCartes();
@@ -764,7 +766,7 @@ void Game::phaseUtilisationEffetsPrioritaires(const std::string& /* nomJoueur */
         
         // Vérifier si la carte a des effets de pioche (ID 1, 4, 6)
         for (const auto& effet : action->getListEffetTextuelChoix1()) {
-            if (effet.getId() == 1 || effet.getId() == 4 || effet.getId() == 6 || effet.getId() == 14) {
+            if (effet.getId() == 1 || effet.getId() == 4 || effet.getId() == 6 || effet.getId() == 14 || effet.getId() == 18) {
                 carteAEffetsPioche = true;
                 break;
             }
@@ -772,7 +774,7 @@ void Game::phaseUtilisationEffetsPrioritaires(const std::string& /* nomJoueur */
         
         if (!carteAEffetsPioche) {
             for (const auto& effet : action->getListEffetTextuelChoix2()) {
-                if (effet.getId() == 1 || effet.getId() == 4 || effet.getId() == 6 || effet.getId() == 14) {
+                if (effet.getId() == 1 || effet.getId() == 4 || effet.getId() == 6 || effet.getId() == 14 || effet.getId() == 18) {
                     carteAEffetsPioche = true;
                     break;
                 }
@@ -781,7 +783,7 @@ void Game::phaseUtilisationEffetsPrioritaires(const std::string& /* nomJoueur */
         
         if (!carteAEffetsPioche && action->getPeutFaireCombo()) {
             for (const auto& effet : action->getListEffetTextuelCombo()) {
-                if (effet.getId() == 1 || effet.getId() == 4 || effet.getId() == 6 || effet.getId() == 14) {
+                if (effet.getId() == 1 || effet.getId() == 4 || effet.getId() == 6 || effet.getId() == 14 || effet.getId() == 18) {
                     carteAEffetsPioche = true;
                     break;
                 }
@@ -967,9 +969,9 @@ void Game::phaseUtilisationEffetsPrioritaires(const std::string& /* nomJoueur */
     }
     
     if (!aEffetsPrioritaires) {
-        std::cout << "→ Aucun effet de pioche disponible." << std::endl;
+        std::cout << "→ Aucun effet prioritaire disponible." << std::endl;
     }
-    
+
     std::cout << "\n✅ Phase des effets prioritaires terminée." << std::endl;
 }
 
@@ -1006,7 +1008,7 @@ void Game::utiliserChampionsEnJeu(const std::string& /* nomJoueur */, Joueur& jo
         Champion* champion = championsEnJeu[i];
         
         // Sauter le champion s'il a déjà utilisé ses effets ce tour
-        if (champion->getEffetsUtilisesCeTour() && !champion->getPeutRejouer()) {
+        if (champion->getEffetsUtilisesCeTour()) {
             std::cout << "\n🎖️  Champion " << (i + 1) << ": " << champion->getNom() << std::endl;
             std::cout << "   ✨ Ce champion a déjà utilisé ses effets ce tour (joué depuis la main)." << std::endl;
             continue;
@@ -1175,5 +1177,98 @@ void Game::utiliserChampionsEnJeu(const std::string& /* nomJoueur */, Joueur& jo
                 }
             }
         }
-    }
+
+        if (champion->getPeutRejouer()) {
+            if (choix == 1) {
+                // Choix 1
+                std::cout << "\n   Utiliser les effets de base (Choix 1)? [1] Oui [0] Non: ";
+                int choixBase;
+                std::cin >> choixBase;
+                
+                if (choixBase == 1) {
+                    for (const auto& effet : champion->getEffetsBasiqueChoix1()) {
+                        switch (effet.getType()) {
+                            case OR:
+                                joueur.setArgent(joueur.getArgent() + effet.getValeur());
+                                std::cout << "      💰 +" << effet.getValeur() << " or (Total: " << joueur.getArgent() << ")" << std::endl;
+                                break;
+                            case DEGAT:
+                                joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur());
+                                std::cout << "      ⚔️  +" << effet.getValeur() << " dégâts (Total: " << joueur.getDegatsStockes() << ")" << std::endl;
+                                break;
+                            case SOIN:
+                                joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur());
+                                std::cout << "      ❤️  +" << effet.getValeur() << " PV (Total: " << joueur.getPointDeVie() << ")" << std::endl;
+                                break;
+                        }
+                    }
+                    
+                    for (const auto& effetTextuel : champion->getListEffetTextuelChoix1()) {
+                        EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur, adversaire);
+                    }
+                }
+                
+                // Choix 2
+                if (!champion->getListEffetBasiqueChoix2().empty() || !champion->getListEffetTextuelChoix2().empty()) {
+                    std::cout << "\n   Utiliser les effets additionnels (Choix 2)? [1] Oui [0] Non: ";
+                    int choix2;
+                    std::cin >> choix2;
+                    
+                    if (choix2 == 1) {
+                        for (const auto& effet : champion->getListEffetBasiqueChoix2()) {
+                            switch (effet.getType()) {
+                                case OR:
+                                    joueur.setArgent(joueur.getArgent() + effet.getValeur());
+                                    std::cout << "      💰 +" << effet.getValeur() << " or" << std::endl;
+                                    break;
+                                case DEGAT:
+                                    joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur());
+                                    std::cout << "      ⚔️  +" << effet.getValeur() << " dégâts" << std::endl;
+                                    break;
+                                case SOIN:
+                                    joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur());
+                                    std::cout << "      ❤️  +" << effet.getValeur() << " PV" << std::endl;
+                                    break;
+                            }
+                        }
+                        
+                        for (const auto& effetTextuel : champion->getListEffetTextuelChoix2()) {
+                            EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur, adversaire);
+                        }
+                    }
+                }
+                
+                // Combo
+                if (comboActivable && (!champion->getListEffetBasiqueCombo().empty() || !champion->getListEffetTextuelCombo().empty())) {
+                    std::cout << "\n   ✨ Utiliser les effets COMBO? [1] Oui [0] Non: ";
+                    int choixCombo;
+                    std::cin >> choixCombo;
+                    
+                    if (choixCombo == 1) {
+                        std::cout << "   🔥 COMBO ACTIVÉ!" << std::endl;
+                        for (const auto& effet : champion->getListEffetBasiqueCombo()) {
+                            switch (effet.getType()) {
+                                case OR:
+                                    joueur.setArgent(joueur.getArgent() + effet.getValeur());
+                                    std::cout << "      💰 +" << effet.getValeur() << " or (COMBO)" << std::endl;
+                                    break;
+                                case DEGAT:
+                                    joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur());
+                                    std::cout << "      ⚔️  +" << effet.getValeur() << " dégâts (COMBO)" << std::endl;
+                                    break;
+                                case SOIN:
+                                    joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur());
+                                    std::cout << "      ❤️  +" << effet.getValeur() << " PV (COMBO)" << std::endl;
+                                    break;
+                            }
+                        }
+                        
+                        for (const auto& effetTextuel : champion->getListEffetTextuelCombo()) {
+                            EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur, adversaire);
+                        }
+                    }
+                }
+            }
+        }
+   }
 }

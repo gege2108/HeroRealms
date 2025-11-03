@@ -273,19 +273,19 @@ std::vector<Action*> Initializer::createActions() {
     // Faction Jaune (Impériale) - 5 actions × 3 = 15 cartes
     for (int copy = 0; copy < 3; ++copy) {
         actions.push_back(new Action(Faction::FactionJaune, "Taxation", 1,
-            {Effet(2, OR)}, {}, {EffetTextuel(13,"Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche")}, {}, {Effet(6, SOIN)}, {}));
+            {Effet(2, OR)}, {}, {EffetTextuel(18, "Preparez un champion.")}, {}, {Effet(6, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionJaune, "Recrutement", 3,
-            {Effet(1, OR)}, {Effet(2, DEGAT)}, {EffetTextuel(14, "Placez la prochaine action que vous acquérez ce tour au sommet de votre deck.")}, {}, {Effet(2, OR), Effet(3, SOIN)}, {}));
+            {Effet(1, OR)}, {Effet(2, DEGAT)}, {EffetTextuel(18, "Preparez un champion.")}, {}, {Effet(2, OR), Effet(3, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionJaune, "Commandement", 2,
-            {Effet(3, DEGAT)}, {}, {EffetTextuel(13,"Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche")}, {}, {Effet(1, OR)}, {}));
+            {Effet(3, DEGAT)}, {}, {EffetTextuel(18, "Preparez un champion.")}, {}, {Effet(1, OR)}, {}));
         
         actions.push_back(new Action(Faction::FactionJaune, "Garde Royale", 4,
-            {Effet(2, OR), Effet(2, SOIN)}, {}, {EffetTextuel(14, "Placez la prochaine action que vous acquérez ce tour au sommet de votre deck.")}, {}, {Effet(3, OR), Effet(3, SOIN)}, {}));
+            {Effet(2, OR), Effet(2, SOIN)}, {}, {EffetTextuel(18, "Preparez un champion.")}, {}, {Effet(3, OR), Effet(3, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionJaune, "Bannière Impériale", 5,
-            {Effet(3, DEGAT), Effet(2, SOIN)}, {}, {EffetTextuel(13,"Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche")}, {}, {Effet(5, DEGAT), Effet(4, SOIN)}, {}));
+            {Effet(3, DEGAT), Effet(2, SOIN)}, {}, {EffetTextuel(18, "Preparez un champion.")}, {}, {Effet(5, DEGAT), Effet(4, SOIN)}, {}));
     }
     
     // Faction Bleue (Guilde) - 5 actions × 3 = 15 cartes
@@ -294,31 +294,31 @@ std::vector<Action*> Initializer::createActions() {
             {Effet(2, OR)}, {}, {EffetTextuel(13,"Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche")}, {}, {Effet(4, DEGAT)}, {}));
         
         actions.push_back(new Action(Faction::FactionBleu, "Intimidation", 2,
-            {Effet(5, DEGAT)}, {}, {EffetTextuel(14, "Placez la prochaine action que vous acquérez ce tour au sommet de votre deck.")}, {}, {Effet(3, OR)}, {}));
+            {Effet(5, DEGAT)}, {}, {EffetTextuel(18, "Preparez un champion.")}, {}, {Effet(3, OR)}, {}));
         
         actions.push_back(new Action(Faction::FactionBleu, "Espionnage", 3,
-            {Effet(2, OR), Effet(2, DEGAT)}, {}, {EffetTextuel(14, "Placez la prochaine action que vous acquérez ce tour au sommet de votre deck.")}, {}, {Effet(4, OR), Effet(3, DEGAT)}, {}));
+            {Effet(2, OR), Effet(2, DEGAT)}, {}, {EffetTextuel(18, "Preparez un champion.")}, {}, {Effet(4, OR), Effet(3, DEGAT)}, {}));
         
         actions.push_back(new Action(Faction::FactionBleu, "Contrat d'Assassin", 4,
-            {Effet(4, DEGAT)}, {}, {EffetTextuel(13,"Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche")}, {}, {Effet(6, DEGAT), Effet(2, OR)}, {}));
-        
+                {Effet(4, DEGAT)}, {}, {EffetTextuel(13,"Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche")}, {}, {Effet(6, DEGAT), Effet(2, OR)}, {}));
+            
         actions.push_back(new Action(Faction::FactionBleu, "Trahison", 5,
-            {Effet(3, DEGAT), Effet(2, OR)}, {}, {EffetTextuel(14, "Placez la prochaine action que vous acquérez ce tour au sommet de votre deck.")}, {}, {Effet(5, DEGAT), Effet(4, OR)}, {}));
+            {Effet(3, DEGAT), Effet(2, OR)}, {}, {EffetTextuel(18, "Preparez un champion.")}, {}, {Effet(5, DEGAT), Effet(4, OR)}, {}));
     }
     
     // Faction Rouge (Nécros) - 5 actions × 3 = 15 cartes
     for (int copy = 0; copy < 3; ++copy) {
         actions.push_back(new Action(Faction::FactionRouge, "Magie Noire", 2,
-            {Effet(3, DEGAT)}, {}, {EffetTextuel(13,"Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche")}, {}, {Effet(2, DEGAT)}, {}));
+            {Effet(3, DEGAT)}, {}, {EffetTextuel(18, "Preparez un champion.")}, {}, {Effet(2, DEGAT)}, {}));
         
         actions.push_back(new Action(Faction::FactionRouge, "Sacrifice", 3,
             {Effet(4, DEGAT)}, {Effet(2, SOIN)}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(6, DEGAT), Effet(3, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionRouge, "Rituel Sombre", 4,
-            {Effet(3, DEGAT)}, {Effet(2, SOIN)}, {EffetTextuel(14, "Placez la prochaine action que vous acquérez ce tour au sommet de votre deck.")}, {}, {Effet(5, DEGAT), Effet(3, SOIN)}, {}));
+            {Effet(3, DEGAT)}, {Effet(2, SOIN)}, {EffetTextuel(18, "Preparez un champion.")}, {}, {Effet(5, DEGAT), Effet(3, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionRouge, "Invocation", 5,
-            {Effet(5, DEGAT), Effet(2, SOIN)}, {}, {EffetTextuel(13,"Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche")}, {}, {Effet(7, DEGAT), Effet(4, SOIN)}, {}));
+            {Effet(5, DEGAT), Effet(2, SOIN)}, {}, {EffetTextuel(18, "Preparez un champion.")}, {}, {Effet(7, DEGAT), Effet(4, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionRouge, "Malédiction", 3,
             {Effet(4, DEGAT)}, {}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(6, DEGAT)}, {}));
@@ -327,19 +327,19 @@ std::vector<Action*> Initializer::createActions() {
     // Faction Verte (Sauvage) - 5 actions × 3 = 15 cartes
     for (int copy = 0; copy < 3; ++copy) {
         actions.push_back(new Action(Faction::FactionVert, "Charge Sauvage", 2,
-            {Effet(4, DEGAT)}, {}, {EffetTextuel(13,"Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche")}, {}, {Effet(6, DEGAT)}, {}));
+            {Effet(4, DEGAT)}, {}, {EffetTextuel(18, "Preparez un champion.")}, {}, {Effet(6, DEGAT)}, {}));
         
         actions.push_back(new Action(Faction::FactionVert, "Rage du Loup", 3,
-            {Effet(3, DEGAT), Effet(2, SOIN)}, {}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(5, DEGAT), Effet(4, SOIN)}, {}));
+            {Effet(3, DEGAT), Effet(2, SOIN)}, {}, {EffetTextuel(18, "Preparez un champion.")}, {}, {Effet(5, DEGAT), Effet(4, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionVert, "Instinct Animal", 4,
-            {Effet(2, DEGAT), Effet(3, SOIN)}, {}, {EffetTextuel(14, "Placez la prochaine action que vous acquérez ce tour au sommet de votre deck.")}, {}, {Effet(4, DEGAT), Effet(5, SOIN)}, {}));
+            {Effet(2, DEGAT), Effet(3, SOIN)}, {}, {EffetTextuel(18, "Preparez un champion.")}, {}, {Effet(4, DEGAT), Effet(5, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionVert, "Hurlement du Pack", 4,
-            {Effet(4, DEGAT)}, {}, {EffetTextuel(13,"Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche")}, {}, {Effet(6, DEGAT), Effet(2, SOIN)}, {}));
+            {Effet(4, DEGAT)}, {}, {EffetTextuel(18, "Preparez un champion.")}, {}, {Effet(6, DEGAT), Effet(2, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionVert, "Sagesse Druidique", 5,
-            {Effet(2, SOIN), Effet(2, OR)}, {}, {EffetTextuel(14, "Placez la prochaine action que vous acquérez ce tour au sommet de votre deck.")}, {}, {Effet(4, SOIN), Effet(4, OR)}, {}));
+            {Effet(2, SOIN), Effet(2, OR)}, {}, {EffetTextuel(18, "Preparez un champion.")}, {}, {Effet(4, SOIN), Effet(4, OR)}, {}));
     }
     
     std::cout << "✅ " << actions.size() << " actions créées (60 actions TOUTES avec effets de pioche prioritaires)" << std::endl;
@@ -355,6 +355,76 @@ std::vector<Champion*> Initializer::createChampions() {
     
     // Faction Jaune - 2 champions
     champions.push_back(new Champion(Faction::FactionJaune, "Général Impérial", 8,
+        {Effet(5, DEGAT), Effet(2, OR)}, {}, {}, {}, {Effet(7, DEGAT), Effet(4, OR)}, {},
+        6, 6, false, false));
+    
+    champions.push_back(new Champion(Faction::FactionJaune, "Paladin Royal", 6,
+        {Effet(3, DEGAT), Effet(3, SOIN)}, {}, {}, {}, {Effet(5, DEGAT), Effet(5, SOIN)}, {},
+        5, 5, true, false));
+    
+    // Faction Bleue - 2 champions
+    champions.push_back(new Champion(Faction::FactionBleu, "Maître Espion", 7,
+        {Effet(4, DEGAT), Effet(2, OR)}, {}, {}, {}, {Effet(6, DEGAT), Effet(4, OR)}, {},
+        5, 5, false, false));
+    
+    champions.push_back(new Champion(Faction::FactionBleu, "Seigneur des Voleurs", 9,
+        {Effet(4, DEGAT), Effet(3, OR)}, {}, {}, {}, {Effet(6, DEGAT), Effet(5, OR)}, {},
+        6, 6, false, false));
+    
+    // Faction Rouge - 2 champions
+    champions.push_back(new Champion(Faction::FactionRouge, "Nécromant", 6,
+        {Effet(3, DEGAT), Effet(2, SOIN)}, {}, {}, {}, {Effet(5, DEGAT), Effet(4, SOIN)}, {},
+        5, 5, false, false));
+    
+    champions.push_back(new Champion(Faction::FactionRouge, "Seigneur Vampire", 10,
+        {Effet(6, DEGAT), Effet(3, SOIN)}, {}, {}, {}, {Effet(9, DEGAT), Effet(5, SOIN)}, {},
+        7, 7, false, false));
+    
+    // Faction Verte - 2 champions
+    champions.push_back(new Champion(Faction::FactionVert, "Alpha des Loups", 9,
+        {Effet(6, DEGAT)}, {}, {}, {}, {Effet(9, DEGAT), Effet(3, SOIN)}, {},
+        7, 7, true, false));
+    
+    champions.push_back(new Champion(Faction::FactionVert, "Druide Suprême", 7,
+        {Effet(2, DEGAT), Effet(4, SOIN)}, {}, {}, {}, {Effet(4, DEGAT), Effet(6, SOIN)}, {},
+        6, 6, false, false));
+
+        champions.push_back(new Champion(Faction::FactionJaune, "Général Impérial", 8,
+        {Effet(5, DEGAT), Effet(2, OR)}, {}, {}, {}, {Effet(7, DEGAT), Effet(4, OR)}, {},
+        6, 6, false, false));
+    
+    champions.push_back(new Champion(Faction::FactionJaune, "Paladin Royal", 6,
+        {Effet(3, DEGAT), Effet(3, SOIN)}, {}, {}, {}, {Effet(5, DEGAT), Effet(5, SOIN)}, {},
+        5, 5, true, false));
+    
+    // Faction Bleue - 2 champions
+    champions.push_back(new Champion(Faction::FactionBleu, "Maître Espion", 7,
+        {Effet(4, DEGAT), Effet(2, OR)}, {}, {}, {}, {Effet(6, DEGAT), Effet(4, OR)}, {},
+        5, 5, false, false));
+    
+    champions.push_back(new Champion(Faction::FactionBleu, "Seigneur des Voleurs", 9,
+        {Effet(4, DEGAT), Effet(3, OR)}, {}, {}, {}, {Effet(6, DEGAT), Effet(5, OR)}, {},
+        6, 6, false, false));
+    
+    // Faction Rouge - 2 champions
+    champions.push_back(new Champion(Faction::FactionRouge, "Nécromant", 6,
+        {Effet(3, DEGAT), Effet(2, SOIN)}, {}, {}, {}, {Effet(5, DEGAT), Effet(4, SOIN)}, {},
+        5, 5, false, false));
+    
+    champions.push_back(new Champion(Faction::FactionRouge, "Seigneur Vampire", 10,
+        {Effet(6, DEGAT), Effet(3, SOIN)}, {}, {}, {}, {Effet(9, DEGAT), Effet(5, SOIN)}, {},
+        7, 7, false, false));
+    
+    // Faction Verte - 2 champions
+    champions.push_back(new Champion(Faction::FactionVert, "Alpha des Loups", 9,
+        {Effet(6, DEGAT)}, {}, {}, {}, {Effet(9, DEGAT), Effet(3, SOIN)}, {},
+        7, 7, true, false));
+    
+    champions.push_back(new Champion(Faction::FactionVert, "Druide Suprême", 7,
+        {Effet(2, DEGAT), Effet(4, SOIN)}, {}, {}, {}, {Effet(4, DEGAT), Effet(6, SOIN)}, {},
+        6, 6, false, false));
+
+        champions.push_back(new Champion(Faction::FactionJaune, "Général Impérial", 8,
         {Effet(5, DEGAT), Effet(2, OR)}, {}, {}, {}, {Effet(7, DEGAT), Effet(4, OR)}, {},
         6, 6, false, false));
     

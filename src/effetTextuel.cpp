@@ -164,11 +164,11 @@ void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueurJouantLeTour, Joue
             effet.gain1CombatPerOtherChampionWild(joueurJouantLeTour);
             break;
         }
-        case 13: { // AJOUT : placer une carte de la défausse sur le dessus de la pioche
+        case 13: { // placer une carte de la défausse sur le dessus de la pioche
             effet.placeCardFromDiscardOnTopOfDraw(joueurJouantLeTour);
             break;
         }
-        case 14: { // Put the next action you acquire this turn on top of your deck
+        case 14: { // Mettre la prochaine action acquise ce tour sur le dessus de votre deck
             effet.setNextActionAcquiredOnTop(joueurJouantLeTour);
             break;
         }
@@ -182,6 +182,10 @@ void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueurJouantLeTour, Joue
         }
         case 17: { // Sacrifier une carte pour gagner 2 combat
             effet.sacrificeCardForCombat2(joueurJouantLeTour);
+            break;
+        }
+        case 18: { // Préparer un champion en jeu
+            effet.preparerChampionEnJeu(joueurJouantLeTour);
             break;
         }
         default:
@@ -560,6 +564,35 @@ void EffetTextuel::sacrificeCardForCombat2(Joueur& joueur) {
  joueur.addCombat(2);
  std::cout << "La carte se sacrifie pour 2 points de combat ===" << std::endl;
  }
+}
+
+//id : 18 - Préparer un champion en jeu pour qu'il puisse rejouer ses compétences ce tour
+void EffetTextuel::preparerChampionEnJeu(Joueur& joueur) {
+    auto champions = joueur.getStackChampion().getChampions();
+    if (champions.empty()) {
+        std::cout << "Aucun champion en jeu à préparer." << std::endl;
+        return;
+    }
+
+    std::cout << "\nChampions en jeu :" << std::endl;
+    for (size_t i = 0; i < champions.size(); ++i) {
+        std::cout << "  [" << i << "] " << champions[i]->getNom();
+        if (champions[i]->getPeutRejouer()) {
+            std::cout << " (déjà prêt à rejouer)";
+        }
+        std::cout << std::endl;
+    }
+
+    std::cout << "Choisissez le champion à préparer (0 à " << champions.size() - 1 << ") : ";
+    int choix = -1;
+    std::cin >> choix;
+    if (choix < 0 || choix >= static_cast<int>(champions.size())) {
+        std::cout << "Indice invalide. Aucun champion préparé." << std::endl;
+        return;
+    }
+
+    champions[choix]->setPeutRejouer(true);
+    std::cout << "Champion '" << champions[choix]->getNom() << "' peut rejouer ses compétences ce tour !" << std::endl;
 }
 
 

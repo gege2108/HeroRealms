@@ -46,6 +46,8 @@ public:
     bool sacrificeCard(Joueur& joueur);                    // id : 15
     void sacrificeCardForCombat3(Joueur& joueur);         // id : 16
     void sacrificeCardForCombat2(Joueur& joueur);         // id : 17
+    void preparerChampionEnJeu(Joueur& joueur); //id : 18
+
 
 
     static void handleIdEffetTextuel(int id, Joueur& joueur, Joueur& adversaire);

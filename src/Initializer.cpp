@@ -78,16 +78,14 @@ void Initializer::initializePlateauRef(Plateau& plateau) {
         marche.addGemme(new GemmeDeFeu());
     }
     
+    // ✅ CORRECTION : Ajouter les actions ET les champions
     std::cout << "DEBUG: Ajout d'actions au marché" << std::endl;
-    // TEMPORAIRE: Ne pas ajouter les actions pour tester uniquement les champions
-    /*
     auto actions = createActions();
     for (auto* action : actions) {
         marche.addStackAction(action);
     }
-    */
     
-    std::cout << "DEBUG: Ajout de champions au marché (UNIQUEMENT DES CHAMPIONS)" << std::endl;
+    std::cout << "DEBUG: Ajout de champions au marché" << std::endl;
     auto champions = createChampions();
     for (auto* champion : champions) {
         marche.addStackAction(champion);
@@ -100,7 +98,10 @@ void Initializer::initializePlateauRef(Plateau& plateau) {
     
     std::cout << "DEBUG: Affichage des 10 premières cartes après mélange :" << std::endl;
     for (int i = 0; i < 10 && i < static_cast<int>(marche.getStackActions().size()); ++i) {
-        std::cout << "  - Carte " << (i+1) << " : " << marche.getStackActions()[i]->getNom() << std::endl;
+        Action* carte = marche.getStackActions()[i];
+        Champion* champ = dynamic_cast<Champion*>(carte);
+        std::string typeIcon = champ ? "🎖️" : "📜";
+        std::cout << "  - Carte " << (i+1) << " : " << typeIcon << " " << carte->getNom() << std::endl;
     }
     
     std::cout << "DEBUG: Mise à jour des actions vendables (initialisation à 5 cartes)" << std::endl;
@@ -114,8 +115,22 @@ void Initializer::initializePlateauRef(Plateau& plateau) {
     std::cout << "DEBUG: Nombre de cartes vendables initialisées: " << marche.getActionsVendables().size() << std::endl;
     std::cout << "DEBUG: Cartes vendables au démarrage :" << std::endl;
     for (size_t i = 0; i < marche.getActionsVendables().size(); ++i) {
-        std::cout << "  " << (i+1) << ". " << marche.getActionsVendables()[i]->getNom() 
-                  << " (" << marche.getActionsVendables()[i]->getPrix() << " 💰)" << std::endl;
+        Action* action = marche.getActionsVendables()[i];
+        
+        std::string factionEmoji;
+        switch(action->getFaction()) {
+            case Faction::FactionJaune: factionEmoji = "👑"; break;
+            case Faction::FactionBleu: factionEmoji = "🗡️"; break;
+            case Faction::FactionRouge: factionEmoji = "💀"; break;
+            case Faction::FactionVert: factionEmoji = "🐺"; break;
+            default: factionEmoji = "⚪"; break;
+        }
+        
+        Champion* champ = dynamic_cast<Champion*>(action);
+        std::string typeIcon = champ ? "🎖️" : "📜";
+        
+        std::cout << "  " << (i+1) << ". " << factionEmoji << " " << typeIcon << " " 
+                  << action->getNom() << " (" << action->getPrix() << " 💰)" << std::endl;
     }
     
     std::cout << "DEBUG: Assignation marché au plateau" << std::endl;
@@ -167,27 +182,68 @@ Joueur Initializer::initializeJoueur() {
 }
 
 Marche Initializer::initializeMarche() {
-    // Créer et ajouter les gemmes de feu (spécifier le nombre)
-    auto gemmes = createGemmesDeFeu(16);
+    std::cout << "Initialisation du marché..." << std::endl;
     
-    // Créer les actions et champions
+    Marche marche;
+    
+    // Créer et ajouter les gemmes de feu (16 gemmes)
+    auto gemmes = createGemmesDeFeu(16);
+    for (auto* gemme : gemmes) {
+        marche.addGemme(gemme);
+    }
+    
+    // ✅ Créer les actions et champions
     auto actions = createActions();
     auto champions = createChampions();
     
-    // Combiner actions et champions dans une seule stack
-    std::vector<Action*> stackComplete = actions;
-    for (auto* champion : champions) {
-        stackComplete.push_back(champion);
+    std::cout << "📊 Composition du marché:" << std::endl;
+    std::cout << "   • Actions: " << actions.size() << std::endl;
+    std::cout << "   • Champions: " << champions.size() << std::endl;
+    
+    // ✅ Ajouter d'abord TOUTES les actions
+    for (auto* action : actions) {
+        marche.addStackAction(action);
     }
     
-    // Créer le marché avec la stack complète et les gemmes
-    Marche marche(stackComplete, gemmes);
+    // ✅ Puis ajouter tous les champions
+    for (auto* champion : champions) {
+        marche.addStackAction(champion);
+    }
     
-    // Mélanger la stack
+    std::cout << "Nombre total de cartes avant mélange: " << marche.getStackActions().size() << std::endl;
+    
+    // ✅ MÉLANGER la stack COMPLÈTE
+    std::cout << "Mélange du marché en cours..." << std::endl;
     marche.melangeStackActionEtChampion();
+    std::cout << "✅ Marché mélangé!" << std::endl;
     
-    // Mettre 5 cartes en vente
-    marche.InitialiserActionsVendables(5);
+    // Initialiser 5 cartes vendables
+    std::cout << "Initialisation des cartes vendables..." << std::endl;
+    for (int i = 0; i < 5 && !marche.getStackActions().empty(); ++i) {
+        Action* carte = marche.getStackActions().front();
+        marche.addActionVendable(carte);
+        marche.removeStackAction(carte);
+    }
+    
+    std::cout << "✅ Marché initialisé avec " << marche.getActionsVendables().size() << " cartes vendables." << std::endl;
+    std::cout << "🎴 Cartes vendables au démarrage:" << std::endl;
+    for (size_t i = 0; i < marche.getActionsVendables().size(); ++i) {
+        Action* action = marche.getActionsVendables()[i];
+        std::string factionEmoji;
+        switch(action->getFaction()) {
+            case Faction::FactionJaune: factionEmoji = "👑"; break;
+            case Faction::FactionBleu: factionEmoji = "🗡️"; break;
+            case Faction::FactionRouge: factionEmoji = "💀"; break;
+            case Faction::FactionVert: factionEmoji = "🐺"; break;
+            default: factionEmoji = "⚪"; break;
+        }
+        
+        Champion* champ = dynamic_cast<Champion*>(action);
+        std::string typeIcon = champ ? "🎖️" : "📜";
+        
+        std::cout << "  " << (i+1) << ". " << factionEmoji << " " << typeIcon << " " 
+                  << action->getNom() << " (" << action->getPrix() << " 💰)" << std::endl;
+    }
     
     return marche;
 }
@@ -211,209 +267,83 @@ std::vector<CarteDeBase*> Initializer::createCartesDeBase() {
 std::vector<Action*> Initializer::createActions() {
     std::vector<Action*> actions;
     
-    // ========== Actions Faction Impériale (Jaune) - 10 actions ==========
-    actions.push_back(new Action(Faction::FactionJaune, "Taxation", 1,
-        {Effet(2, OR)}, {},
-        {}, {},
-        {Effet(6, SOIN)}, {}));
+    // ✅ TEMPORAIRE : Toutes les actions avec effets de pioche (ID 1, 4 ou 6)
+    // Au lieu de 1 exemplaire de chaque, créer 3 exemplaires de chaque action
     
-    actions.push_back(new Action(Faction::FactionJaune, "Recrutement", 3,
-        {Effet(1, OR)}, {Effet(2, DEGAT)},
-        {}, {},
-        {Effet(2, SOIN)}, {}));
+    // Faction Jaune (Impériale) - 5 actions × 3 = 15 cartes
+    for (int copy = 0; copy < 3; ++copy) {
+        actions.push_back(new Action(Faction::FactionJaune, "Taxation", 1,
+            {Effet(2, OR)}, {}, {EffetTextuel(1, "Piocher 1 carte")}, {}, {Effet(6, SOIN)}, {}));
+        
+        actions.push_back(new Action(Faction::FactionJaune, "Recrutement", 3,
+            {Effet(1, OR)}, {Effet(2, DEGAT)}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(2, OR), Effet(3, SOIN)}, {}));
+        
+        actions.push_back(new Action(Faction::FactionJaune, "Commandement", 2,
+            {Effet(3, DEGAT)}, {}, {EffetTextuel(1, "Piocher 1 carte")}, {}, {Effet(1, OR)}, {}));
+        
+        actions.push_back(new Action(Faction::FactionJaune, "Garde Royale", 4,
+            {Effet(2, OR), Effet(2, SOIN)}, {}, {EffetTextuel(6, "Piocher 2 puis défausser 2")}, {}, {Effet(3, OR), Effet(3, SOIN)}, {}));
+        
+        actions.push_back(new Action(Faction::FactionJaune, "Bannière Impériale", 5,
+            {Effet(3, DEGAT), Effet(2, SOIN)}, {}, {EffetTextuel(1, "Piocher 1 carte")}, {}, {Effet(5, DEGAT), Effet(4, SOIN)}, {}));
+    }
     
-    actions.push_back(new Action(Faction::FactionJaune, "Commandement", 2,
-        {Effet(3, DEGAT)}, {},
-        {}, {},
-        {Effet(1, OR)}, {}));
+    // Faction Bleue (Guilde) - 5 actions × 3 = 15 cartes
+    for (int copy = 0; copy < 3; ++copy) {
+        actions.push_back(new Action(Faction::FactionBleu, "Pot-de-Vin", 1,
+            {Effet(2, OR)}, {}, {EffetTextuel(1, "Piocher 1 carte")}, {}, {Effet(4, DEGAT)}, {}));
+        
+        actions.push_back(new Action(Faction::FactionBleu, "Intimidation", 2,
+            {Effet(5, DEGAT)}, {}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(3, OR)}, {}));
+        
+        actions.push_back(new Action(Faction::FactionBleu, "Espionnage", 3,
+            {Effet(2, OR), Effet(2, DEGAT)}, {}, {EffetTextuel(6, "Piocher 2 puis défausser 2")}, {}, {Effet(4, OR), Effet(3, DEGAT)}, {}));
+        
+        actions.push_back(new Action(Faction::FactionBleu, "Contrat d'Assassin", 4,
+            {Effet(4, DEGAT)}, {}, {EffetTextuel(1, "Piocher 1 carte")}, {}, {Effet(6, DEGAT), Effet(2, OR)}, {}));
+        
+        actions.push_back(new Action(Faction::FactionBleu, "Trahison", 5,
+            {Effet(3, DEGAT), Effet(2, OR)}, {}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(5, DEGAT), Effet(4, OR)}, {}));
+    }
     
-    actions.push_back(new Action(Faction::FactionJaune, "Diplomatie", 4,
-        {Effet(2, OR), Effet(3, SOIN)}, {},
-        {EffetTextuel(1, "Piocher une carte")}, {},
-        {Effet(4, OR), Effet(5, SOIN)}, {}));
+    // Faction Rouge (Nécros) - 5 actions × 3 = 15 cartes
+    for (int copy = 0; copy < 3; ++copy) {
+        actions.push_back(new Action(Faction::FactionRouge, "Magie Noire", 2,
+            {Effet(3, DEGAT)}, {}, {EffetTextuel(1, "Piocher 1 carte")}, {}, {Effet(2, DEGAT)}, {}));
+        
+        actions.push_back(new Action(Faction::FactionRouge, "Sacrifice", 3,
+            {Effet(4, DEGAT)}, {Effet(2, SOIN)}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(6, DEGAT), Effet(3, SOIN)}, {}));
+        
+        actions.push_back(new Action(Faction::FactionRouge, "Rituel Sombre", 4,
+            {Effet(3, DEGAT)}, {Effet(2, SOIN)}, {EffetTextuel(6, "Piocher 2 puis défausser 2")}, {}, {Effet(5, DEGAT), Effet(3, SOIN)}, {}));
+        
+        actions.push_back(new Action(Faction::FactionRouge, "Invocation", 5,
+            {Effet(5, DEGAT), Effet(2, SOIN)}, {}, {EffetTextuel(1, "Piocher 1 carte")}, {}, {Effet(7, DEGAT), Effet(4, SOIN)}, {}));
+        
+        actions.push_back(new Action(Faction::FactionRouge, "Malédiction", 3,
+            {Effet(4, DEGAT)}, {}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(6, DEGAT)}, {}));
+    }
     
-    actions.push_back(new Action(Faction::FactionJaune, "Garde Royale", 5,
-        {Effet(4, DEGAT)}, {Effet(6, SOIN)},
-        {}, {},
-        {Effet(6, DEGAT), Effet(4, SOIN)}, {}));
+    // Faction Verte (Sauvage) - 5 actions × 3 = 15 cartes
+    for (int copy = 0; copy < 3; ++copy) {
+        actions.push_back(new Action(Faction::FactionVert, "Charge Sauvage", 2,
+            {Effet(4, DEGAT)}, {}, {EffetTextuel(1, "Piocher 1 carte")}, {}, {Effet(6, DEGAT)}, {}));
+        
+        actions.push_back(new Action(Faction::FactionVert, "Rage du Loup", 3,
+            {Effet(3, DEGAT), Effet(2, SOIN)}, {}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(5, DEGAT), Effet(4, SOIN)}, {}));
+        
+        actions.push_back(new Action(Faction::FactionVert, "Instinct Animal", 4,
+            {Effet(2, DEGAT), Effet(3, SOIN)}, {}, {EffetTextuel(6, "Piocher 2 puis défausser 2")}, {}, {Effet(4, DEGAT), Effet(5, SOIN)}, {}));
+        
+        actions.push_back(new Action(Faction::FactionVert, "Hurlement du Pack", 4,
+            {Effet(4, DEGAT)}, {}, {EffetTextuel(1, "Piocher 1 carte")}, {}, {Effet(6, DEGAT), Effet(2, SOIN)}, {}));
+        
+        actions.push_back(new Action(Faction::FactionVert, "Sagesse Druidique", 5,
+            {Effet(2, SOIN), Effet(2, OR)}, {}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(4, SOIN), Effet(4, OR)}, {}));
+    }
     
-    actions.push_back(new Action(Faction::FactionJaune, "Trésor Impérial", 6,
-        {Effet(5, OR)}, {},
-        {}, {},
-        {Effet(8, OR)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionJaune, "Héraut Impérial", 2,
-        {Effet(1, OR), Effet(2, SOIN)}, {},
-        {}, {},
-        {Effet(3, OR), Effet(4, SOIN)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionJaune, "Stratège", 4,
-        {Effet(3, OR)}, {},
-        {EffetTextuel(1, "Piocher une carte")}, {},
-        {Effet(5, OR)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionJaune, "Médecin de Guerre", 3,
-        {Effet(2, SOIN)}, {Effet(2, OR)},
-        {}, {},
-        {Effet(5, SOIN)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionJaune, "Bannière Impériale", 5,
-        {Effet(3, DEGAT), Effet(3, SOIN)}, {},
-        {}, {},
-        {Effet(5, DEGAT), Effet(5, SOIN)}, {}));
-    
-    // ========== Actions Faction Guilde (Bleu) - 10 actions ==========
-    actions.push_back(new Action(Faction::FactionBleu, "Pot-de-Vin", 1,
-        {Effet(2, OR)}, {},
-        {}, {},
-        {Effet(4, DEGAT)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionBleu, "Intimidation", 2,
-        {Effet(5, DEGAT)}, {},
-        {}, {},
-        {Effet(3, OR)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionBleu, "Espionnage", 3,
-        {Effet(2, OR)}, {Effet(3, DEGAT)},
-        {EffetTextuel(2, "Défausser adversaire")}, {},
-        {Effet(4, OR), Effet(2, DEGAT)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionBleu, "Contrat d'Assassin", 4,
-        {Effet(6, DEGAT)}, {},
-        {EffetTextuel(3, "Étourdir champion")}, {},
-        {Effet(8, DEGAT)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionBleu, "Maître Voleur", 5,
-        {Effet(3, OR), Effet(2, DEGAT)}, {},
-        {EffetTextuel(4, "Piocher puis défausser")}, {},
-        {Effet(5, OR), Effet(4, DEGAT)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionBleu, "Chef de Guilde", 7,
-        {Effet(4, OR), Effet(4, DEGAT)}, {},
-        {}, {},
-        {Effet(6, OR), Effet(6, DEGAT)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionBleu, "Racketteur", 2,
-        {Effet(3, OR)}, {},
-        {}, {},
-        {Effet(5, OR)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionBleu, "Pickpocket", 1,
-        {Effet(1, OR)}, {Effet(2, DEGAT)},
-        {}, {},
-        {Effet(3, OR)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionBleu, "Coup de Poignard", 3,
-        {Effet(4, DEGAT)}, {},
-        {}, {},
-        {Effet(6, DEGAT)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionBleu, "Marché Noir", 4,
-        {Effet(3, OR)}, {},
-        {EffetTextuel(1, "Piocher une carte")}, {},
-        {Effet(5, OR)}, {}));
-    
-    // ========== Actions Faction Nécros (Rouge) - 10 actions ==========
-    actions.push_back(new Action(Faction::FactionRouge, "Magie Noire", 2,
-        {Effet(3, DEGAT)}, {Effet(2, OR)},
-        {EffetTextuel(2, "Défausser adversaire")}, {},
-        {Effet(5, DEGAT)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionRouge, "Drain de Vie", 3,
-        {Effet(2, DEGAT), Effet(2, SOIN)}, {},
-        {}, {},
-        {Effet(4, DEGAT), Effet(4, SOIN)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionRouge, "Malédiction", 4,
-        {Effet(4, DEGAT)}, {},
-        {EffetTextuel(2, "Défausser adversaire")}, {},
-        {Effet(6, DEGAT)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionRouge, "Invocation", 5,
-        {Effet(3, DEGAT)}, {Effet(1, OR)},
-        {EffetTextuel(1, "Piocher une carte")}, {},
-        {Effet(5, DEGAT), Effet(2, OR)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionRouge, "Rituel Sanglant", 6,
-        {Effet(6, DEGAT)}, {},
-        {}, {},
-        {Effet(8, DEGAT), Effet(3, SOIN)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionRouge, "Nécrose", 8,
-        {Effet(5, DEGAT), Effet(4, SOIN)}, {},
-        {EffetTextuel(3, "Étourdir champion")}, {},
-        {Effet(8, DEGAT), Effet(6, SOIN)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionRouge, "Âme Tourmentée", 2,
-        {Effet(3, DEGAT)}, {},
-        {}, {},
-        {Effet(5, DEGAT)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionRouge, "Pacte des Ténèbres", 4,
-        {Effet(2, OR), Effet(3, DEGAT)}, {},
-        {}, {},
-        {Effet(4, OR), Effet(5, DEGAT)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionRouge, "Vampirisme", 5,
-        {Effet(4, DEGAT), Effet(3, SOIN)}, {},
-        {}, {},
-        {Effet(6, DEGAT), Effet(5, SOIN)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionRouge, "Résurrection", 3,
-        {Effet(2, SOIN)}, {Effet(2, DEGAT)},
-        {EffetTextuel(1, "Piocher une carte")}, {},
-        {Effet(4, SOIN), Effet(3, DEGAT)}, {}));
-    
-    // ========== Actions Faction Sauvage (Vert) - 10 actions ==========
-    actions.push_back(new Action(Faction::FactionVert, "Charge Sauvage", 2,
-        {Effet(4, DEGAT)}, {},
-        {}, {},
-        {Effet(6, DEGAT)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionVert, "Rage Primitive", 3,
-        {Effet(5, DEGAT)}, {},
-        {}, {},
-        {Effet(7, DEGAT)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionVert, "Guérison Naturelle", 2,
-        {Effet(1, OR), Effet(4, SOIN)}, {},
-        {}, {},
-        {Effet(2, OR), Effet(6, SOIN)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionVert, "Instinct Animal", 4,
-        {Effet(3, DEGAT), Effet(2, SOIN)}, {},
-        {EffetTextuel(1, "Piocher une carte")}, {},
-        {Effet(5, DEGAT), Effet(3, SOIN)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionVert, "Meute de Loups", 5,
-        {Effet(6, DEGAT)}, {},
-        {}, {},
-        {Effet(9, DEGAT)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionVert, "Druide Ancien", 7,
-        {Effet(2, OR), Effet(3, DEGAT), Effet(4, SOIN)}, {},
-        {EffetTextuel(4, "Piocher puis défausser")}, {},
-        {Effet(4, OR), Effet(5, DEGAT), Effet(6, SOIN)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionVert, "Griffes Acérées", 1,
-        {Effet(3, DEGAT)}, {},
-        {}, {},
-        {Effet(5, DEGAT)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionVert, "Hurlement de Guerre", 3,
-        {Effet(4, DEGAT)}, {},
-        {}, {},
-        {Effet(6, DEGAT), Effet(2, SOIN)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionVert, "Régénération", 4,
-        {Effet(5, SOIN)}, {},
-        {}, {},
-        {Effet(7, SOIN), Effet(2, OR)}, {}));
-    
-    actions.push_back(new Action(Faction::FactionVert, "Traqueur des Bois", 2,
-        {Effet(2, DEGAT), Effet(2, SOIN)}, {},
-        {}, {},
-        {Effet(4, DEGAT), Effet(3, SOIN)}, {}));
+    std::cout << "✅ " << actions.size() << " actions créées (60 actions TOUTES avec effets de pioche prioritaires)" << std::endl;
+    std::cout << "   📊 Répartition : ~30 ID1 (piocher 1), ~15 ID4 (piocher+défausser), ~15 ID6 (piocher 2+défausser 2)" << std::endl;
     
     return actions;
 }
@@ -421,81 +351,46 @@ std::vector<Action*> Initializer::createActions() {
 std::vector<Champion*> Initializer::createChampions() {
     std::vector<Champion*> champions;
     
-    // Champions Faction Impériale (3 champions)
-    champions.push_back(new Champion(Faction::FactionJaune, "Garde Impérial", 4,
-        {Effet(3, DEGAT)}, {Effet(2, SOIN)},
-        {}, {},
-        {Effet(5, DEGAT), Effet(3, SOIN)}, {},
-        5, 5, true, false));  // ✅ PV=5, PVmax=5, isGarde=true, isDefense=false
+    // ✅ Garder seulement 1 exemplaire de chaque champion (8 champions uniques)
+    
+    // Faction Jaune - 2 champions
+    champions.push_back(new Champion(Faction::FactionJaune, "Général Impérial", 8,
+        {Effet(5, DEGAT), Effet(2, OR)}, {}, {}, {}, {Effet(7, DEGAT), Effet(4, OR)}, {},
+        //                           ^ Correction : ) au lieu de }
+        6, 6, false, false));
     
     champions.push_back(new Champion(Faction::FactionJaune, "Paladin Royal", 6,
-        {Effet(2, DEGAT), Effet(3, SOIN)}, {},
-        {}, {},
-        {Effet(4, DEGAT), Effet(5, SOIN)}, {},
-        7, 7, true, false));  // ✅ PV=7, PVmax=7
+        {Effet(3, DEGAT), Effet(3, SOIN)}, {}, {}, {}, {Effet(5, DEGAT), Effet(5, SOIN)}, {},
+        5, 5, true, false));
     
-    champions.push_back(new Champion(Faction::FactionJaune, "Général Impérial", 8,
-        {Effet(5, DEGAT), Effet(2, OR)}, {},
-        {EffetTextuel(1, "Piocher une carte")}, {},
-        {Effet(7, DEGAT), Effet(4, OR)}, {},
-        6, 6, false, false));  // ✅ PV=6, PVmax=6
-    
-    // Champions Faction Guilde (3 champions)
-    champions.push_back(new Champion(Faction::FactionBleu, "Assassin de Guilde", 5,
-        {Effet(4, DEGAT)}, {},
-        {EffetTextuel(3, "Étourdir champion")}, {},
-        {Effet(6, DEGAT)}, {},
-        4, 4, false, false));  // ✅ PV=4, PVmax=4
-    
+    // Faction Bleue - 2 champions
     champions.push_back(new Champion(Faction::FactionBleu, "Maître Espion", 7,
-        {Effet(3, DEGAT), Effet(2, OR)}, {},
-        {EffetTextuel(2, "Défausser adversaire")}, {},
-        {Effet(5, DEGAT), Effet(3, OR)}, {},
-        5, 5, false, false));  // ✅ PV=5, PVmax=5
+        {Effet(4, DEGAT), Effet(2, OR)}, {}, {}, {}, {Effet(6, DEGAT), Effet(4, OR)}, {},
+        5, 5, false, false));
     
     champions.push_back(new Champion(Faction::FactionBleu, "Seigneur des Voleurs", 9,
-        {Effet(4, DEGAT), Effet(3, OR)}, {},
-        {EffetTextuel(4, "Piocher puis défausser")}, {},
-        {Effet(6, DEGAT), Effet(5, OR)}, {},
-        6, 6, false, false));  // ✅ PV=6, PVmax=6
+        {Effet(4, DEGAT), Effet(3, OR)}, {}, {}, {}, {Effet(6, DEGAT), Effet(5, OR)}, {},
+        6, 6, false, false));
     
-    // Champions Faction Nécros (3 champions)
+    // Faction Rouge - 2 champions
     champions.push_back(new Champion(Faction::FactionRouge, "Nécromant", 6,
-        {Effet(2, DEGAT)}, {Effet(3, SOIN)},
-        {EffetTextuel(1, "Piocher une carte")}, {},
-        {Effet(4, DEGAT), Effet(2, SOIN)}, {},
-        6, 6, false, false));  // ✅ PV=6, PVmax=6
-    
-    champions.push_back(new Champion(Faction::FactionRouge, "Liche Ancienne", 8,
-        {Effet(4, DEGAT), Effet(2, SOIN)}, {},
-        {EffetTextuel(2, "Défausser adversaire")}, {},
-        {Effet(6, DEGAT), Effet(4, SOIN)}, {},
-        7, 7, false, false));  // ✅ PV=7, PVmax=7
+        {Effet(3, DEGAT), Effet(2, SOIN)}, {}, {}, {}, {Effet(5, DEGAT), Effet(4, SOIN)}, {},
+        5, 5, false, false));
     
     champions.push_back(new Champion(Faction::FactionRouge, "Seigneur Vampire", 10,
-        {Effet(5, DEGAT), Effet(3, SOIN)}, {},
-        {EffetTextuel(3, "Étourdir champion")}, {},
-        {Effet(8, DEGAT), Effet(5, SOIN)}, {},
-        8, 8, false, false));  // ✅ PV=8, PVmax=8
+        {Effet(6, DEGAT), Effet(3, SOIN)}, {}, {}, {}, {Effet(9, DEGAT), Effet(5, SOIN)}, {},
+        7, 7, false, false));
     
-    // Champions Faction Sauvage (3 champions)
-    champions.push_back(new Champion(Faction::FactionVert, "Chef de Clan", 5,
-        {Effet(4, DEGAT), Effet(1, SOIN)}, {},
-        {}, {},
-        {Effet(6, DEGAT), Effet(2, SOIN)}, {},
-        5, 5, false, false));  // ✅ PV=5, PVmax=5
+    // Faction Verte - 2 champions
+    champions.push_back(new Champion(Faction::FactionVert, "Alpha des Loups", 9,
+        {Effet(6, DEGAT)}, {}, {}, {}, {Effet(9, DEGAT), Effet(3, SOIN)}, {},
+        7, 7, true, false));
     
     champions.push_back(new Champion(Faction::FactionVert, "Druide Suprême", 7,
-        {Effet(2, DEGAT), Effet(4, SOIN)}, {},
-        {EffetTextuel(1, "Piocher une carte")}, {},
-        {Effet(4, DEGAT), Effet(6, SOIN)}, {},
-        6, 6, false, false));  // ✅ PV=6, PVmax=6
+        {Effet(2, DEGAT), Effet(4, SOIN)}, {}, {}, {}, {Effet(4, DEGAT), Effet(6, SOIN)}, {},
+        6, 6, false, false));
     
-    champions.push_back(new Champion(Faction::FactionVert, "Alpha des Loups", 9,
-        {Effet(6, DEGAT)}, {},
-        {EffetTextuel(4, "Piocher puis défausser")}, {},
-        {Effet(9, DEGAT), Effet(3, SOIN)}, {},
-        7, 7, true, false));  // ✅ PV=7, PVmax=7
+    std::cout << "✅ " << champions.size() << " champions créés (8 champions uniques)" << std::endl;
     
     return champions;
 }

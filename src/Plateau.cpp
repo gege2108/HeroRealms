@@ -116,7 +116,7 @@ void Plateau::afficherEtat() const {
 
 
 
-std::pair<std::vector<Effet>, std::vector<EffetTextuel>> Plateau::choixUtilisationEffetJ1(){
+std::pair<std::vector<Effet>, std::vector<EffetTextuel>> Plateau::choixUtilisationEffetJ1() {
     //active les combos pour les actions de la même faction que les champions en jeu
     std::set<Faction> factionsEnJeu;
     for (auto* champion : joueur1.getStackChampion().getChampions()) {
@@ -146,6 +146,60 @@ std::pair<std::vector<Effet>, std::vector<EffetTextuel>> Plateau::choixUtilisati
         Champion* champion = dynamic_cast<Champion*>(carte);
 
         if (action != nullptr || champion != nullptr) {
+            // ✅ Filtrer les effets textuels NON-PRIORITAIRES
+            std::vector<EffetTextuel> effetsTextuelsChoix1NonPrioritaires;
+            std::vector<EffetTextuel> effetsTextuelsChoix2NonPrioritaires;
+            std::vector<EffetTextuel> effetsTextuelsComboNonPrioritaires;
+            
+            if (action != nullptr) {
+                for (const auto& effet : action->getListEffetTextuelChoix1()) {
+                    int id = effet.getId();
+                    if (id != 1 && id != 4 && id != 6) { // Exclure les effets de pioche
+                        effetsTextuelsChoix1NonPrioritaires.push_back(effet);
+                    }
+                }
+                for (const auto& effet : action->getListEffetTextuelChoix2()) {
+                    int id = effet.getId();
+                    if (id != 1 && id != 4 && id != 6) {
+                        effetsTextuelsChoix2NonPrioritaires.push_back(effet);
+                    }
+                }
+                for (const auto& effet : action->getListEffetTextuelCombo()) {
+                    int id = effet.getId();
+                    if (id != 1 && id != 4 && id != 6) {
+                        effetsTextuelsComboNonPrioritaires.push_back(effet);
+                    }
+                }
+            } else if (champion != nullptr) {
+                for (const auto& effet : champion->getListEffetTextuelChoix1()) {
+                    int id = effet.getId();
+                    if (id != 1 && id != 4 && id != 6) {
+                        effetsTextuelsChoix1NonPrioritaires.push_back(effet);
+                    }
+                }
+                for (const auto& effet : champion->getListEffetTextuelChoix2()) {
+                    int id = effet.getId();
+                    if (id != 1 && id != 4 && id != 6) {
+                        effetsTextuelsChoix2NonPrioritaires.push_back(effet);
+                    }
+                }
+                for (const auto& effet : champion->getListEffetTextuelCombo()) {
+                    int id = effet.getId();
+                    if (id != 1 && id != 4 && id != 6) {
+                        effetsTextuelsComboNonPrioritaires.push_back(effet);
+                    }
+                }
+            }
+            
+            // ✅ Si la carte n'a QUE des effets de pioche (déjà traités), la sauter
+            bool aEffetsNonPrioritaires = !carte->getEffetsBasiqueChoix1().empty() ||
+                                          !effetsTextuelsChoix1NonPrioritaires.empty();
+            
+            if (!aEffetsNonPrioritaires && effetsTextuelsChoix2NonPrioritaires.empty() && 
+                effetsTextuelsComboNonPrioritaires.empty()) {
+                continue; // Sauter cette carte
+            }
+            
             std::cout << "\nCarte " << (carteIndex + 1) << ": " << carte->getNom() << std::endl;
             
             // === ÉTAPE 1: Effets Choix 1 (obligatoires) ===
@@ -351,6 +405,60 @@ std::pair<std::vector<Effet>, std::vector<EffetTextuel>> Plateau::choixUtilisati
         Champion* champion = dynamic_cast<Champion*>(carte);
 
         if (action != nullptr || champion != nullptr) {
+            // ✅ Filtrer les effets textuels NON-PRIORITAIRES
+            std::vector<EffetTextuel> effetsTextuelsChoix1NonPrioritaires;
+            std::vector<EffetTextuel> effetsTextuelsChoix2NonPrioritaires;
+            std::vector<EffetTextuel> effetsTextuelsComboNonPrioritaires;
+            
+            if (action != nullptr) {
+                for (const auto& effet : action->getListEffetTextuelChoix1()) {
+                    int id = effet.getId();
+                    if (id != 1 && id != 4 && id != 6) { // Exclure les effets de pioche
+                        effetsTextuelsChoix1NonPrioritaires.push_back(effet);
+                    }
+                }
+                for (const auto& effet : action->getListEffetTextuelChoix2()) {
+                    int id = effet.getId();
+                    if (id != 1 && id != 4 && id != 6) {
+                        effetsTextuelsChoix2NonPrioritaires.push_back(effet);
+                    }
+                }
+                for (const auto& effet : action->getListEffetTextuelCombo()) {
+                    int id = effet.getId();
+                    if (id != 1 && id != 4 && id != 6) {
+                        effetsTextuelsComboNonPrioritaires.push_back(effet);
+                    }
+                }
+            } else if (champion != nullptr) {
+                for (const auto& effet : champion->getListEffetTextuelChoix1()) {
+                    int id = effet.getId();
+                    if (id != 1 && id != 4 && id != 6) {
+                        effetsTextuelsChoix1NonPrioritaires.push_back(effet);
+                    }
+                }
+                for (const auto& effet : champion->getListEffetTextuelChoix2()) {
+                    int id = effet.getId();
+                    if (id != 1 && id != 4 && id != 6) {
+                        effetsTextuelsChoix2NonPrioritaires.push_back(effet);
+                    }
+                }
+                for (const auto& effet : champion->getListEffetTextuelCombo()) {
+                    int id = effet.getId();
+                    if (id != 1 && id != 4 && id != 6) {
+                        effetsTextuelsComboNonPrioritaires.push_back(effet);
+                    }
+                }
+            }
+            
+            // ✅ Si la carte n'a QUE des effets de pioche (déjà traités), la sauter
+            bool aEffetsNonPrioritaires = !carte->getEffetsBasiqueChoix1().empty() ||
+                                          !effetsTextuelsChoix1NonPrioritaires.empty();
+            
+            if (!aEffetsNonPrioritaires && effetsTextuelsChoix2NonPrioritaires.empty() && 
+                effetsTextuelsComboNonPrioritaires.empty()) {
+                continue; // Sauter cette carte
+            }
+            
             std::cout << "\nCarte " << (carteIndex + 1) << ": " << carte->getNom() << std::endl;
             
             // === ÉTAPE 1: Effets Choix 1 (obligatoires) ===
@@ -523,45 +631,41 @@ std::pair<std::vector<Effet>, std::vector<EffetTextuel>> Plateau::choixUtilisati
     return {effetsBasiqueChoisis, effetsTextuelsChoisis};
 }
 
-void Plateau::appliquerEffetsJ1(const std::vector<Effet>& effetsBasique, const std::vector<EffetTextuel>& effetsTextuel){
-    std::cout << "\n--- Application des effets basiques du Joueur 1 ---" << std::endl;
-    for (const auto& effet : effetsBasique) {
+void Plateau::appliquerEffetsJ1(const std::vector<Effet>& effetsBasiques, 
+                                const std::vector<EffetTextuel>& effetsTextuels) {
+    std::cout << "\n=== APPLICATION DES EFFETS (Joueur 1) ===" << std::endl;
+    
+    // Appliquer les effets basiques
+    for (const auto& effet : effetsBasiques) {
         switch (effet.getType()) {
-            case DEGAT: {
-                int before = joueur1.getDegatsStockes();
-                joueur1.addDegatsStockes(effet.getValeur());
-                //joueur2.setPointDeVie(before - effet.getValeur());
-                std::cout << " => +" << effet.getValeur()
-                          << " Degats stockes à Joueur1 ( " << before << " -> " << joueur1.getDegatsStockes() << " )" << std::endl;
+            case OR:
+                joueur1.setArgent(joueur1.getArgent() + effet.getValeur());
+                std::cout << "💰 +" << effet.getValeur() << " Or" << std::endl;
                 break;
-            }
-            case SOIN: {
-                int before = joueur1.getPointDeVie();
-                joueur1.setPointDeVie(before + effet.getValeur());
-                std::cout << " => +" << effet.getValeur()
-                          << " PV à Joueur1 ( " << before << " -> " << joueur1.getPointDeVie() << " )" << std::endl;
+            case DEGAT:
+                joueur1.setDegatsStockes(joueur1.getDegatsStockes() + effet.getValeur());
+                std::cout << "⚔️  +" << effet.getValeur() << " Dégâts" << std::endl;
                 break;
-            }
-            case OR: {
-                int before = joueur1.getArgent();
-                joueur1.setArgent(before + effet.getValeur());
-                std::cout << " => +" << effet.getValeur()
-                    << " Or à Joueur1 ( " << before << " -> " << joueur1.getArgent() << " )" << std::endl;
-                break;
-            }
-            default:
-                std::cout << " => effet non géré pour l'instant." << std::endl;
+            case SOIN:
+                joueur1.setPointDeVie(joueur1.getPointDeVie() + effet.getValeur());
+                std::cout << "❤️  +" << effet.getValeur() << " PV" << std::endl;
                 break;
         }
     }
-    std::cout << "--- Fin application des effets basiques du Joueur 1 ---" << std::endl;
-
-    std::cout << "\n--- Application des effets textuels du Joueur 1 ---" << std::endl;
-    for (const auto& effetTextuel : effetsTextuel) {
-        EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur1,joueur2);
+    
+    // ✅ Appliquer UNIQUEMENT les effets textuels non-prioritaires (pas ID 1, 4, 6)
+    for (const auto& effet : effetsTextuels) {
+        int idEffet = effet.getId();
+        if (idEffet != 1 && idEffet != 4 && idEffet != 6) {
+            std::cout << "📜 " << effet.toString() << std::endl;
+            EffetTextuel::handleIdEffetTextuel(idEffet, joueur1, joueur2);
+        }
     }
-    std::cout << "--- Fin application des effets textuels du Joueur 1 ---" << std::endl;
+    
+    std::cout << "✅ Effets appliqués." << std::endl;
 }
+
+// ✅ Même logique pour appliquerEffetsJ2()
 
 void Plateau::appliquerEffetsJ2(const std::vector<Effet>& effetsBasique, const std::vector<EffetTextuel>& effetsTextuel){
     std::cout << "\n--- Application des effets basiques du Joueur 2 ---" << std::endl;

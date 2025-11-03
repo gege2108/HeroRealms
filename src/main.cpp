@@ -90,7 +90,7 @@ int main() {
     
     
     */
-   Plateau plateau;
+    Plateau plateau;
     Initializer::initializePlateauRef(plateau);  // Initialisation par référence
     
     Game game(plateau);

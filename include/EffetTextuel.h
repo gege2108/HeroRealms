@@ -21,11 +21,12 @@ public:
     }
 
     // Méthodes utilisant Joueur
-    void drawACard(Joueur& joueur); // id : 1
-    void discardOpponentCard(Joueur& adversaire); // id : 2
-    void stunChampion(Joueur& adversaire); // id : 3
-    void drawAndDiscard(Joueur& joueur); // id : 4
-    void defenseModActivated(Joueur& joueur); // id : 5
+    static void drawACard(Joueur& joueur); // id : 1
+    static void discardOpponentCard(Joueur& opponent); // id : 2
+    static void stunChampion(Joueur& opponent); // id : 3
+    static void drawAndDiscard(Joueur& joueur); // id : 4
+    static void defenseModActivated(Joueur& joueur); // id : 5
+    static void drawTwoAndDiscardTwo(Joueur& joueur);  // ✅ AJOUT
 
     static void handleIdEffetTextuel(int id, Joueur& joueur, Joueur& adversaire);
 

@@ -79,6 +79,10 @@ void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueurJouantLeTour, Joue
             effet.defenseModActivated(joueurJouantLeTour);
             break;
         }
+        case 6: {
+            effet.drawTwoAndDiscardTwo(joueurJouantLeTour);
+            break;
+        }
         default:
             std::cout << "Effet textuel avec ID " << id << " non implémenté." << std::endl;
             break;
@@ -204,4 +208,68 @@ void EffetTextuel::defenseModActivated(Joueur& joueur) {
     std::cout << "\nTous les champions ont été transférés en mode défense." << std::endl;
     std::cout << "Champions en jeu: " << joueur.getStackChampion().getChampions().size() << std::endl;
     std::cout << "Gardes actifs: " << joueur.getStackChampion().getGardes().size() << std::endl;
+}
+
+//id : 6 - Piocher 2 cartes puis en défausser 2
+void EffetTextuel::drawTwoAndDiscardTwo(Joueur& joueur) {
+    std::cout << "\n=== Piocher 2 puis défausser 2 ===" << std::endl;
+    
+    // Piocher 2 cartes
+    int cartesPiochees = 0;
+    for (int i = 0; i < 2; ++i) {
+        Pioche piocheJoueur = joueur.getPioche();
+        MainJoueur mainJoueur = joueur.getMain();
+        
+        if (!piocheJoueur.getCartes().empty()) {
+            piocheJoueur.piocher(mainJoueur);
+            joueur.setMain(mainJoueur);
+            joueur.setPioche(piocheJoueur);
+            cartesPiochees++;
+            std::cout << "Carte " << (i + 1) << " piochée." << std::endl;
+        } else {
+            std::cout << "La pioche est vide, impossible de piocher la carte " << (i + 1) << "." << std::endl;
+            break;
+        }
+    }
+    
+    if (cartesPiochees == 0) {
+        std::cout << "Aucune carte piochée, aucune défausse nécessaire." << std::endl;
+        return;
+    }
+    
+    // Vérifier s'il y a des cartes à défausser
+    if (joueur.getMain().getCartes().empty()) {
+        std::cout << "Pas de cartes en main à défausser." << std::endl;
+        return;
+    }
+    
+    // Défausser 2 cartes (ou moins si pas assez de cartes)
+    int cartesADefausser = std::min(2, static_cast<int>(joueur.getMain().getCartes().size()));
+    
+    for (int i = 0; i < cartesADefausser; ++i) {
+        std::cout << "\n--- Défausser la carte " << (i + 1) << "/" << cartesADefausser << " ---" << std::endl;
+        std::cout << "Cartes en main :" << std::endl;
+        
+        for (size_t j = 0; j < joueur.getMain().getCartes().size(); ++j) {
+            std::cout << "  [" << j << "] " << joueur.getMain().getCartes()[j]->getNom() << std::endl;
+        }
+        
+        int choix;
+        std::cout << "Choisissez une carte (0 à " << joueur.getMain().getCartes().size() - 1 << "): ";
+        std::cin >> choix;
+        
+        if (choix < 0 || choix >= static_cast<int>(joueur.getMain().getCartes().size())) {
+            std::cout << "Choix invalide. Défausse de la première carte par défaut." << std::endl;
+            choix = 0;
+        }
+        
+        Carte* carte = joueur.getMain().getCartes()[choix];
+        joueur.getMain().removeCarte(carte);
+        const_cast<Defausse&>(joueur.getDefausse()).addCarte(carte);
+        
+        std::cout << "✓ Vous défaussez : " << carte->getNom() << std::endl;
+    }
+    
+    std::cout << "\n✅ Effet terminé : " << cartesPiochees << " carte(s) piochée(s), " 
+              << cartesADefausser << " carte(s) défaussée(s)." << std::endl;
 }

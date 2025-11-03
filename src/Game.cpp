@@ -34,10 +34,14 @@ void Game::run() {
         gererChampionsEnMain(plateau.getJoueur1(), plateau.getJoueur2());
         utiliserChampionsEnJeu("Joueur 1", plateau.getJoueur1(), plateau.getJoueur2());
         
+        phaseUtilisationEffetsPrioritaires("Joueur 1", plateau.getJoueur1(), plateau.getJoueur2());
+
         phaseCartesDeBase("Joueur 1", plateau.getJoueur1(), plateau.getJoueur2());
         phaseGemmesDeFeu("Joueur 1", plateau.getJoueur1());
         phaseAchatGemmes("Joueur 1", plateau.getJoueur1());
         phaseAchatActions("Joueur 1", plateau.getJoueur1());
+        
+        
         phaseUtilisationEffets("Joueur 1", plateau.getJoueur1(), plateau.getJoueur2());
         phaseUtilisationDegats("Joueur 1", plateau.getJoueur1(), plateau.getJoueur2());
         phaseFinTour("Joueur 1", plateau.getJoueur1());
@@ -64,6 +68,10 @@ void Game::run() {
         phaseGemmesDeFeu("Joueur 2", plateau.getJoueur2());
         phaseAchatGemmes("Joueur 2", plateau.getJoueur2());
         phaseAchatActions("Joueur 2", plateau.getJoueur2());
+        
+        // Phase 0 : Effets Prioritaires (AVANT les autres phases)
+        phaseUtilisationEffetsPrioritaires("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1());
+        
         phaseUtilisationEffets("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1());
         phaseUtilisationDegats("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1());
         phaseFinTour("Joueur 2", plateau.getJoueur2());
@@ -735,6 +743,207 @@ void Game::afficherChampionsEnJeu(const std::string& nomJoueur, Joueur& joueur) 
     std::cout << std::endl;
 }
 
+
+// ✅ NOUVELLE FONCTION : Phase 0 - Effets Prioritaires 
+void Game::phaseUtilisationEffetsPrioritaires(const std::string& /* nomJoueur */, Joueur& joueur, Joueur& adversaire) {
+    std::cout << "\n┌─ PHASE 0: Effets Prioritaires (Pioche) ───────────────┐" << std::endl;
+    std::cout << "│ 🎴 Effets de pioche des actions et champions          │" << std::endl;
+    std::cout << "└─────────────────────────────────────────────────────────┘" << std::endl;
+    
+    // Parcourir toutes les actions/champions en main
+    auto cartes = joueur.getMain().getCartes();
+    bool aEffetsPrioritaires = false;
+    
+    for (auto* carte : cartes) {
+        Action* action = dynamic_cast<Action*>(carte);
+        if (!action) continue; // Ignorer les cartes de base
+        
+        bool carteAEffetsPioche = false;
+        
+        // Vérifier si la carte a des effets de pioche (ID 1, 4, 6)
+        for (const auto& effet : action->getListEffetTextuelChoix1()) {
+            if (effet.getId() == 1 || effet.getId() == 4 || effet.getId() == 6) {
+                carteAEffetsPioche = true;
+                break;
+            }
+        }
+        
+        if (!carteAEffetsPioche) {
+            for (const auto& effet : action->getListEffetTextuelChoix2()) {
+                if (effet.getId() == 1 || effet.getId() == 4 || effet.getId() == 6) {
+                    carteAEffetsPioche = true;
+                    break;
+                }
+            }
+        }
+        
+        if (!carteAEffetsPioche && action->getPeutFaireCombo()) {
+            for (const auto& effet : action->getListEffetTextuelCombo()) {
+                if (effet.getId() == 1 || effet.getId() == 4 || effet.getId() == 6) {
+                    carteAEffetsPioche = true;
+                    break;
+                }
+            }
+        }
+        
+        // Si la carte a des effets de pioche, les proposer
+        if (carteAEffetsPioche) {
+            aEffetsPrioritaires = true;
+            std::cout << "\n📜 Carte : " << action->getNom() << std::endl;
+            
+            // === CHOIX 1 ===
+            std::vector<EffetTextuel> effetsPiocheChoix1;
+            for (const auto& effet : action->getListEffetTextuelChoix1()) {
+                if (effet.getId() == 1 || effet.getId() == 4 || effet.getId() == 6) {
+                    effetsPiocheChoix1.push_back(effet);
+                }
+            }
+            
+            if (!effetsPiocheChoix1.empty()) {
+                std::cout << "   📋 Effets de pioche (Choix 1) : ";
+                for (const auto& e : effetsPiocheChoix1) {
+                    std::cout << e.toString() << " ";
+                }
+                std::cout << std::endl;
+                
+                std::cout << "   Utiliser ces effets ? [1] Oui [0] Non : ";
+                int choix;
+                std::cin >> choix;
+                
+                if (choix == 1) {
+                    // ✅ Appliquer d'abord les effets basiques associés
+                    std::cout << "   💰 Application des effets basiques (Choix 1):" << std::endl;
+                    for (const auto& effetBasique : action->getEffetsBasiqueChoix1()) {
+                        switch (effetBasique.getType()) {
+                            case OR:
+                                joueur.setArgent(joueur.getArgent() + effetBasique.getValeur());
+                                std::cout << "      💰 +" << effetBasique.getValeur() << " Or (Total: " << joueur.getArgent() << ")" << std::endl;
+                                break;
+                            case DEGAT:
+                                joueur.setDegatsStockes(joueur.getDegatsStockes() + effetBasique.getValeur());
+                                std::cout << "      ⚔️  +" << effetBasique.getValeur() << " Dégâts (Total: " << joueur.getDegatsStockes() << ")" << std::endl;
+                                break;
+                            case SOIN:
+                                joueur.setPointDeVie(joueur.getPointDeVie() + effetBasique.getValeur());
+                                std::cout << "      ❤️  +" << effetBasique.getValeur() << " PV (Total: " << joueur.getPointDeVie() << ")" << std::endl;
+                                break;
+                        }
+                    }
+                    
+                    // Puis appliquer les effets de pioche
+                    for (const auto& effet : effetsPiocheChoix1) {
+                        std::cout << "      🎴 " << effet.toString() << std::endl;
+                        EffetTextuel::handleIdEffetTextuel(effet.getId(), joueur, adversaire);
+                    }
+                }
+            }
+            
+            // === CHOIX 2 ===
+            std::vector<EffetTextuel> effetsPiocheChoix2;
+            for (const auto& effet : action->getListEffetTextuelChoix2()) {
+                if (effet.getId() == 1 || effet.getId() == 4 || effet.getId() == 6) {
+                    effetsPiocheChoix2.push_back(effet);
+                }
+            }
+            
+            if (!effetsPiocheChoix2.empty()) {
+                std::cout << "   📋 Effets de pioche (Choix 2) : ";
+                for (const auto& e : effetsPiocheChoix2) {
+                    std::cout << e.toString() << " ";
+                }
+                std::cout << std::endl;
+                
+                std::cout << "   Utiliser ces effets (Choix 2) ? [1] Oui [0] Non : ";
+                int choix;
+                std::cin >> choix;
+                
+                if (choix == 1) {
+                    // ✅ Appliquer d'abord les effets basiques associés
+                    std::cout << "   💰 Application des effets basiques (Choix 2):" << std::endl;
+                    for (const auto& effetBasique : action->getListEffetBasiqueChoix2()) {
+                        switch (effetBasique.getType()) {
+                            case OR:
+                                joueur.setArgent(joueur.getArgent() + effetBasique.getValeur());
+                                std::cout << "      💰 +" << effetBasique.getValeur() << " Or" << std::endl;
+                                break;
+                            case DEGAT:
+                                joueur.setDegatsStockes(joueur.getDegatsStockes() + effetBasique.getValeur());
+                                std::cout << "      ⚔️  +" << effetBasique.getValeur() << " Dégâts" << std::endl;
+                                break;
+                            case SOIN:
+                                joueur.setPointDeVie(joueur.getPointDeVie() + effetBasique.getValeur());
+                                std::cout << "      ❤️  +" << effetBasique.getValeur() << " PV" << std::endl;
+                                break;
+                        }
+                    }
+                    
+                    // Puis appliquer les effets de pioche
+                    for (const auto& effet : effetsPiocheChoix2) {
+                        std::cout << "      🎴 " << effet.toString() << std::endl;
+                        EffetTextuel::handleIdEffetTextuel(effet.getId(), joueur, adversaire);
+                    }
+                }
+            }
+            
+            // === COMBO ===
+            if (action->getPeutFaireCombo()) {
+                std::vector<EffetTextuel> effetsPiocheCombo;
+                for (const auto& effet : action->getListEffetTextuelCombo()) {
+                    if (effet.getId() == 1 || effet.getId() == 4 || effet.getId() == 6) {
+                        effetsPiocheCombo.push_back(effet);
+                    }
+                }
+                
+                if (!effetsPiocheCombo.empty()) {
+                    std::cout << "   ✨ Effets de pioche (COMBO) : ";
+                    for (const auto& e : effetsPiocheCombo) {
+                        std::cout << e.toString() << " ";
+                    }
+                    std::cout << std::endl;
+                    
+                    std::cout << "   Utiliser ces effets (COMBO) ? [1] Oui [0] Non : ";
+                    int choix;
+                    std::cin >> choix;
+                    
+                    if (choix == 1) {
+                        // ✅ Appliquer d'abord les effets basiques associés
+                        std::cout << "   💰 Application des effets basiques (COMBO):" << std::endl;
+                        for (const auto& effetBasique : action->getListEffetBasiqueCombo()) {
+                            switch (effetBasique.getType()) {
+                                case OR:
+                                    joueur.setArgent(joueur.getArgent() + effetBasique.getValeur());
+                                    std::cout << "      💰 +" << effetBasique.getValeur() << " Or (COMBO)" << std::endl;
+                                    break;
+                                case DEGAT:
+                                    joueur.setDegatsStockes(joueur.getDegatsStockes() + effetBasique.getValeur());
+                                    std::cout << "      ⚔️  +" << effetBasique.getValeur() << " Dégâts (COMBO)" << std::endl;
+                                    break;
+                                case SOIN:
+                                    joueur.setPointDeVie(joueur.getPointDeVie() + effetBasique.getValeur());
+                                    std::cout << "      ❤️  +" << effetBasique.getValeur() << " PV (COMBO)" << std::endl;
+                                    break;
+                            }
+                        }
+                        
+                        // Puis appliquer les effets de pioche
+                        for (const auto& effet : effetsPiocheCombo) {
+                            std::cout << "      🎴 " << effet.toString() << std::endl;
+                            EffetTextuel::handleIdEffetTextuel(effet.getId(), joueur, adversaire);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // ✅ FIX : Utiliser la variable aEffetsPrioritaires
+    if (!aEffetsPrioritaires) {
+        std::cout << "→ Aucun effet de pioche disponible." << std::endl;
+    }
+    
+    std::cout << "\n✅ Phase des effets prioritaires terminée." << std::endl;
+}
+
 void Game::utiliserChampionsEnJeu(const std::string& /* nomJoueur */, Joueur& joueur, Joueur& adversaire) {
     auto championsEnJeu = joueur.getStackChampion().getChampions();
     
@@ -937,3 +1146,4 @@ void Game::utiliserChampionsEnJeu(const std::string& /* nomJoueur */, Joueur& jo
         }
     }
 }
+

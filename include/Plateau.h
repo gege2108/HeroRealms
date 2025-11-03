@@ -45,20 +45,27 @@ public:
     std::pair<std::vector<Effet>, std::vector<EffetTextuel>> choixUtilisationEffetJ2();
 
     // Fonctions pour appliquer les effets choisis
-    void appliquerEffetsJ1(const std::vector<Effet>& effetsBasique, const std::vector<EffetTextuel>& effetsTextuel);
-    void appliquerEffetsJ2(const std::vector<Effet>& effetsBasique, const std::vector<EffetTextuel>& effetsTextuel);
+   // void appliquerEffetsJ1(const std::vector<Effet>& effetsBasiques, const std::vector<EffetTextuel>& effetsTextuels);
+    //void appliquerEffetsJ2(const std::vector<Effet>& effetsBasiques, const std::vector<EffetTextuel>& effetsTextuels);
 
     void achatActionChampion(Joueur& joueur); 
 
     void utiliserDegatsStockes(Joueur& joueur, Joueur& adversaire);
 
-
-
-
-
-
-
+    // ✅ NOUVELLES FONCTIONS : Gestion des effets prioritaires
+    std::pair<std::vector<Effet>, std::vector<EffetTextuel>> choixUtilisationPrioritaireEffetJ1();
+    std::pair<std::vector<Effet>, std::vector<EffetTextuel>> choixUtilisationPrioritaireEffetJ2();
     
+    void appliquerEffetsPrioritairesJ1(const std::vector<Effet>& effetsBasiques, 
+                                       const std::vector<EffetTextuel>& effetsTextuels);
+    void appliquerEffetsPrioritairesJ2(const std::vector<Effet>& effetsBasiques, 
+                                       const std::vector<EffetTextuel>& effetsTextuels);
+    
+    // ✅ GARDER UNIQUEMENT CES DÉCLARATIONS
+    void appliquerEffetsJ1(const std::vector<Effet>& effetsBasiques, 
+                          const std::vector<EffetTextuel>& effetsTextuels);
+    void appliquerEffetsJ2(const std::vector<Effet>& effetsBasiques, 
+                          const std::vector<EffetTextuel>& effetsTextuels);
 
 private:
     Joueur joueur1;

@@ -1,4 +1,8 @@
 #include "Defausse.h"
+#include <algorithm>
+#include <random>
+#include <iostream>
+#include <chrono>
 
 Defausse::Defausse() = default;
 Defausse::Defausse(const std::vector<Carte*>& cartes) : cartes(cartes) {}
@@ -28,3 +32,15 @@ void Defausse::removeCarte(Carte* carte) {
 }
 
 void Defausse::clear() { cartes.clear(); }
+
+void Defausse::melangeDefausse() {
+    if (cartes.empty()) return;
+
+    srand(time(nullptr));
+    for (int i = cartes.size() - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
+        Carte* temp = cartes[i];
+        cartes[i] = cartes[j];
+        cartes[j] = temp;
+    }
+}

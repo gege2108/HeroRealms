@@ -3,6 +3,8 @@
 #include "Pioche.h"
 #include "MainJoueur.h"
 #include <iostream>
+#include <algorithm>
+#include <random>
 
 //id : 1 - Piocher une carte
 void EffetTextuel::drawACard(Joueur& joueur) {  
@@ -429,3 +431,4 @@ void EffetTextuel::placeCardFromDiscardOnTopOfDraw(Joueur& joueur) {
     
     std::cout << "✓ Carte '" << carteChoisie->getNom() << "' placée sur le dessus de votre pioche." << std::endl;
 }
+

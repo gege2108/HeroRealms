@@ -16,6 +16,7 @@ public:
     bool remove(Carte* c);
     void clear();
     void removeCarte(Carte* carte);
+    void melangeDefausse();
 
 private:
     std::vector<Carte*> cartes;

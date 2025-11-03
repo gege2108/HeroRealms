@@ -52,7 +52,7 @@ public:
 
     void utiliserDegatsStockes(Joueur& joueur, Joueur& adversaire);
 
-    // ✅ NOUVELLES FONCTIONS : Gestion des effets prioritaires
+    // Gestion des effets prioritaires
     std::pair<std::vector<Effet>, std::vector<EffetTextuel>> choixUtilisationPrioritaireEffetJ1();
     std::pair<std::vector<Effet>, std::vector<EffetTextuel>> choixUtilisationPrioritaireEffetJ2();
     
@@ -61,7 +61,6 @@ public:
     void appliquerEffetsPrioritairesJ2(const std::vector<Effet>& effetsBasiques, 
                                        const std::vector<EffetTextuel>& effetsTextuels);
     
-    // ✅ GARDER UNIQUEMENT CES DÉCLARATIONS
     void appliquerEffetsJ1(const std::vector<Effet>& effetsBasiques, 
                           const std::vector<EffetTextuel>& effetsTextuels);
     void appliquerEffetsJ2(const std::vector<Effet>& effetsBasiques, 

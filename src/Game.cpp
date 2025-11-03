@@ -348,6 +348,7 @@ void Game::phaseFinTour(const std::string& /* nomJoueur */, Joueur& joueur) {
     
     for (int i = 0; i < 5; ++i) {
         if (pioche.getCartes().empty()) {
+            defausse.melangeDefausse();
             // Remettre la défausse dans la pioche
             for (auto* carte : defausse.getCartes()) {
                 // Vérifier que les champions ont bien isDefense=false et PV restaurés

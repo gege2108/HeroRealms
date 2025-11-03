@@ -29,7 +29,6 @@ private:
     void phaseUtilisationDegats(const std::string& nomJoueur, Joueur& joueur, Joueur& adversaire);
     void phaseFinTour(const std::string& nomJoueur, Joueur& joueur);
     
-    // ✅ DÉCLARATION UNIQUEMENT (l'implémentation doit être dans Game.cpp)
     void phaseUtilisationEffetsPrioritaires(const std::string& nomJoueur, Joueur& joueur, Joueur& adversaire);
     
     // Gestion du tour

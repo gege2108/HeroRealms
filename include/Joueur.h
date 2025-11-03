@@ -15,56 +15,65 @@ enum class Faction;
 
 class Joueur {
 public:
-	// Remplacement du constructeur par défaut par un constructeur qui initialise tous les attributs.
-	Joueur(const MainJoueur& m = MainJoueur(),
-	       const Pioche& p = Pioche(),
-	       const StackChampion& s = StackChampion(),
-	       const Defausse& d = Defausse(),
-	       int pv = 30, int _argent = 0,int degatsStockes = 0)
-	    : mainJoueur(m), pioche(p), stackChampion(s), defausse(d), argent(_argent), pointDeVie(pv), degatsStockes(degatsStockes) {}
+    // Remplacement du constructeur par défaut par un constructeur qui initialise tous les attributs.
+    Joueur(const MainJoueur& m = MainJoueur(),
+           const Pioche& p = Pioche(),
+           const StackChampion& s = StackChampion(),
+           const Defausse& d = Defausse(),
+           int pv = 30, int _argent = 0,int degatsStockes = 0)
+        : mainJoueur(m), pioche(p), stackChampion(s), defausse(d), argent(_argent), pointDeVie(pv), degatsStockes(degatsStockes) {}
 
-	int getPointDeVie() const;
-	void setPointDeVie(int v);
+    int getPointDeVie() const;
+    void setPointDeVie(int v);
 
-	// Versions non-const
-	MainJoueur& getMain();
-	Pioche& getPioche();
-	Defausse& getDefausse();
-	StackChampion& getStackChampion();
+    // Versions non-const
+    MainJoueur& getMain();
+    Pioche& getPioche();
+    Defausse& getDefausse();
+    StackChampion& getStackChampion();
 
-	// Versions const  
-	const MainJoueur& getMain() const;
-	const Pioche& getPioche() const;
-	const Defausse& getDefausse() const;
-	const StackChampion& getStackChampion() const;
+    // Versions const  
+    const MainJoueur& getMain() const;
+    const Pioche& getPioche() const;
+    const Defausse& getDefausse() const;
+    const StackChampion& getStackChampion() const;
 
-	// Setters
-	void setMain(const MainJoueur& m);
-	void setPioche(const Pioche& p);
-	void setDefausse(const Defausse& d);
-	void setStackChampion(const StackChampion& s);
+    // Setters
+    void setMain(const MainJoueur& m);
+    void setPioche(const Pioche& p);
+    void setDefausse(const Defausse& d);
+    void setStackChampion(const StackChampion& s);
 
-	int getArgent() const;
-	void setArgent(int a);
+    int getArgent() const;
+    void setArgent(int a);
 
-	int getDegatsStockes() const;
-	void setDegatsStockes(int d);
-	void addDegatsStockes(int d);
+    int getDegatsStockes() const;
+    void setDegatsStockes(int d);
+    void addDegatsStockes(int d);
 
-	// Fonction pour activer les combos selon les factions présentes
-	void peuxActiverCombo();
-	
+    // Fonction pour activer les combos selon les factions présentes
+    void peuxActiverCombo();
 
+    void gainHealth(int amount) {
+        pointDeVie += amount;
+        std::cout << "Gain de " << amount << " points de vie. Total: " << pointDeVie << std::endl;
+    }
+
+    void addCombat(int amount) {
+        degatsStockes += amount;
+        std::cout << "Gain de " << amount << " points de combat. Total: " << degatsStockes << std::endl;
+    }
 
 private:
 
-	MainJoueur mainJoueur;
-	Pioche pioche;
-	StackChampion stackChampion;
-	Defausse defausse;
-	int argent = 0;      
-	int pointDeVie = 0;
-	int degatsStockes = 0;
+    MainJoueur mainJoueur;
+    Pioche pioche;
+    StackChampion stackChampion;
+    Defausse defausse;
+    int argent = 0;      
+    int pointDeVie = 0;
+    int degatsStockes = 0;
 };
 
 #endif // JOUEUR_H
+

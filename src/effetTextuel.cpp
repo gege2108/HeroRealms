@@ -83,6 +83,10 @@ void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueurJouantLeTour, Joue
             effet.drawTwoAndDiscardTwo(joueurJouantLeTour);
             break;
         }
+        case 7: {
+            effet.gain2HealthPerChampion(joueurJouantLeTour);
+            break;
+        }
         default:
             std::cout << "Effet textuel avec ID " << id << " non implémenté." << std::endl;
             break;
@@ -273,3 +277,13 @@ void EffetTextuel::drawTwoAndDiscardTwo(Joueur& joueur) {
     std::cout << "\n✅ Effet terminé : " << cartesPiochees << " carte(s) piochée(s), " 
               << cartesADefausser << " carte(s) défaussée(s)." << std::endl;
 }
+
+
+//id : 7 - Gagner 2 points de vie pour chaque champion en jeu
+void EffetTextuel::gain2HealthPerChampion(Joueur& joueur) {
+    int nbChampions = joueur.getStackChampion().getChampions().size();
+    int healthGain = 2 * nbChampions;
+    joueur.gainHealth(healthGain);
+    std::cout << "Vous gagnez " << healthGain << " points de vie (2 × " << nbChampions << " champions)" << std::endl;
+}
+

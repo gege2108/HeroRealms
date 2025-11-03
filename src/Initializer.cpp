@@ -273,25 +273,25 @@ std::vector<Action*> Initializer::createActions() {
     // Faction Jaune (Impériale) - 5 actions × 3 = 15 cartes
     for (int copy = 0; copy < 3; ++copy) {
         actions.push_back(new Action(Faction::FactionJaune, "Taxation", 1,
-            {Effet(2, OR)}, {}, {EffetTextuel(1, "Piocher 1 carte")}, {}, {Effet(6, SOIN)}, {}));
+            {Effet(2, OR)}, {}, {EffetTextuel(7, "Gagne 2 soins par champion en jeu")}, {}, {Effet(6, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionJaune, "Recrutement", 3,
             {Effet(1, OR)}, {Effet(2, DEGAT)}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(2, OR), Effet(3, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionJaune, "Commandement", 2,
-            {Effet(3, DEGAT)}, {}, {EffetTextuel(1, "Piocher 1 carte")}, {}, {Effet(1, OR)}, {}));
+            {Effet(3, DEGAT)}, {}, {EffetTextuel(7, "Gagne 2 soins par champion en jeu")}, {}, {Effet(1, OR)}, {}));
         
         actions.push_back(new Action(Faction::FactionJaune, "Garde Royale", 4,
             {Effet(2, OR), Effet(2, SOIN)}, {}, {EffetTextuel(6, "Piocher 2 puis défausser 2")}, {}, {Effet(3, OR), Effet(3, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionJaune, "Bannière Impériale", 5,
-            {Effet(3, DEGAT), Effet(2, SOIN)}, {}, {EffetTextuel(1, "Piocher 1 carte")}, {}, {Effet(5, DEGAT), Effet(4, SOIN)}, {}));
+            {Effet(3, DEGAT), Effet(2, SOIN)}, {}, {EffetTextuel(7, "Gagne 2 soins par champion en jeu")}, {}, {Effet(5, DEGAT), Effet(4, SOIN)}, {}));
     }
     
     // Faction Bleue (Guilde) - 5 actions × 3 = 15 cartes
     for (int copy = 0; copy < 3; ++copy) {
         actions.push_back(new Action(Faction::FactionBleu, "Pot-de-Vin", 1,
-            {Effet(2, OR)}, {}, {EffetTextuel(1, "Piocher 1 carte")}, {}, {Effet(4, DEGAT)}, {}));
+            {Effet(2, OR)}, {}, {EffetTextuel(7, "Gagne 2 soins par champion en jeu")}, {}, {Effet(4, DEGAT)}, {}));
         
         actions.push_back(new Action(Faction::FactionBleu, "Intimidation", 2,
             {Effet(5, DEGAT)}, {}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(3, OR)}, {}));
@@ -300,7 +300,7 @@ std::vector<Action*> Initializer::createActions() {
             {Effet(2, OR), Effet(2, DEGAT)}, {}, {EffetTextuel(6, "Piocher 2 puis défausser 2")}, {}, {Effet(4, OR), Effet(3, DEGAT)}, {}));
         
         actions.push_back(new Action(Faction::FactionBleu, "Contrat d'Assassin", 4,
-            {Effet(4, DEGAT)}, {}, {EffetTextuel(1, "Piocher 1 carte")}, {}, {Effet(6, DEGAT), Effet(2, OR)}, {}));
+            {Effet(4, DEGAT)}, {}, {EffetTextuel(7, "Gagne 2 soins par champion en jeu")}, {}, {Effet(6, DEGAT), Effet(2, OR)}, {}));
         
         actions.push_back(new Action(Faction::FactionBleu, "Trahison", 5,
             {Effet(3, DEGAT), Effet(2, OR)}, {}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(5, DEGAT), Effet(4, OR)}, {}));
@@ -309,7 +309,7 @@ std::vector<Action*> Initializer::createActions() {
     // Faction Rouge (Nécros) - 5 actions × 3 = 15 cartes
     for (int copy = 0; copy < 3; ++copy) {
         actions.push_back(new Action(Faction::FactionRouge, "Magie Noire", 2,
-            {Effet(3, DEGAT)}, {}, {EffetTextuel(1, "Piocher 1 carte")}, {}, {Effet(2, DEGAT)}, {}));
+            {Effet(3, DEGAT)}, {}, {EffetTextuel(7, "Gagne 2 soins par champion en jeu")}, {}, {Effet(2, DEGAT)}, {}));
         
         actions.push_back(new Action(Faction::FactionRouge, "Sacrifice", 3,
             {Effet(4, DEGAT)}, {Effet(2, SOIN)}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(6, DEGAT), Effet(3, SOIN)}, {}));
@@ -318,7 +318,7 @@ std::vector<Action*> Initializer::createActions() {
             {Effet(3, DEGAT)}, {Effet(2, SOIN)}, {EffetTextuel(6, "Piocher 2 puis défausser 2")}, {}, {Effet(5, DEGAT), Effet(3, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionRouge, "Invocation", 5,
-            {Effet(5, DEGAT), Effet(2, SOIN)}, {}, {EffetTextuel(1, "Piocher 1 carte")}, {}, {Effet(7, DEGAT), Effet(4, SOIN)}, {}));
+            {Effet(5, DEGAT), Effet(2, SOIN)}, {}, {EffetTextuel(7, "Gagne 2 soins par champion en jeu")}, {}, {Effet(7, DEGAT), Effet(4, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionRouge, "Malédiction", 3,
             {Effet(4, DEGAT)}, {}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(6, DEGAT)}, {}));
@@ -327,7 +327,7 @@ std::vector<Action*> Initializer::createActions() {
     // Faction Verte (Sauvage) - 5 actions × 3 = 15 cartes
     for (int copy = 0; copy < 3; ++copy) {
         actions.push_back(new Action(Faction::FactionVert, "Charge Sauvage", 2,
-            {Effet(4, DEGAT)}, {}, {EffetTextuel(1, "Piocher 1 carte")}, {}, {Effet(6, DEGAT)}, {}));
+            {Effet(4, DEGAT)}, {}, {EffetTextuel(7, "Gagne 2 soins par champion en jeu")}, {}, {Effet(6, DEGAT)}, {}));
         
         actions.push_back(new Action(Faction::FactionVert, "Rage du Loup", 3,
             {Effet(3, DEGAT), Effet(2, SOIN)}, {}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(5, DEGAT), Effet(4, SOIN)}, {}));
@@ -336,7 +336,7 @@ std::vector<Action*> Initializer::createActions() {
             {Effet(2, DEGAT), Effet(3, SOIN)}, {}, {EffetTextuel(6, "Piocher 2 puis défausser 2")}, {}, {Effet(4, DEGAT), Effet(5, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionVert, "Hurlement du Pack", 4,
-            {Effet(4, DEGAT)}, {}, {EffetTextuel(1, "Piocher 1 carte")}, {}, {Effet(6, DEGAT), Effet(2, SOIN)}, {}));
+            {Effet(4, DEGAT)}, {}, {EffetTextuel(7, "Gagne 2 soins par champion en jeu")}, {}, {Effet(6, DEGAT), Effet(2, SOIN)}, {}));
         
         actions.push_back(new Action(Faction::FactionVert, "Sagesse Druidique", 5,
             {Effet(2, SOIN), Effet(2, OR)}, {}, {EffetTextuel(4, "Piocher puis défausser")}, {}, {Effet(4, SOIN), Effet(4, OR)}, {}));
@@ -356,7 +356,6 @@ std::vector<Champion*> Initializer::createChampions() {
     // Faction Jaune - 2 champions
     champions.push_back(new Champion(Faction::FactionJaune, "Général Impérial", 8,
         {Effet(5, DEGAT), Effet(2, OR)}, {}, {}, {}, {Effet(7, DEGAT), Effet(4, OR)}, {},
-        //                           ^ Correction : ) au lieu de }
         6, 6, false, false));
     
     champions.push_back(new Champion(Faction::FactionJaune, "Paladin Royal", 6,
@@ -394,6 +393,7 @@ std::vector<Champion*> Initializer::createChampions() {
     
     return champions;
 }
+
 
 std::vector<GemmeDeFeu*> Initializer::createGemmesDeFeu(int nombre) {
     std::vector<GemmeDeFeu*> gemmes;

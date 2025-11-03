@@ -38,11 +38,12 @@ void Game::run() {
 
         phaseCartesDeBase("Joueur 1", plateau.getJoueur1(), plateau.getJoueur2());
         phaseGemmesDeFeu("Joueur 1", plateau.getJoueur1());
+        phaseUtilisationEffets("Joueur 1", plateau.getJoueur1(), plateau.getJoueur2());
         phaseAchatGemmes("Joueur 1", plateau.getJoueur1());
         phaseAchatActions("Joueur 1", plateau.getJoueur1());
         
         
-        phaseUtilisationEffets("Joueur 1", plateau.getJoueur1(), plateau.getJoueur2());
+        
         phaseUtilisationDegats("Joueur 1", plateau.getJoueur1(), plateau.getJoueur2());
         phaseFinTour("Joueur 1", plateau.getJoueur1());
         
@@ -68,12 +69,13 @@ void Game::run() {
         
         phaseCartesDeBase("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1());
         phaseGemmesDeFeu("Joueur 2", plateau.getJoueur2());
+        phaseUtilisationEffets("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1());
         phaseAchatGemmes("Joueur 2", plateau.getJoueur2());
         phaseAchatActions("Joueur 2", plateau.getJoueur2());
         
         
         
-        phaseUtilisationEffets("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1());
+        
         phaseUtilisationDegats("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1());
         phaseFinTour("Joueur 2", plateau.getJoueur2());
     }
@@ -233,7 +235,7 @@ void Game::phaseGemmesDeFeu(const std::string& nomJoueur, Joueur& joueur) {
 }
 
 void Game::phaseAchatGemmes(const std::string& /* nomJoueur */, Joueur& joueur) {
-    std::cout << "\n┌─ PHASE 3: Achat de Gemmes ─────────────────────────────┐" << std::endl;
+    std::cout << "\n┌─ PHASE 4: Achat de Gemmes ─────────────────────────────┐" << std::endl;
     std::cout << "│ 💰 Votre or: " << joueur.getArgent() << " | Prix gemme: 3 💰           │" << std::endl;
     std::cout << "│ 💎 Gemmes disponibles: " << plateau.getMarche().getGemmes().size() << "                          │" << std::endl;
     std::cout << "└─────────────────────────────────────────────────────────┘" << std::endl;
@@ -256,7 +258,7 @@ void Game::phaseAchatGemmes(const std::string& /* nomJoueur */, Joueur& joueur) 
 }
 
 void Game::phaseAchatActions(const std::string& /* nomJoueur */, Joueur& joueur) {
-    std::cout << "\n┌─ PHASE 4: Achat d'Actions/Champions ──────────────────┐" << std::endl;
+    std::cout << "\n┌─ PHASE 5: Achat d'Actions/Champions ──────────────────┐" << std::endl;
     std::cout << "│ 💰 Or disponible: " << std::setw(2) << joueur.getArgent() << "                                 │" << std::endl;
     std::cout << "└─────────────────────────────────────────────────────────┘" << std::endl;
     
@@ -291,7 +293,7 @@ void Game::phaseAchatActions(const std::string& /* nomJoueur */, Joueur& joueur)
 }
 
 void Game::phaseUtilisationEffets(const std::string& nomJoueur, Joueur& /* joueur */, Joueur& /* adversaire */) {
-    std::cout << "\n┌─ PHASE 5: Utilisation des Effets ──────────────────────┐" << std::endl;
+    std::cout << "\n┌─ PHASE 3: Utilisation des Effets ──────────────────────┐" << std::endl;
     std::cout << "│ Choisissez les effets de vos cartes                    │" << std::endl;
     std::cout << "└─────────────────────────────────────────────────────────┘" << std::endl;
     

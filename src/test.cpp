@@ -271,13 +271,17 @@ void testStunChampion() {
     adversaire.setPointDeVie(20);
     
     // Créer des champions pour l'adversaire
-    Champion* champion1 = new Champion("Champion Guerrier");
-    champion1->setPointDeVie(5);
-    champion1->setIsDefense(true);
+    Champion* champion1 = new Champion(
+        Faction::FactionJaune, "Champion Guerrier", 5,
+        {Effet(2, DEGAT)}, {}, {}, {}, {}, {},
+        5, 5, false, false  // ✅ pointDeVie=5, pointDeVieMax=5
+    );
     
-    Champion* champion2 = new Champion("Champion Mage");
-    champion2->setPointDeVie(3);
-    champion2->setIsDefense(true);
+    Champion* champion2 = new Champion(
+        Faction::FactionBleu, "Champion Mage", 4,
+        {Effet(1, DEGAT)}, {}, {}, {}, {}, {},
+        4, 4, false, false  // ✅ pointDeVie=4, pointDeVieMax=4
+    );
     
     // Ajouter les champions à la stack de l'adversaire
     StackChampion stackAdversaire;
@@ -478,11 +482,17 @@ void testChoixUtilisationEffetJ1() {
         {}, {},
         {Effet(4, DEGAT)}, {});
     
-    Champion* champion1 = new Champion(Faction::FactionJaune, "Champion Guerrier", 4,
-        {Effet(3, DEGAT)}, {Effet(2, SOIN)},
-        {}, {},
-        {Effet(5, DEGAT), Effet(3, SOIN)}, {},
-        5, false, true);
+    Champion* champion1 = new Champion(
+        Faction::FactionJaune, "Champion Guerrier", 5,
+        {Effet(3, DEGAT)}, {}, {}, {}, {Effet(5, DEGAT)}, {},
+        5, 5, false, true  // ✅ Ajout pointDeVieMax=5
+    );
+    
+    Champion* champion2 = new Champion(
+        Faction::FactionBleu, "Champion Mage", 4,
+        {Effet(1, DEGAT)}, {}, {}, {}, {Effet(4, DEGAT)}, {},
+        4, 4, false, true  // ✅ Ajout pointDeVieMax=4
+    );
     
     // Créer une main avec ces cartes
     MainJoueur mainTest;
@@ -490,6 +500,7 @@ void testChoixUtilisationEffetJ1() {
     mainTest.addCarte(actionJaune2);
     mainTest.addCarte(actionBleu1);
     mainTest.addCarte(champion1);
+    mainTest.addCarte(champion2);
     
     joueur1Test.setMain(mainTest);
     plateauTest.setJoueur1(joueur1Test);
@@ -597,11 +608,11 @@ void testChoixUtilisationEffetJ2() {
         {}, {},
         {Effet(6, DEGAT)}, {});
     
-    Champion* champion2 = new Champion(Faction::FactionRouge, "Champion Nécromant", 5,
-        {Effet(2, DEGAT)}, {Effet(3, SOIN)},
-        {}, {},
-        {Effet(4, DEGAT), Effet(2, SOIN)}, {},
-        4, false, true);
+    Champion* champion2 = new Champion(
+        Faction::FactionBleu, "Champion Sorcier", 4,
+        {Effet(2, DEGAT)}, {Effet(3, SOIN)}, {}, {}, {Effet(4, DEGAT)}, {},
+        4, 4, false, true  // ✅ Ajout pointDeVieMax=4
+    );
     
     // Créer une main avec ces cartes
     MainJoueur mainTest2;
@@ -863,7 +874,7 @@ void testAchatActionChampion() {
         {Effet(5, DEGAT)}, {}, {}, {}, {Effet(8, DEGAT)}, {});
     
     Champion* championAbordable = new Champion(Faction::FactionVert, "Champion Accessible", 4,
-        {Effet(2, DEGAT)}, {}, {}, {}, {Effet(4, DEGAT)}, {}, 3, false, false);
+        {Effet(2, DEGAT)}, {}, {}, {}, {Effet(4, DEGAT)}, {}, 3, 3, false, false);
     
     // Ajouter les actions/champions au marché comme vendables
     marcheTest.addActionVendable(actionPasChere);
@@ -942,7 +953,8 @@ void testAchatActionChampionNouveauFonctionnement() {
         {Effet(3, DEGAT)}, {}, {}, {}, {Effet(4, DEGAT)}, {});
     
     Champion* championStack = new Champion(Faction::FactionVert, "Champion Stack", 8,
-        {Effet(4, DEGAT)}, {}, {}, {}, {Effet(6, DEGAT)}, {}, 5, false, false);
+        {Effet(4, DEGAT)}, {}, {}, {}, {Effet(6, DEGAT)}, {},
+        5, 5, false, false);  // ✅ Ajout de pointDeVieMax=5
     
     // Ajouter à la stack du marché
     marcheTest.addStackAction(actionStack1);
@@ -1034,35 +1046,30 @@ void testMainJoueurChampions() {
     std::cout << "\n--- Ajout de champions variés dans la main ---" << std::endl;
     
     // Ajouter différents champions avec des caractéristiques variées
-    mainChampions.addCarte(new Champion(Faction::FactionJaune, "Paladin Impérial", 6,
-        {Effet(2, SOIN)}, {Effet(3, DEGAT)}, 
-        {EffetTextuel(2, "Défausser adversaire")}, {EffetTextuel(1, "Piocher une carte")},
-        {}, {EffetTextuel(3, "Étourdir champion")},
-        5, true, true));
+    mainChampions.addCarte(new Champion(
+        Faction::FactionJaune, "Champion Guerrier", 5,
+        {Effet(3, DEGAT)}, {}, {}, {}, {Effet(5, DEGAT)}, {},
+        5, 5, true, true));  // ✅ Ajout de pointDeVieMax=5
     
-    mainChampions.addCarte(new Champion(Faction::FactionJaune, "Garen", 6,
-        {Effet(2, SOIN)}, {Effet(3, DEGAT)}, 
-        {EffetTextuel(1,"Piochez une carte")}, {EffetTextuel(3, "Étourdir champion")},
-        {}, {EffetTextuel(3, "Étourdir champion")},
-        5, true, true));
+    mainChampions.addCarte(new Champion(
+        Faction::FactionBleu, "Mage", 4,
+        {Effet(2, DEGAT)}, {}, {}, {}, {Effet(4, DEGAT)}, {},
+        5, 5, true, true));  // ✅ Ajout de pointDeVieMax=5
     
-    mainChampions.addCarte(new Champion(Faction::FactionJaune, "Illaoi", 6,
-        {Effet(2, SOIN)}, {Effet(3, DEGAT)}, 
-        {EffetTextuel(1,"Piochez une carte")}, {EffetTextuel(3, "Étourdir champion")},
-        {Effet(3, SOIN)}, {EffetTextuel(3, "Étourdir champion")},
-        5, true, true));
+    mainChampions.addCarte(new Champion(
+        Faction::FactionRouge, "Voleur", 3,
+        {Effet(1, DEGAT)}, {}, {}, {}, {Effet(3, DEGAT)}, {},
+        5, 5, true, true));  // ✅ Ajout de pointDeVieMax=5
     
-    mainChampions.addCarte(new Champion(Faction::FactionJaune, "Illaoi", 6,
-        {Effet(2, SOIN)}, {Effet(3, DEGAT)}, 
-        {EffetTextuel(1,"Piochez une carte")}, {EffetTextuel(3, "Étourdir champion")},
-        {Effet(3, SOIN)}, {EffetTextuel(3, "Étourdir champion")},
-        5, true, true));
+    mainChampions.addCarte(new Champion(
+        Faction::FactionVert, "Druide", 4,
+        {Effet(2, SOIN)}, {}, {}, {}, {Effet(4, SOIN)}, {},
+        5, 5, true, true));  // ✅ Ajout de pointDeVieMax=5
     
-    mainChampions.addCarte(new Champion(Faction::FactionJaune, "Kled", 6,
-        {Effet(2, SOIN)}, {Effet(3, DEGAT)}, 
-        {EffetTextuel(1,"Piochez une carte")}, {EffetTextuel(3, "Étourdir champion")},
-        {Effet(3, SOIN)}, {EffetTextuel(3, "Étourdir champion")},
-        5, true, true));
+    mainChampions.addCarte(new Champion(
+        Faction::FactionJaune, "Roi", 6,
+        {Effet(4, DEGAT)}, {}, {}, {}, {Effet(6, DEGAT)}, {},
+        5, 5, true, true));  // ✅ Ajout de pointDeVieMax=5
     
     // Assigner la main au joueur
     joueurTest.setMain(mainChampions);
@@ -1149,17 +1156,22 @@ void testChoixUtilisationEffetJ1NouvelleFonction() {
         {},
         {}, {});
     
-    // Champion avec choix 1, choix 2 et combo
-    Champion* championComplet = new Champion(Faction::FactionRouge, "Champion Puissant", 7,
-        {Effet(3, DEGAT)}, {Effet(2, SOIN)},
-        {EffetTextuel(2, "Défausser adversaire")}, {EffetTextuel(1, "Piocher une carte")},
-        {Effet(5, DEGAT), Effet(3, SOIN)}, {EffetTextuel(4, "Piocher puis défausser")},
-        6, true, false);
+    Champion* champion1 = new Champion(
+        Faction::FactionJaune, "Champion Guerrier", 8,
+        {Effet(5, DEGAT), Effet(2, OR)}, {}, {}, {}, {Effet(7, DEGAT), Effet(4, OR)}, {},
+        6, 6, true, false);  // ✅ Ajout pointDeVieMax=6
+    
+    Champion* champion2 = new Champion(
+        Faction::FactionBleu, "Champion Mage", 4,
+        {Effet(1, DEGAT)}, {}, {}, {}, {Effet(4, DEGAT)}, {},
+        4, 4, false, true  // ✅ Ajout pointDeVieMax=4
+    );
     
     // Ajouter les cartes à la main
     mainTest.addCarte(actionComplete);
     mainTest.addCarte(actionSimple);
-    mainTest.addCarte(championComplet);
+    mainTest.addCarte(champion1);
+    mainTest.addCarte(champion2);
     
     joueur1Test.setMain(mainTest);
     plateauTest.setJoueur1(joueur1Test);
@@ -1188,6 +1200,7 @@ void testChoixUtilisationEffetJ1NouvelleFonction() {
             
             if (action) {
                 if (!action->getListEffetBasiqueChoix2().empty()) {
+
                     std::cout << "  - Effets Choix 2: ";
                     for (const auto& effet : action->getListEffetBasiqueChoix2()) {
                         std::cout << effet.toString() << " ";
@@ -1309,10 +1322,14 @@ void testUtiliserDegatsStockes() {
     joueur4.setPointDeVie(25);
     
     // Ajouter des champions non-garde avec le nouveau constructeur
-    Champion* champion1 = new Champion(Faction::FactionBleu, "Mage", 5,
-        {Effet(2, DEGAT)}, {}, {}, {}, {Effet(3, DEGAT)}, {}, 3, false, false);
-    Champion* champion2 = new Champion(Faction::FactionVert, "Archer", 4,
-        {Effet(1, DEGAT)}, {}, {}, {}, {Effet(2, DEGAT)}, {}, 2, false, false);
+    Champion* champion1 = new Champion(
+        Faction::FactionBleu, "Mage", 5,
+        {Effet(2, DEGAT)}, {}, {}, {}, {Effet(3, DEGAT)}, {},
+        3, 3, false, false);  // ✅ Ajout de pointDeVieMax=3
+    Champion* champion2 = new Champion(
+        Faction::FactionVert, "Archer", 4,
+        {Effet(1, DEGAT)}, {}, {}, {}, {Effet(2, DEGAT)}, {},
+        2, 2, false, false);  // ✅ Ajout de pointDeVieMax=2
     
     StackChampion stackJ4;
     stackJ4.push(champion1);
@@ -1356,12 +1373,18 @@ void testUtiliserDegatsStockes() {
     joueur6.setPointDeVie(30);
     
     // Ajouter des champions avec garde avec le nouveau constructeur
-    Champion* garde1 = new Champion(Faction::FactionJaune, "Garde Royal", 6,
-        {Effet(1, DEGAT)}, {}, {}, {}, {Effet(2, DEGAT)}, {}, 4, true, false);
-    Champion* garde2 = new Champion(Faction::FactionJaune, "Garde Elite", 7,
-        {Effet(2, DEGAT)}, {}, {}, {}, {Effet(3, DEGAT)}, {}, 3, true, false);
-    Champion* champion3 = new Champion(Faction::FactionRouge, "Assassin", 5,
-        {Effet(3, DEGAT)}, {}, {}, {}, {Effet(4, DEGAT)}, {}, 2, false, false);
+    Champion* garde1 = new Champion(
+        Faction::FactionJaune, "Garde Royal", 6,
+        {Effet(1, DEGAT)}, {}, {}, {}, {Effet(2, DEGAT)}, {},
+        4, 4, true, false);  // ✅ Ajout de pointDeVieMax=4
+    Champion* garde2 = new Champion(
+        Faction::FactionJaune, "Garde Royal", 6,
+        {Effet(2, DEGAT)}, {}, {}, {}, {Effet(3, DEGAT)}, {},
+        3, 3, true, false);  // ✅ Ajout de pointDeVieMax=3
+    Champion* champion3 = new Champion(
+        Faction::FactionRouge, "Assassin", 5,
+        {Effet(3, DEGAT)}, {}, {}, {}, {Effet(4, DEGAT)}, {},
+        2, 2, false, false);  // ✅ Ajout de pointDeVieMax=2
     
     // DEBUG: Vérifier les attributs des champions
     std::cout << "DEBUG - garde1->getIsGarde(): " << garde1->getIsGarde() << std::endl;
@@ -1444,7 +1467,8 @@ void testUtiliserDegatsStockes() {
     
     // Ajouter un champion avec beaucoup de PV avec le nouveau constructeur
     Champion* championResistant = new Champion(Faction::FactionVert, "Titan", 8,
-        {Effet(1, DEGAT)}, {}, {}, {}, {Effet(2, DEGAT)}, {}, 10, false, false);
+        {Effet(1, DEGAT)}, {}, {}, {}, {Effet(2, DEGAT)}, {},
+        10, 10, false, false);  // ✅ Ajout de pointDeVieMax=10
     
     StackChampion stackJ8;
     stackJ8.push(championResistant);
@@ -1486,23 +1510,20 @@ void testDefenseModActivated() {
     MainJoueur mainTest;
     
     // Ajouter des champions variés à la main
-    Champion* champion1 = new Champion(Faction::FactionJaune, "Paladin Impérial", 6,
-        {Effet(2, SOIN)}, {Effet(3, DEGAT)}, 
-        {EffetTextuel(2, "Défausser adversaire")}, {EffetTextuel(1, "Piocher une carte")},
-        {}, {EffetTextuel(3, "Étourdir champion")},
-        5, true, false);  // isGarde = true, isDefense = false
+    Champion* champion1 = new Champion(
+        Faction::FactionJaune, "Champion Guerrier", 5,
+        {Effet(3, DEGAT)}, {}, {}, {}, {Effet(5, DEGAT)}, {},
+        5, 5, true, false);  // ✅ Ajout de pointDeVieMax=5
     
-    Champion* champion2 = new Champion(Faction::FactionBleu, "Mage de Guilde", 4,
-        {Effet(1, DEGAT)}, {Effet(2, SOIN)},
-        {}, {},
-        {Effet(3, DEGAT)}, {},
-        3, false, false);  // isGarde = false, isDefense = false
+    Champion* champion2 = new Champion(
+        Faction::FactionBleu, "Champion Mage", 4,
+        {Effet(2, DEGAT)}, {}, {}, {}, {Effet(4, DEGAT)}, {},
+        3, 3, false, false);  // ✅ Ajout de pointDeVieMax=3
     
-    Champion* champion3 = new Champion(Faction::FactionRouge, "Nécromant", 5,
-        {Effet(3, DEGAT)}, {},
-        {}, {},
-        {Effet(4, DEGAT)}, {},
-        4, true, false);  // isGarde = true, isDefense = false
+    Champion* champion3 = new Champion(
+        Faction::FactionRouge, "Nécromant", 6,
+        {Effet(4, DEGAT)}, {}, {}, {}, {Effet(6, DEGAT)}, {},
+        4, 4, true, false);  // ✅ Ajout de pointDeVieMax=4
     
     // Ajouter aussi une action (qui ne doit pas être affectée)
     Action* action1 = new Action(Faction::FactionVert, "Charge Sauvage", 3,

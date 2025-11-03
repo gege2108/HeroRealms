@@ -62,14 +62,16 @@ void Game::run() {
         afficherChampionsEnJeu("Joueur 2", plateau.getJoueur2());
         
         gererChampionsEnMain(plateau.getJoueur2(), plateau.getJoueur1());
-        utiliserChampionsEnJeu("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1()); // ✅ RESTAURÉ
+        utiliserChampionsEnJeu("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1()); 
+
+        phaseUtilisationEffetsPrioritaires("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1());
         
         phaseCartesDeBase("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1());
         phaseGemmesDeFeu("Joueur 2", plateau.getJoueur2());
         phaseAchatGemmes("Joueur 2", plateau.getJoueur2());
         phaseAchatActions("Joueur 2", plateau.getJoueur2());
         
-        phaseUtilisationEffetsPrioritaires("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1());
+        
         
         phaseUtilisationEffets("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1());
         phaseUtilisationDegats("Joueur 2", plateau.getJoueur2(), plateau.getJoueur1());

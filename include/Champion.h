@@ -9,7 +9,8 @@ private:
     int pointDeVieMax;
     bool isGarde;
     bool isDefense;
-    bool effetsUtilisesCeTour;  // ✅ NOUVEAU: Suivre si les effets ont déjà été utilisés ce tour
+    bool effetsUtilisesCeTour;  // Suivre si les effets ont déjà été utilisés ce tour
+    bool peutRejouer;  // Indique si le champion peut rejouer ce tour
 
 public:
     Champion(const Faction& faction, const std::string& nom, int prix,
@@ -19,7 +20,7 @@ public:
              const std::vector<EffetTextuel>& effetsTextuelChoix2,
              const std::vector<Effet>& effetsAllie,
              const std::vector<EffetTextuel>& effetsTextuelAllie,
-             int pointDeVie, int pointDeVieMax, bool isGarde, bool isDefense);  // ✅ Ajout pvMax
+             int pointDeVie, int pointDeVieMax, bool isGarde, bool isDefense);
 
     int getPointDeVie() const;
     void setPointDeVie(int pv);
@@ -36,6 +37,9 @@ public:
     bool getEffetsUtilisesCeTour() const;
     void setEffetsUtilisesCeTour(bool utilises);
     void resetEffetsTour();  // Réinitialiser pour le prochain tour
+
+    void setPeutRejouer(bool peut) { peutRejouer = peut; }
+    bool getPeutRejouer() const { return peutRejouer; }
 };
 
 #endif // CHAMPION_H

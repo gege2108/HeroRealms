@@ -1006,7 +1006,7 @@ void Game::utiliserChampionsEnJeu(const std::string& /* nomJoueur */, Joueur& jo
         Champion* champion = championsEnJeu[i];
         
         // Sauter le champion s'il a déjà utilisé ses effets ce tour
-        if (champion->getEffetsUtilisesCeTour()) {
+        if (champion->getEffetsUtilisesCeTour() && !champion->getPeutRejouer()) {
             std::cout << "\n🎖️  Champion " << (i + 1) << ": " << champion->getNom() << std::endl;
             std::cout << "   ✨ Ce champion a déjà utilisé ses effets ce tour (joué depuis la main)." << std::endl;
             continue;

@@ -6,6 +6,61 @@
 #include <algorithm>
 #include <random>
 
+// Fonction utilitaire pour sacrifier une carte de la main
+bool EffetTextuel::sacrificeFromHand(Joueur& joueur) {
+ MainJoueur& main = joueur.getMain();
+ if (main.getCartes().empty()) {
+ std::cout << "Pas de cartes en main à sacrifier." << std::endl;
+ return false;
+ }
+
+ std::cout << "Cartes en main :" << std::endl;
+ for (size_t i = 0; i < main.getCartes().size(); ++i) {
+ std::cout << "[" << i << "] " << main.getCartes()[i]->getNom() << std::endl;
+ }
+
+ int choix;
+ std::cout << "Choisissez une carte à sacrifier (-1 pour annuler): ";
+ std::cin >> choix;
+
+ if (choix >= 0 && choix < static_cast<int>(main.getCartes().size())) {
+ Carte* carte = main.getCartes()[choix];
+ main.removeCarte(carte);
+ delete carte; // La carte est détruite
+ std::cout << "Carte sacrifiée." << std::endl;
+ return true;
+ }
+ return false;
+}
+
+
+// Fonction utilitaire pour sacrifier une carte de la défausse
+bool EffetTextuel::sacrificeFromDiscard(Joueur& joueur) {
+ const Defausse& defausse = joueur.getDefausse();
+ if (defausse.getCartes().empty()) {
+ std::cout << "Pas de cartes dans la défausse à sacrifier." << std::endl;
+ return false;
+ }
+
+ std::cout << "Cartes dans la défausse :" << std::endl;
+ for (size_t i = 0; i < defausse.getCartes().size(); ++i) {
+ std::cout << "[" << i << "] " << defausse.getCartes()[i]->getNom() << std::endl;
+ }
+
+ int choix;
+ std::cout << "Choisissez une carte à sacrifier (-1 pour annuler): ";
+ std::cin >> choix;
+
+ if (choix >= 0 && choix < static_cast<int>(defausse.getCartes().size())) {
+ Carte* carte = defausse.getCartes()[choix];
+ const_cast<Defausse&>(defausse).remove(carte);
+ delete carte; // La carte est détruite
+ std::cout << "Carte sacrifiée." << std::endl;
+ return true;
+ }
+ return false;
+}
+
 //id : 1 - Piocher une carte
 void EffetTextuel::drawACard(Joueur& joueur) {  
     Pioche piocheJoueur = joueur.getPioche();
@@ -115,6 +170,18 @@ void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueurJouantLeTour, Joue
         }
         case 14: { // Put the next action you acquire this turn on top of your deck
             effet.setNextActionAcquiredOnTop(joueurJouantLeTour);
+            break;
+        }
+        case 15: { // Sacrifier une carte de la main ou de la défausse
+            effet.sacrificeCard(joueurJouantLeTour);
+            break;
+        }
+        case 16: { // Sacrifier une carte pour gagner 3 combat
+            effet.sacrificeCardForCombat3(joueurJouantLeTour);
+            break;
+        }
+        case 17: { // Sacrifier une carte pour gagner 2 combat
+            effet.sacrificeCardForCombat2(joueurJouantLeTour);
             break;
         }
         default:
@@ -454,4 +521,45 @@ void EffetTextuel::setNextActionAcquiredOnTop(Joueur& joueur) {
     joueur.setNextActionOnTop(true);
     std::cout << "Effet activé : La prochaine action que vous achetez ce tour ira sur le dessus de votre pioche." << std::endl;
 }
+
+
+
+//id : 15 - Sacrifier une carte de la main ou de la défausse
+bool EffetTextuel::sacrificeCard(Joueur& joueur) {
+ std::cout << "\n=== Sacrifice d'une carte ===" << std::endl;
+ std::cout << "Choisissez d'où sacrifier une carte :" << std::endl;
+ std::cout << "1. Main" << std::endl;
+ std::cout << "2. Défausse" << std::endl;
+ std::cout << "0. Annuler" << std::endl;
+ 
+ int choix;
+ std::cin >> choix;
+ 
+ switch(choix) {
+ case 1:
+ return sacrificeFromHand(joueur);
+ case 2:
+ return sacrificeFromDiscard(joueur);
+ default:
+ std::cout << "Sacrifice annulé." << std::endl;
+ return false;
+ }
+}
+
+//id : 16 - Sacrifier une carte pour gagner 3 combat
+void EffetTextuel::sacrificeCardForCombat3(Joueur& joueur) {
+ if (sacrificeCard(joueur)) {
+ joueur.addCombat(3);
+ std::cout << "La carte se sacrifie pour 3 points de combat ===" << std::endl;
+ }
+}
+
+//id : 17 - Sacrifier une carte pour gagner 2 combat
+void EffetTextuel::sacrificeCardForCombat2(Joueur& joueur) {
+ if (sacrificeCard(joueur)) {
+ joueur.addCombat(2);
+ std::cout << "La carte se sacrifie pour 2 points de combat ===" << std::endl;
+ }
+}
+
 

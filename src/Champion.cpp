@@ -17,7 +17,9 @@ Champion::Champion(const Faction& faction, const std::string& nom, int prix,
       pointDeVieMax(pointDeVieMax),
       isGarde(isGarde), 
       isDefense(isDefense),
-      effetsUtilisesCeTour(false) {}  // ✅ Initialiser à false
+      effetsUtilisesCeTour(false) {
+          peutRejouer = false;
+      }  // ✅ Initialiser à false
 
 int Champion::getPointDeVie() const { return pointDeVie; }
 void Champion::setPointDeVie(int pv) { 

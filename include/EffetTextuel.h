@@ -20,6 +20,10 @@ public:
         return description;
     }
 
+    bool sacrificeFromHand(Joueur& joueur);
+    bool sacrificeFromDiscard(Joueur& joueur);
+
+
     // Méthodes utilisant Joueur
     static void drawACard(Joueur& joueur); // id : 1
     static void discardOpponentCard(Joueur& opponent); // id : 2
@@ -37,6 +41,11 @@ public:
     static void gain1CombatPerOtherChampionWild(Joueur& joueur);  // id : 12
     static void placeCardFromDiscardOnTopOfDraw(Joueur& joueur); // id : 13
     static void setNextActionAcquiredOnTop(Joueur& joueur); // id : 14
+
+    // Fonctions de sacrifice publiques
+    bool sacrificeCard(Joueur& joueur);                    // id : 15
+    void sacrificeCardForCombat3(Joueur& joueur);         // id : 16
+    void sacrificeCardForCombat2(Joueur& joueur);         // id : 17
 
 
     static void handleIdEffetTextuel(int id, Joueur& joueur, Joueur& adversaire);

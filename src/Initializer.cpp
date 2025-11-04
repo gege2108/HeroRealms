@@ -4,7 +4,8 @@
 #include "EffetTextuel.h"
 
 void Initializer::initializePlateauRef(Plateau& plateau) {
- std::cout << "DEBUG: Début initializePlateauRef" << std::endl;
+ 
+    
  
  std::cout << "DEBUG: Création des effets" << std::endl;
  Effet soinPetit(2, SOIN);
@@ -193,7 +194,6 @@ Joueur Initializer::initializeJoueur() {
 }
 
 Marche Initializer::initializeMarche() {
- std::cout << "Initialisation du marché..." << std::endl;
  
  Marche marche;
  
@@ -207,10 +207,6 @@ Marche Initializer::initializeMarche() {
  auto actions = createActions();
  auto champions = createChampions();
  
- std::cout << "📊 Composition du marché:" << std::endl;
- std::cout << " • Actions: " << actions.size() << std::endl;
- std::cout << " • Champions: " << champions.size() << std::endl;
- 
  // ✅ Ajouter d'abord TOUTES les actions
  for (auto* action : actions) {
  marche.addStackAction(action);
@@ -220,8 +216,6 @@ Marche Initializer::initializeMarche() {
  for (auto* champion : champions) {
  marche.addStackAction(champion);
  }
- 
- std::cout << "Nombre total de cartes avant mélange: " << marche.getStackActions().size() << std::endl;
  
  // ✅ MÉLANGER la stack COMPLÈTE
  std::cout << "Mélange du marché en cours..." << std::endl;

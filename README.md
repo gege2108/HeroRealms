@@ -1,48 +1,93 @@
-# HeroRealms
-Création du jeu Hero Realms en C++
+# Hero Realms (C++)
 
-# 🛡️ Hero Realms – Jeu de cartes en C++
+Hero Realms est une adaptation console du jeu de deckbuilding Hero Realms, développée en C++ avec une architecture orientée objet.
 
-![C++](https://img.shields.io/badge/C%2B%2B-17-blue.svg)
-![CMake](https://img.shields.io/badge/CMake-3.10%2B-green.svg)
-![Status](https://img.shields.io/badge/status-en%20développement-orange)
-![License](https://img.shields.io/badge/license-MIT-lightgrey)
-
----
-
-## 📚 Sommaire
-- [🎮 Description](#-description)
-- [⚙️ Fonctionnalités](#️-fonctionnalités)
-- [🧩 Structure orientée objet](#-structure-orientée-objet)
-- [🚀 Installation et compilation](#-installation-et-compilation)
-- [🧪 Tests](#-tests)
-- [💡 Exemple d’utilisation](#-exemple-dutilisation)
-- [🧰 Améliorations futures](#-améliorations-futures)
-- [👨‍💻 Auteurs](#-auteurs)
-- [⚖️ Licence](#-licence)
+## Sommaire
+- [Description](#description)
+- [Fonctionnalités](#fonctionnalités)
+- [Structure du projet](#structure-du-projet)
+- [Installation](#installation)
+- [Utilisation](#utilisation)
+- [Tests](#tests)
+- [Contribuer](#contribuer)
+- [Auteurs](#auteurs)
+- [Licence](#licence)
 
 ---
 
-## 🎮 Description
+## Description
 
-**Hero Realms** est une adaptation en **C++** du célèbre jeu de cartes **deckbuilding**.  
-Chaque joueur débute avec un deck basique et tente d’éliminer ses adversaires en achetant de nouvelles cartes, en optimisant son deck et en gérant ses ressources (or, dégâts, soin...).
+Ce projet propose une version numérique du jeu de cartes Hero Realms. Deux joueurs s'affrontent en construisant leur deck, achetant des cartes au marché, et utilisant des champions et des actions pour vaincre l'adversaire.
 
-Le projet met l’accent sur :
-- une **programmation orientée objet** claire et extensible,
-- une **interface console** lisible,
+Le jeu met en avant :
+- Une structure orientée objet (Joueur, Carte, Champion, Action, Marché, Plateau, etc.)
+- Une interface console interactive
+- Un système d'effets et de combos fidèle au jeu original
+
+---
+
+## Fonctionnalités
+
+- Gestion complète du tour de jeu (pioche, main, défausse, achats, utilisation des cartes)
+- Système de marché dynamique
+- Effets textuels et basiques sur les cartes
+- Champions avec compétences et mode défense
+- Combos de factions
+- Mode "Godmode" 
+- Mélange des decks et défausses
 
 ---
 
-## ⚙️ Fonctionnalités
+## Structure du projet
 
-| Fonctionnalité | Description | Statut |
-|----------------|-------------|--------|
-| 💀 Système de joueur | Points de vie, main, deck, défausse | 🏗️ En cours |
-| 🧩 Système de cartes | Types (action, champion, objet…), effets | 🏗️ En cours |
-| 💰 Marché | Pioche centrale de cartes achetables | 🏗️ En cours |
-| ⚔️ Tour de jeu | Gestion des actions, achats, attaques | 🏗️ En cours |
+- `src/` : Code source principal
+- `include/` : Fichiers d'en-tête
+- `main.cpp` : Point d'entrée du jeu
+- `README.md` : Ce fichier
+- `Makefile` : Compilation
 
 ---
+
+## Installation
+
+### Prérequis
+
+- C++17 ou plus
+- Make
+
+### Compilation
+
+```bash
+make clean   # Supprime les fichiers objets (.o) et l'exécutable existant
+make        # Compile le projet (g++ compile tous les fichiers sources)
+make run    # Exécute le binaire HeroRealms (équivalent à ./HeroRealms)
+```
+
+---
+
+## Utilisation
+
+Lancez le jeu depuis la console :
+
+```bash
+./HeroRealms
+```
+
+Suivez les instructions à l'écran pour jouer, acheter des cartes, utiliser vos champions et tenter de vaincre votre adversaire.
+
+---
+
+## Tests
+
+Des tests unitaires peuvent être ajoutés dans le dossier `tests/` (non inclus par défaut).
+
+---
+
+
+---
+
+## Licence
+
+Ce projet est sous licence MIT.
 
 

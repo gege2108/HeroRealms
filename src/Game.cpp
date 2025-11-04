@@ -13,8 +13,6 @@ void Game::run() {
     std::cout << "║           BIENVENUE DANS HERO REALMS                      ║" << std::endl;
     std::cout << "╚═══════════════════════════════════════════════════════════╝" << std::endl;
 
-    std::cout << "DEBUG: Début de la boucle de jeu" << std::endl;
-
     while (round < 500 && !partieTerminee()) {
         ++round;
 
@@ -1397,6 +1395,7 @@ void Game::phaseUtilisationEffetGodModeUniqueCombo(Carte* carteAchetee, Joueur& 
     auto hasCombo = [&](Faction faction, Carte* self) {
         int count = 0;
         for (auto* c : cartesAchetees) {
+
             if (c == self) continue;
             Action* a = dynamic_cast<Action*>(c);
             Champion* ch = dynamic_cast<Champion*>(c);

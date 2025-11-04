@@ -308,6 +308,7 @@ void Game::phaseAchatActions(const std::string& /* nomJoueur */, Joueur& joueur)
     if (godMode) {
         std::cout << "\n⚡ GODMODE : Vous pouvez acheter n'importe quelle carte du marché ! ⚡" << std::endl;
         auto& stack = plateau.getMarche().getStackActions();
+        std::vector<Carte*> cartesAchetees;
         while (true) {
             // Vérifier s'il reste des cartes et si le joueur a assez d'argent pour au moins une carte
             int prixMin = -1;
@@ -351,15 +352,7 @@ void Game::phaseAchatActions(const std::string& /* nomJoueur */, Joueur& joueur)
                     joueur.setMain(main);
                     plateau.getMarche().removeStackAction(action);
                     std::cout << "✓ Carte achetée et ajoutée directement dans votre main !" << std::endl;
-
-                    // GODMODE : Proposer d'appliquer les effets de la carte achetée uniquement
-                    Joueur& adversaire = (&joueur == &plateau.getJoueur1()) ? plateau.getJoueur2() : plateau.getJoueur1();
-                    phaseUtilisationEffetGodModeUnique(action, joueur, adversaire);
-
-                    // Retirer la carte achetée de la main (simule la défausse ou mise en jeu)
-                    main.removeCarte(action);
-                    for (auto* c : joueur.getMain().getCartes()) main.addCarte(c);
-                    joueur.setMain(main);
+                    cartesAchetees.push_back(action);
                 } else {
                     std::cout << "Pas assez d'or pour acheter cette carte." << std::endl;
                 }
@@ -367,6 +360,20 @@ void Game::phaseAchatActions(const std::string& /* nomJoueur */, Joueur& joueur)
                 std::cout << "Indice invalide. Achat annulé." << std::endl;
             }
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+
+        // Phase de choix des effets pour chaque carte achetée
+        if (!cartesAchetees.empty()) {
+            Joueur& adversaire = (&joueur == &plateau.getJoueur1()) ? plateau.getJoueur2() : plateau.getJoueur1();
+            std::cout << "\n--- GODMODE : Application des effets des cartes achetées ---" << std::endl;
+            for (Carte* carte : cartesAchetees) {
+                phaseUtilisationEffetGodModeUnique(carte, joueur, adversaire);
+                // Retirer la carte achetée de la main (simule la défausse ou mise en jeu)
+                MainJoueur main = joueur.getMain();
+                main.removeCarte(carte);
+                for (auto* c : joueur.getMain().getCartes()) main.addCarte(c);
+                joueur.setMain(main);
+            }
         }
         return;
     }

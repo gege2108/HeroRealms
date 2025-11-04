@@ -15,7 +15,7 @@ void Game::run() {
 
     std::cout << "DEBUG: Début de la boucle de jeu" << std::endl;
 
-    while (round < 10 && !partieTerminee()) {
+    while (round < 500 && !partieTerminee()) {
         ++round;
 
         // gestion de la commande godmode à chaque étape ---

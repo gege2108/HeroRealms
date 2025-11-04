@@ -25,6 +25,7 @@ public:
     std::vector<GemmeDeFeu*> getGemmesDeFeu() const;
     std::vector<Champion*> getChampions() const;  // Ajouter cette ligne
     std::vector<Action*> getActions() const;      // Ajouter cette ligne
+    void melangeMain();
 
 private:
     std::vector<Carte*> cartes;

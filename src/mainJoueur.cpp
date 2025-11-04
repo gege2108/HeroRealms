@@ -1,4 +1,9 @@
 #include "MainJoueur.h"
+#include <algorithm>
+#include <random>
+#include <iostream>
+#include <chrono>
+
 
 MainJoueur::MainJoueur() = default;
 
@@ -74,4 +79,16 @@ std::vector<Action*> MainJoueur::getActions() const {
         }
     }
     return actions;
+}
+
+void MainJoueur::melangeMain() {
+    if (cartes.empty()) return;
+
+    srand(time(nullptr));
+    for (int i = cartes.size() - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
+        Carte* temp = cartes[i];
+        cartes[i] = cartes[j];
+        cartes[j] = temp;
+    }
 }

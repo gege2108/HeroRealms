@@ -200,7 +200,7 @@ void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueurJouantLeTour, Joue
             effet.gainGoldOrHealthPerChampion(joueurJouantLeTour);
             break;
         }
-        case 22: { // Gagner du combat ou de la vie
+        case 22: { // Gagner 3 d combat ou 4 de vie
             effet.gainCombatOrHealth(joueurJouantLeTour);
             break;
         }

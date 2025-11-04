@@ -35,6 +35,8 @@ private:
 
     void phaseUtilisationEffetGodModeUnique(Carte* carteAchetee, Joueur& joueur, Joueur& adversaire);
 
+    void phaseUtilisationEffetGodModeUniqueCombo(Carte* carteAchetee, Joueur& joueur, Joueur& adversaire, const std::vector<Carte*>& cartesAchetees);
+
     // Gestion du tour
     void tourJoueur(const std::string& nomJoueur, Joueur& joueur, Joueur& adversaire);
     

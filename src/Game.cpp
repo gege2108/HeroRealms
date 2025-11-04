@@ -366,8 +366,22 @@ void Game::phaseAchatActions(const std::string& /* nomJoueur */, Joueur& joueur)
         if (!cartesAchetees.empty()) {
             Joueur& adversaire = (&joueur == &plateau.getJoueur1()) ? plateau.getJoueur2() : plateau.getJoueur1();
             std::cout << "\n--- GODMODE : Application des effets des cartes achetées ---" << std::endl;
+            // Calculer les factions présentes dans les cartes achetées pour les combos
+            std::set<Faction> factionsAchetees;
             for (Carte* carte : cartesAchetees) {
-                phaseUtilisationEffetGodModeUnique(carte, joueur, adversaire);
+                Action* action = dynamic_cast<Action*>(carte);
+                if (action) {
+                    factionsAchetees.insert(action->getFaction());
+                }
+                Champion* champ = dynamic_cast<Champion*>(carte);
+                if (champ) {
+                    factionsAchetees.insert(champ->getFaction());
+                }
+            }
+            for (size_t i = 0; i < cartesAchetees.size(); ++i) {
+                Carte* carte = cartesAchetees[i];
+                // Passer la liste des cartes achetées pour combo
+                phaseUtilisationEffetGodModeUniqueCombo(carte, joueur, adversaire, cartesAchetees);
                 // Retirer la carte achetée de la main (simule la défausse ou mise en jeu)
                 MainJoueur main = joueur.getMain();
                 main.removeCarte(carte);
@@ -1008,18 +1022,9 @@ void Game::phaseUtilisationEffetsPrioritaires(const std::string& /* nomJoueur */
 
                         for (const auto& effet : action->getListEffetBasiqueCombo()) {
                             switch (effet.getType()) {
-                                case OR:
-                                    joueur.setArgent(joueur.getArgent() + effet.getValeur());
-                                    std::cout << "      💰 +" << effet.getValeur() << " or (COMBO)" << std::endl;
-                                    break;
-                                case DEGAT:
-                                    joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur());
-                                    std::cout << "      ⚔️  +" << effet.getValeur() << " dégâts (COMBO)" << std::endl;
-                                    break;
-                                case SOIN:
-                                    joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur());
-                                    std::cout << "      ❤️  +" << effet.getValeur() << " PV (COMBO)" << std::endl;
-                                    break;
+                                case OR: joueur.setArgent(joueur.getArgent() + effet.getValeur()); break;
+                                case DEGAT: joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur()); break;
+                                case SOIN: joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur()); break;
                             }
                         }
 
@@ -1451,6 +1456,126 @@ void Game::phaseUtilisationEffetGodModeUnique(Carte* carteAchetee, Joueur& joueu
         }
         for (const auto& effetTextuel : action->getListEffetTextuelCombo()) {
             EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur, adversaire);
+        }
+        std::cout << "Effets de l'action appliqués." << std::endl;
+    } else {
+        std::cout << "Cette carte n'a pas d'effets à appliquer." << std::endl;
+    }
+    std::cout << "\n--- Fin de la phase d'application des effets GODMODE ---" << std::endl;
+}
+
+// Version combo pour la phase d'application des effets godmode
+void Game::phaseUtilisationEffetGodModeUniqueCombo(Carte* carteAchetee, Joueur& joueur, Joueur& adversaire, const std::vector<Carte*>& cartesAchetees) {
+    std::cout << "\n--- GODMODE : Application des effets de la carte achetée ---" << std::endl;
+    if (!carteAchetee) {
+        std::cout << "Aucune carte achetée à jouer." << std::endl;
+        return;
+    }
+    Champion* champ = dynamic_cast<Champion*>(carteAchetee);
+    Action* action = dynamic_cast<Action*>(carteAchetee);
+
+    std::cout << "\n" << carteAchetee->getNom() << " : ";
+    if (champ) std::cout << "🎖️ Champion";
+    else if (action) std::cout << "📜 Action";
+    else std::cout << "Autre";
+    std::cout << std::endl;
+
+    std::cout << "Voulez-vous appliquer les effets de cette carte ? [1] Oui [0] Non : ";
+    int choix = 0;
+    std::cin >> choix;
+    if (choix != 1) {
+        std::cout << "--- Fin de la phase d'application des effets GODMODE ---" << std::endl;
+        return;
+    }
+
+    // Détecter combo : si une autre carte achetée a la même faction
+    auto hasCombo = [&](Faction faction, Carte* self) {
+        int count = 0;
+        for (auto* c : cartesAchetees) {
+            if (c == self) continue;
+            Action* a = dynamic_cast<Action*>(c);
+            Champion* ch = dynamic_cast<Champion*>(c);
+            if ((a && a->getFaction() == faction) || (ch && ch->getFaction() == faction)) {
+                count++;
+            }
+        }
+        return count > 0;
+    };
+
+    if (champ) {
+        // Effets Choix 1
+        for (const auto& effet : champ->getEffetsBasiqueChoix1()) {
+            switch (effet.getType()) {
+                case OR: joueur.setArgent(joueur.getArgent() + effet.getValeur()); break;
+                case DEGAT: joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur()); break;
+                case SOIN: joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur()); break;
+            }
+        }
+        for (const auto& effetTextuel : champ->getListEffetTextuelChoix1()) {
+            EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur, adversaire);
+        }
+        // Effets Choix 2
+        for (const auto& effet : champ->getListEffetBasiqueChoix2()) {
+            switch (effet.getType()) {
+                case OR: joueur.setArgent(joueur.getArgent() + effet.getValeur()); break;
+                case DEGAT: joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur()); break;
+                case SOIN: joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur()); break;
+            }
+        }
+        for (const auto& effetTextuel : champ->getListEffetTextuelChoix2()) {
+            EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur, adversaire);
+        }
+        // Effets Combo si combo activable
+        if (hasCombo(champ->getFaction(), champ) && (!champ->getListEffetBasiqueCombo().empty() || !champ->getListEffetTextuelCombo().empty())) {
+            std::cout << "✨ Effets COMBO disponibles pour cette carte achetée !" << std::endl;
+            for (const auto& effet : champ->getListEffetBasiqueCombo()) {
+                switch (effet.getType()) {
+                    case OR: joueur.setArgent(joueur.getArgent() + effet.getValeur()); break;
+                    case DEGAT: joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur()); break;
+                    case SOIN: joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur()); break;
+                }
+            }
+            for (const auto& effetTextuel : champ->getListEffetTextuelCombo()) {
+                EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur, adversaire);
+            }
+        }
+        std::cout << "Effets du champion appliqués." << std::endl;
+    } else if (action) {
+        // Effets Choix 1
+        for (const auto& effet : action->getEffetsBasiqueChoix1()) {
+            switch (effet.getType()) {
+                case OR: joueur.setArgent(joueur.getArgent() + effet.getValeur()); break;
+                case DEGAT: joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur()); break;
+                case SOIN: joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur()); break;
+            }
+        }
+        for (const auto& effetTextuel : action->getListEffetTextuelChoix1()) {
+            EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur, adversaire);
+        }
+        // Effets Choix 2
+        for (const auto& effet : action->getListEffetBasiqueChoix2()) {
+            switch (effet.getType()) {
+                case OR: joueur.setArgent(joueur.getArgent() + effet.getValeur()); break;
+                case DEGAT: joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur()); break;
+                case SOIN: joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur()); break;
+            }
+        }
+        for (const auto& effetTextuel : action->getListEffetTextuelChoix2()) {
+            EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur, adversaire);
+        }
+        // Effets Combo si combo activable
+        if (hasCombo(action->getFaction(), action) && (!action->getListEffetBasiqueCombo().empty() || !action->getListEffetTextuelCombo().empty())) {
+            std::cout << "✨ Effets COMBO disponibles pour cette carte achetée !" << std::endl;
+            for (const auto& effet : action->getListEffetBasiqueCombo()) {
+                switch (effet.getType()) {
+                    case OR: joueur.setArgent(joueur.getArgent() + effet.getValeur()); break;
+                    case DEGAT: joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur()); break;
+                    case SOIN: joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur()); break;
+                }
+            }
+            for (const auto& effetTextuel : action->getListEffetTextuelCombo()) {
+                EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur, adversaire);
+            }
         }
         std::cout << "Effets de l'action appliqués." << std::endl;
     } else {

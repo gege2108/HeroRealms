@@ -33,7 +33,6 @@ private:
     
     void phaseUtilisationEffetGodMode(Joueur& joueur, Joueur& adversaire);
 
-    void phaseUtilisationEffetGodModeUnique(Carte* carteAchetee, Joueur& joueur, Joueur& adversaire);
 
     void phaseUtilisationEffetGodModeUniqueCombo(Carte* carteAchetee, Joueur& joueur, Joueur& adversaire, const std::vector<Carte*>& cartesAchetees);
 

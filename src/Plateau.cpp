@@ -789,6 +789,12 @@ void Plateau::achatActionChampion(Joueur& joueur) {
                             joueur.setPioche(piocheJ);
                             joueur.setNextActionOnTop(false);
                     }
+                    else if (joueur.getNextChampionOnTop() && champion != nullptr) {
+                            Pioche piocheJ = joueur.getPioche();
+                            piocheJ.addCarteOnTop(action);
+                            joueur.setPioche(piocheJ);
+                            joueur.setNextChampionOnTop(false);
+                    }
                     else{
                         defausseJ.addCarte(action);
                     }

@@ -74,6 +74,15 @@ public:
         return nextActionOnTop;
     }
 
+    void setNextChampionOnTop(bool value) {
+        nextChampionOnTop = value;
+    }
+
+    bool getNextChampionOnTop() const {
+        return nextChampionOnTop;
+    }
+    
+
 private:
 
     MainJoueur mainJoueur;
@@ -84,6 +93,7 @@ private:
     int pointDeVie = 0;
     int degatsStockes = 0;
     bool nextActionOnTop = false; // Pour l'effet id 14
+    bool nextChampionOnTop = false; // Pour l'effet id
 };
 
 #endif // JOUEUR_H

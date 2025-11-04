@@ -192,6 +192,10 @@ void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueurJouantLeTour, Joue
             effet.sacrificeItself(joueurJouantLeTour);
             break;
         }
+        case 20: { // Mettre le prochain champion acheté ce tour sur le dessus de la pioche
+            effet.setNextChampionAcquiredOnTop(joueurJouantLeTour);
+            break;
+        }
         default:
             std::cout << "Effet textuel avec ID " << id << " non implémenté." << std::endl;
             break;
@@ -530,6 +534,12 @@ void EffetTextuel::setNextActionAcquiredOnTop(Joueur& joueur) {
     std::cout << "Effet activé : La prochaine action que vous achetez ce tour ira sur le dessus de votre pioche." << std::endl;
 }
 
+// id 20 : Mettre le prochain champion acheté ce tour sur le dessus de la pioche
+void EffetTextuel::setNextChampionAcquiredOnTop(Joueur& joueur) {
+    // Active un flag sur le joueur pour ce tour
+    joueur.setNextChampionOnTop(true);
+    std::cout << "Effet activé : Le prochain champion que vous achetez ce tour ira sur le dessus de votre pioche." << std::endl;
+}
 
 
 //id : 15 - Sacrifier une carte de la main ou de la défausse

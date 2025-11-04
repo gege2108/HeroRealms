@@ -196,6 +196,22 @@ void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueurJouantLeTour, Joue
             effet.setNextChampionAcquiredOnTop(joueurJouantLeTour);
             break;
         }
+        case 21: { // Gagner de l'or ou de la vie par champion
+            effet.gainGoldOrHealthPerChampion(joueurJouantLeTour);
+            break;
+        }
+        case 22: { // Gagner du combat ou de la vie
+            effet.gainCombatOrHealth(joueurJouantLeTour);
+            break;
+        }
+        case 23: { // Gagner de l'or ou 2 de combat
+            effet.gainGoldOrCombat2(joueurJouantLeTour);
+            break;
+        }
+        case 24: { // Gagner de l'or ou 1 de combat
+            effet.gainGoldOrCombat1(joueurJouantLeTour);
+            break;
+        }
         default:
             std::cout << "Effet textuel avec ID " << id << " non implémenté." << std::endl;
             break;
@@ -623,6 +639,75 @@ void EffetTextuel::sacrificeItself(Joueur& joueur) {
     main.removeCarte(carte);
     delete carte; // La carte est détruite
     std::cout << "La carte '" << nomCarte << "' vient d'être sacrifiée." << std::endl;
+}
+
+// id 21 : Gagner 1 or OU gagner 1 PV par champion en jeu
+void EffetTextuel::gainGoldOrHealthPerChampion(Joueur& joueur) {
+    std::cout << "\nEffet : [1] Gagner 1 or  |  [2] Gagner 1 PV par champion en jeu" << std::endl;
+    std::cout << "Votre choix ? [1/2] : ";
+    int choix = 0;
+    std::cin >> choix;
+    if (choix == 1) {
+        joueur.setArgent(joueur.getArgent() + 1);
+        std::cout << "Vous gagnez 1 or." << std::endl;
+    } else if (choix == 2) {
+        int nbChampions = joueur.getStackChampion().getChampions().size();
+        joueur.gainHealth(nbChampions);
+        std::cout << "Vous gagnez " << nbChampions << " PV (1 par champion en jeu)." << std::endl;
+    } else {
+        std::cout << "Choix invalide. Aucun effet appliqué." << std::endl;
+    }
+}
+
+// id 22 : Gagner 3 combat OU gagner 4 PV
+void EffetTextuel::gainCombatOrHealth(Joueur& joueur) {
+    std::cout << "\nEffet : [1] Gagner 3 combat  |  [2] Gagner 4 PV" << std::endl;
+    std::cout << "Votre choix ? [1/2] : ";
+    int choix = 0;
+    std::cin >> choix;
+    if (choix == 1) {
+        joueur.addCombat(3);
+        std::cout << "Vous gagnez 3 points de combat." << std::endl;
+    } else if (choix == 2) {
+        joueur.gainHealth(4);
+        std::cout << "Vous gagnez 4 points de vie." << std::endl;
+    } else {
+        std::cout << "Choix invalide. Aucun effet appliqué." << std::endl;
+    }
+}
+
+// id 23 : Gagner 1 or OU gagner 2 combat
+void EffetTextuel::gainGoldOrCombat2(Joueur& joueur) {
+    std::cout << "\nEffet : [1] Gagner 1 or  |  [2] Gagner 2 combat" << std::endl;
+    std::cout << "Votre choix ? [1/2] : ";
+    int choix = 0;
+    std::cin >> choix;
+    if (choix == 1) {
+        joueur.setArgent(joueur.getArgent() + 1);
+        std::cout << "Vous gagnez 1 or." << std::endl;
+    } else if (choix == 2) {
+        joueur.addCombat(2);
+        std::cout << "Vous gagnez 2 points de combat." << std::endl;
+    } else {
+        std::cout << "Choix invalide. Aucun effet appliqué." << std::endl;
+    }
+}
+
+// id 24 : Gagner 1 or OU gagner 1 combat
+void EffetTextuel::gainGoldOrCombat1(Joueur& joueur) {
+    std::cout << "\nEffet : [1] Gagner 1 or  |  [2] Gagner 1 combat" << std::endl;
+    std::cout << "Votre choix ? [1/2] : ";
+    int choix = 0;
+    std::cin >> choix;
+    if (choix == 1) {
+        joueur.setArgent(joueur.getArgent() + 1);
+        std::cout << "Vous gagnez 1 or." << std::endl;
+    } else if (choix == 2) {
+        joueur.addCombat(1);
+        std::cout << "Vous gagnez 1 point de combat." << std::endl;
+    } else {
+        std::cout << "Choix invalide. Aucun effet appliqué." << std::endl;
+    }
 }
 
 

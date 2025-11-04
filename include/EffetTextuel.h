@@ -42,6 +42,10 @@ public:
     static void placeCardFromDiscardOnTopOfDraw(Joueur& joueur); // id : 13
     static void setNextActionAcquiredOnTop(Joueur& joueur); // id : 14
     static void setNextChampionAcquiredOnTop(Joueur& joueur); // id : 20
+    static void gainGoldOrHealthPerChampion(Joueur& joueur); // id : 21
+    static void gainCombatOrHealth(Joueur& joueur); // id : 22
+    static void gainGoldOrCombat2(Joueur& joueur); // id : 23
+    static void gainGoldOrCombat1(Joueur& joueur); // id : 24
 
     // Fonctions de sacrifice publiques
     bool sacrificeCard(Joueur& joueur);                    // id : 15

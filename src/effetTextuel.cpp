@@ -188,6 +188,10 @@ void EffetTextuel::handleIdEffetTextuel(int id, Joueur& joueurJouantLeTour, Joue
             effet.preparerChampionEnJeu(joueurJouantLeTour);
             break;
         }
+        case 19: { // Sacrifier cette carte
+            effet.sacrificeItself(joueurJouantLeTour);
+            break;
+        }
         default:
             std::cout << "Effet textuel avec ID " << id << " non implémenté." << std::endl;
             break;
@@ -593,6 +597,22 @@ void EffetTextuel::preparerChampionEnJeu(Joueur& joueur) {
 
     champions[choix]->setPeutRejouer(true);
     std::cout << "Champion '" << champions[choix]->getNom() << "' peut rejouer ses compétences ce tour !" << std::endl;
+}
+
+// Sacrifie la carte que le joueur est en train de jouer (supposée être la dernière carte jouée dans la main)
+void EffetTextuel::sacrificeItself(Joueur& joueur) {
+    // On suppose que la carte jouée est la dernière carte ajoutée à la main
+    MainJoueur& main = joueur.getMain();
+    if (main.getCartes().empty()) {
+        std::cout << "Aucune carte à sacrifier (main vide)." << std::endl;
+        return;
+    }
+    // Sacrifier la dernière carte de la main
+    Carte* carte = main.getCartes().back();
+    std::string nomCarte = carte->getNom();
+    main.removeCarte(carte);
+    delete carte; // La carte est détruite
+    std::cout << "La carte '" << nomCarte << "' vient d'être sacrifiée." << std::endl;
 }
 
 

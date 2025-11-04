@@ -291,7 +291,7 @@ std::vector<Action*> Initializer::createActions() {
     // Faction Bleue (Guilde) - 5 actions × 3 = 15 cartes
     for (int copy = 0; copy < 3; ++copy) {
         actions.push_back(new Action(Faction::FactionBleu, "Pot-de-Vin", 1,
-            {Effet(2, OR)}, {}, {EffetTextuel(13,"Vous pouvez placer une carte de votre défausse sur le dessus de votre pioche")}, {}, {Effet(4, DEGAT)}, {}));
+            {Effet(2, OR)}, {}, {EffetTextuel(19,"Vous devez sacrifier cette carte")}, {}, {Effet(4, DEGAT)}, {}));
         
         actions.push_back(new Action(Faction::FactionBleu, "Intimidation", 2,
             {Effet(5, DEGAT)}, {}, {EffetTextuel(18, "Preparez un champion.")}, {}, {Effet(3, OR)}, {}));
@@ -327,7 +327,7 @@ std::vector<Action*> Initializer::createActions() {
     // Faction Verte (Sauvage) - 5 actions × 3 = 15 cartes
     for (int copy = 0; copy < 3; ++copy) {
         actions.push_back(new Action(Faction::FactionVert, "Charge Sauvage", 2,
-            {Effet(4, DEGAT)}, {}, {EffetTextuel(18, "Preparez un champion.")}, {}, {Effet(6, DEGAT)}, {}));
+            {Effet(4, DEGAT)}, {}, {EffetTextuel(2, "Defaussez l'adversaire.")}, {}, {Effet(6, DEGAT)}, {}));
         
         actions.push_back(new Action(Faction::FactionVert, "Rage du Loup", 3,
             {Effet(3, DEGAT), Effet(2, SOIN)}, {}, {EffetTextuel(18, "Preparez un champion.")}, {}, {Effet(5, DEGAT), Effet(4, SOIN)}, {}));
@@ -351,7 +351,7 @@ std::vector<Action*> Initializer::createActions() {
 std::vector<Champion*> Initializer::createChampions() {
     std::vector<Champion*> champions;
     
-    // ✅ Garder seulement 1 exemplaire de chaque champion (8 champions uniques)
+    //  Garder seulement 1 exemplaire de chaque champion (8 champions uniques)
     
     // Faction Jaune - 2 champions
     champions.push_back(new Champion(Faction::FactionJaune, "Général Impérial", 8,

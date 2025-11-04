@@ -47,6 +47,7 @@ public:
     void sacrificeCardForCombat3(Joueur& joueur);         // id : 16
     void sacrificeCardForCombat2(Joueur& joueur);         // id : 17
     void preparerChampionEnJeu(Joueur& joueur); //id : 18
+    void sacrificeItself(Joueur& joueur); // id : 19
 
 
 

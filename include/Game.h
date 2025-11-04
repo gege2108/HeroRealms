@@ -31,12 +31,17 @@ private:
     
     void phaseUtilisationEffetsPrioritaires(const std::string& nomJoueur, Joueur& joueur, Joueur& adversaire);
     
+    void phaseUtilisationEffetGodMode(Joueur& joueur, Joueur& adversaire);
+
+    void phaseUtilisationEffetGodModeUnique(Carte* carteAchetee, Joueur& joueur, Joueur& adversaire);
+
     // Gestion du tour
     void tourJoueur(const std::string& nomJoueur, Joueur& joueur, Joueur& adversaire);
     
     // Conditions de fin
     bool partieTerminee() const;
     void afficherGagnant() const;
+    
     
 public:
     Game(Plateau& p);

@@ -18,10 +18,11 @@ void Game::run() {
     while (round < 10 && !partieTerminee()) {
         ++round;
 
-        // --- Ajout : gestion de la commande godmode à chaque étape ---
+        // gestion de la commande godmode à chaque étape ---
         auto checkGodMode = [&]() {
             std::string commande;
-            // Suppression de l'affichage de la commande spéciale
+            // Ajout de l'affichage pour indiquer la commande godmode
+            std::cout << "\nTapez une commande spéciale ('godmode') ou appuyez sur Entrée pour continuer : ";
             std::getline(std::cin, commande);
             if (commande == "godmode") {
                 godMode = !godMode;
@@ -42,10 +43,10 @@ void Game::run() {
 
         // ==================== TOUR JOUEUR 1 ====================
         std::cout << "\n╔═══════════════════════════════════════════════════════════╗" << std::endl;
-        std::cout << "║         🎮 TOUR DE " << std::left << std::setw(30) << "Joueur 1" << "             ║" << std::endl;
+        std::cout << "║         🎮 TOUR DE JOUEUR 1" << std::setw(30) << " " << "║" << std::endl;
         std::cout << "╚═══════════════════════════════════════════════════════════╝" << std::endl;
 
-        // ✅ RÉINITIALISER les champions en jeu AU DÉBUT du tour
+        // RÉINITIALISER les champions en jeu AU DÉBUT du tour
         for (auto* champion : plateau.getJoueur1().getStackChampion().getChampions()) {
             champion->resetEffetsTour();
         }
@@ -83,7 +84,7 @@ void Game::run() {
 
         // ==================== TOUR JOUEUR 2 ====================
         std::cout << "\n╔═══════════════════════════════════════════════════════════╗" << std::endl;
-        std::cout << "║         🎮 TOUR DE " << std::left << std::setw(30) << "Joueur 2" << "             ║" << std::endl;
+        std::cout << "║         🎮 TOUR DE JOUEUR 2" << std::setw(30) << " " << "║" << std::endl;
         std::cout << "╚═══════════════════════════════════════════════════════════╝" << std::endl;
 
         // ✅ RÉINITIALISER les champions en jeu AU DÉBUT du tour
@@ -340,43 +341,14 @@ void Game::phaseAchatActions(const std::string& /* nomJoueur */, Joueur& joueur)
                 plateau.getMarche().removeStackAction(action);
                 std::cout << "✓ Carte achetée et ajoutée directement dans votre main !" << std::endl;
 
-                // Proposer d'utiliser les effets immédiatement
-                Champion* champ = dynamic_cast<Champion*>(action);
-                if (champ) {
-                    std::cout << "Voulez-vous utiliser les effets du champion '" << champ->getNom() << "' immédiatement ? [1] Oui [0] Non : ";
-                    int choixEffet;
-                    std::cin >> choixEffet;
-                    if (choixEffet == 1) {
-                        // Utilisation des effets du champion (simulateur minimal)
-                        Joueur& adversaire = (&joueur == &plateau.getJoueur1()) ? plateau.getJoueur2() : plateau.getJoueur1();
-                        std::vector<Champion*> tempChampList = { champ };
-                        MainJoueur tempMain;
-                        tempMain.addCarte(champ);
-                        joueur.setMain(tempMain);
-                        gererChampionsEnMain(joueur, adversaire);
-                        // Remettre la main réelle
-                        main.removeCarte(champ); // car gererChampionsEnMain retire le champion de la main
-                        for (auto* c : joueur.getMain().getCartes()) main.addCarte(c);
-                        joueur.setMain(main);
-                    }
-                } else {
-                    std::cout << "Voulez-vous utiliser les effets de l'action '" << action->getNom() << "' immédiatement ? [1] Oui [0] Non : ";
-                    int choixEffet;
-                    std::cin >> choixEffet;
-                    if (choixEffet == 1) {
-                        Joueur& adversaire = (&joueur == &plateau.getJoueur1()) ? plateau.getJoueur2() : plateau.getJoueur1();
-                        std::vector<Action*> tempActionList = { action };
-                        MainJoueur tempMain;
-                        tempMain.addCarte(action);
-                        joueur.setMain(tempMain);
-                        // Utilisation des effets prioritaires pour cette action
-                        phaseUtilisationEffetsPrioritaires("", joueur, adversaire);
-                        // Remettre la main réelle
-                        main.removeCarte(action); // car phaseUtilisationEffetsPrioritaires retire l'action de la main
-                        for (auto* c : joueur.getMain().getCartes()) main.addCarte(c);
-                        joueur.setMain(main);
-                    }
-                }
+                // GODMODE : Proposer d'appliquer les effets de la carte achetée uniquement
+                Joueur& adversaire = (&joueur == &plateau.getJoueur1()) ? plateau.getJoueur2() : plateau.getJoueur1();
+                phaseUtilisationEffetGodModeUnique(action, joueur, adversaire);
+
+                // Retirer la carte achetée de la main (simule la défausse ou mise en jeu)
+                main.removeCarte(action);
+                for (auto* c : joueur.getMain().getCartes()) main.addCarte(c);
+                joueur.setMain(main);
             } else {
                 std::cout << "Pas assez d'or pour acheter cette carte." << std::endl;
             }
@@ -523,7 +495,7 @@ void Game::phaseFinTour(const std::string& /* nomJoueur */, Joueur& joueur) {
     std::cout << "│ ✓ Cartes défaussées                                    │" << std::endl;
     std::cout << "│ ✓ 5 nouvelles cartes piochées :                        │" << std::endl;
 
-    // Afficher les nouvelles cartes piochées
+    // Afficher les nouvelles cartes piochées (nom tronqué à 20 caractères max)
     int idx = 1;
     for (auto* carte : nouvelleMain.getCartes()) {
         if (carte != nullptr) {
@@ -531,6 +503,7 @@ void Game::phaseFinTour(const std::string& /* nomJoueur */, Joueur& joueur) {
             if (nomCarte.empty()) {
                 nomCarte = "(Carte sans nom)";
             }
+            if (nomCarte.length() > 20) nomCarte = nomCarte.substr(0, 20) + "...";
             std::cout << "│   [" << idx++ << "] " << std::left << std::setw(45) << nomCarte << " │" << std::endl;
         } else {
             std::cout << "│   [" << idx++ << "] " << std::left << std::setw(45) << "(Carte invalide)" << " │" << std::endl;
@@ -692,18 +665,9 @@ void Game::gererChampionsEnMain(Joueur& joueur, Joueur& adversaire) {
                 if (choixEffets2 == 1) {
                     for (const auto& effet : champion->getListEffetBasiqueChoix2()) {
                         switch (effet.getType()) {
-                            case OR:
-                                joueur.setArgent(joueur.getArgent() + effet.getValeur());
-                                std::cout << "      💰 +" << effet.getValeur() << " or" << std::endl;
-                                break;
-                            case DEGAT:
-                                joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur());
-                                std::cout << "      ⚔️  +" << effet.getValeur() << " dégâts" << std::endl;
-                                break;
-                            case SOIN:
-                                joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur());
-                                std::cout << "      ❤️  +" << effet.getValeur() << " PV" << std::endl;
-                                break;
+                            case OR: joueur.setArgent(joueur.getArgent() + effet.getValeur()); break;
+                            case DEGAT: joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur()); break;
+                            case SOIN: joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur()); break;
                         }
                     }
 
@@ -756,18 +720,9 @@ void Game::gererChampionsEnMain(Joueur& joueur, Joueur& adversaire) {
                 if (choixCombo == 1) {
                     for (const auto& effet : champion->getListEffetBasiqueCombo()) {
                         switch (effet.getType()) {
-                            case OR:
-                                joueur.setArgent(joueur.getArgent() + effet.getValeur());
-                                std::cout << "      💰 +" << effet.getValeur() << " or (COMBO)" << std::endl;
-                                break;
-                            case DEGAT:
-                                joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur());
-                                std::cout << "      ⚔️  +" << effet.getValeur() << " dégâts (COMBO)" << std::endl;
-                                break;
-                            case SOIN:
-                                joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur());
-                                std::cout << "      ❤️  +" << effet.getValeur() << " PV (COMBO)" << std::endl;
-                                break;
+                            case OR: joueur.setArgent(joueur.getArgent() + effet.getValeur()); break;
+                            case DEGAT: joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur()); break;
+                            case SOIN: joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur()); break;
                         }
                     }
 
@@ -862,7 +817,7 @@ void Game::afficherChampionsEnJeu(const std::string& nomJoueur, Joueur& joueur) 
 }
 
 
-// ✅ NOUVELLE FONCTION : Phase 0 - Effets Prioritaires 
+// NOUVELLE FONCTION : Phase 0 - Effets Prioritaires 
 void Game::phaseUtilisationEffetsPrioritaires(const std::string& /* nomJoueur */, Joueur& joueur, Joueur& adversaire) {
     std::cout << "\n┌─ PHASE 0: Effets Prioritaires (Pioche) ───────────────┐" << std::endl;
     std::cout << "│ 🎴 Effets prioritaires des actions et champions          │" << std::endl;
@@ -941,11 +896,11 @@ void Game::phaseUtilisationEffetsPrioritaires(const std::string& /* nomJoueur */
                         switch (effet.getType()) {
                             case OR:
                                 joueur.setArgent(joueur.getArgent() + effet.getValeur());
-                                std::cout << "      💰 +" << effet.getValeur() << " Or (Total: " << joueur.getArgent() << ")" << std::endl;
+                                std::cout << "      💰 +" << effet.getValeur() << " or (Total: " << joueur.getArgent() << ")" << std::endl;
                                 break;
                             case DEGAT:
                                 joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur());
-                                std::cout << "      ⚔️  +" << effet.getValeur() << " Dégâts (Total: " << joueur.getDegatsStockes() << ")" << std::endl;
+                                std::cout << "      ⚔️  +" << effet.getValeur() << " dégâts (Total: " << joueur.getDegatsStockes() << ")" << std::endl;
                                 break;
                             case SOIN:
                                 joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur());
@@ -989,11 +944,11 @@ void Game::phaseUtilisationEffetsPrioritaires(const std::string& /* nomJoueur */
                         switch (effet.getType()) {
                             case OR:
                                 joueur.setArgent(joueur.getArgent() + effet.getValeur());
-                                std::cout << "      💰 +" << effet.getValeur() << " Or" << std::endl;
+                                std::cout << "      💰 +" << effet.getValeur() << " or" << std::endl;
                                 break;
                             case DEGAT:
                                 joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur());
-                                std::cout << "      ⚔️  +" << effet.getValeur() << " Dégâts" << std::endl;
+                                std::cout << "      ⚔️  +" << effet.getValeur() << " dégâts" << std::endl;
                                 break;
                             case SOIN:
                                 joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur());
@@ -1036,11 +991,11 @@ void Game::phaseUtilisationEffetsPrioritaires(const std::string& /* nomJoueur */
                             switch (effet.getType()) {
                                 case OR:
                                     joueur.setArgent(joueur.getArgent() + effet.getValeur());
-                                    std::cout << "      💰 +" << effet.getValeur() << " Or (COMBO)" << std::endl;
+                                    std::cout << "      💰 +" << effet.getValeur() << " or (COMBO)" << std::endl;
                                     break;
                                 case DEGAT:
                                     joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur());
-                                    std::cout << "      ⚔️  +" << effet.getValeur() << " Dégâts (COMBO)" << std::endl;
+                                    std::cout << "      ⚔️  +" << effet.getValeur() << " dégâts (COMBO)" << std::endl;
                                     break;
                                 case SOIN:
                                     joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur());
@@ -1387,4 +1342,100 @@ void Game::utiliserChampionsEnJeu(const std::string& /* nomJoueur */, Joueur& jo
             }
         }
    }
+}
+
+// Propose au joueur d'appliquer les effets de la carte achetée pendant le godmode (une seule carte)
+void Game::phaseUtilisationEffetGodModeUnique(Carte* carteAchetee, Joueur& joueur, Joueur& adversaire) {
+    std::cout << "\n--- GODMODE : Application des effets de la carte achetée ---" << std::endl;
+    if (!carteAchetee) {
+        std::cout << "Aucune carte achetée à jouer." << std::endl;
+        return;
+    }
+    Champion* champ = dynamic_cast<Champion*>(carteAchetee);
+    Action* action = dynamic_cast<Action*>(carteAchetee);
+
+    std::cout << "\n" << carteAchetee->getNom() << " : ";
+    if (champ) std::cout << "🎖️ Champion";
+    else if (action) std::cout << "📜 Action";
+    else std::cout << "Autre";
+    std::cout << std::endl;
+
+    std::cout << "Voulez-vous appliquer les effets de cette carte ? [1] Oui [0] Non : ";
+    int choix = 0;
+    std::cin >> choix;
+    if (choix != 1) {
+        std::cout << "--- Fin de la phase d'application des effets GODMODE ---" << std::endl;
+        return;
+    }
+
+    if (champ) {
+        // Appliquer tous les effets du champion
+        for (const auto& effet : champ->getEffetsBasiqueChoix1()) {
+            switch (effet.getType()) {
+                case OR: joueur.setArgent(joueur.getArgent() + effet.getValeur()); break;
+                case DEGAT: joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur()); break;
+                case SOIN: joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur()); break;
+            }
+        }
+        for (const auto& effetTextuel : champ->getListEffetTextuelChoix1()) {
+            EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur, adversaire);
+        }
+        for (const auto& effet : champ->getListEffetBasiqueChoix2()) {
+            switch (effet.getType()) {
+                case OR: joueur.setArgent(joueur.getArgent() + effet.getValeur()); break;
+                case DEGAT: joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur()); break;
+                case SOIN: joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur()); break;
+            }
+        }
+        for (const auto& effetTextuel : champ->getListEffetTextuelChoix2()) {
+            EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur, adversaire);
+        }
+        for (const auto& effet : champ->getListEffetBasiqueCombo()) {
+            switch (effet.getType()) {
+                case OR: joueur.setArgent(joueur.getArgent() + effet.getValeur()); break;
+                case DEGAT: joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur()); break;
+                case SOIN: joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur()); break;
+            }
+        }
+        for (const auto& effetTextuel : champ->getListEffetTextuelCombo()) {
+            EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur, adversaire);
+        }
+        std::cout << "Effets du champion appliqués." << std::endl;
+    } else if (action) {
+        // Appliquer tous les effets de l'action
+        for (const auto& effet : action->getEffetsBasiqueChoix1()) {
+            switch (effet.getType()) {
+                case OR: joueur.setArgent(joueur.getArgent() + effet.getValeur()); break;
+                case DEGAT: joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur()); break;
+                case SOIN: joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur()); break;
+            }
+        }
+        for (const auto& effetTextuel : action->getListEffetTextuelChoix1()) {
+            EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur, adversaire);
+        }
+        for (const auto& effet : action->getListEffetBasiqueChoix2()) {
+            switch (effet.getType()) {
+                case OR: joueur.setArgent(joueur.getArgent() + effet.getValeur()); break;
+                case DEGAT: joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur()); break;
+                case SOIN: joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur()); break;
+            }
+        }
+        for (const auto& effetTextuel : action->getListEffetTextuelChoix2()) {
+            EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur, adversaire);
+        }
+        for (const auto& effet : action->getListEffetBasiqueCombo()) {
+            switch (effet.getType()) {
+                case OR: joueur.setArgent(joueur.getArgent() + effet.getValeur()); break;
+                case DEGAT: joueur.setDegatsStockes(joueur.getDegatsStockes() + effet.getValeur()); break;
+                case SOIN: joueur.setPointDeVie(joueur.getPointDeVie() + effet.getValeur()); break;
+            }
+        }
+        for (const auto& effetTextuel : action->getListEffetTextuelCombo()) {
+            EffetTextuel::handleIdEffetTextuel(effetTextuel.getId(), joueur, adversaire);
+        }
+        std::cout << "Effets de l'action appliqués." << std::endl;
+    } else {
+        std::cout << "Cette carte n'a pas d'effets à appliquer." << std::endl;
+    }
+    std::cout << "\n--- Fin de la phase d'application des effets GODMODE ---" << std::endl;
 }

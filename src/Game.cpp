@@ -339,6 +339,44 @@ void Game::phaseAchatActions(const std::string& /* nomJoueur */, Joueur& joueur)
                 joueur.setMain(main);
                 plateau.getMarche().removeStackAction(action);
                 std::cout << "✓ Carte achetée et ajoutée directement dans votre main !" << std::endl;
+
+                // Proposer d'utiliser les effets immédiatement
+                Champion* champ = dynamic_cast<Champion*>(action);
+                if (champ) {
+                    std::cout << "Voulez-vous utiliser les effets du champion '" << champ->getNom() << "' immédiatement ? [1] Oui [0] Non : ";
+                    int choixEffet;
+                    std::cin >> choixEffet;
+                    if (choixEffet == 1) {
+                        // Utilisation des effets du champion (simulateur minimal)
+                        Joueur& adversaire = (&joueur == &plateau.getJoueur1()) ? plateau.getJoueur2() : plateau.getJoueur1();
+                        std::vector<Champion*> tempChampList = { champ };
+                        MainJoueur tempMain;
+                        tempMain.addCarte(champ);
+                        joueur.setMain(tempMain);
+                        gererChampionsEnMain(joueur, adversaire);
+                        // Remettre la main réelle
+                        main.removeCarte(champ); // car gererChampionsEnMain retire le champion de la main
+                        for (auto* c : joueur.getMain().getCartes()) main.addCarte(c);
+                        joueur.setMain(main);
+                    }
+                } else {
+                    std::cout << "Voulez-vous utiliser les effets de l'action '" << action->getNom() << "' immédiatement ? [1] Oui [0] Non : ";
+                    int choixEffet;
+                    std::cin >> choixEffet;
+                    if (choixEffet == 1) {
+                        Joueur& adversaire = (&joueur == &plateau.getJoueur1()) ? plateau.getJoueur2() : plateau.getJoueur1();
+                        std::vector<Action*> tempActionList = { action };
+                        MainJoueur tempMain;
+                        tempMain.addCarte(action);
+                        joueur.setMain(tempMain);
+                        // Utilisation des effets prioritaires pour cette action
+                        phaseUtilisationEffetsPrioritaires("", joueur, adversaire);
+                        // Remettre la main réelle
+                        main.removeCarte(action); // car phaseUtilisationEffetsPrioritaires retire l'action de la main
+                        for (auto* c : joueur.getMain().getCartes()) main.addCarte(c);
+                        joueur.setMain(main);
+                    }
+                }
             } else {
                 std::cout << "Pas assez d'or pour acheter cette carte." << std::endl;
             }

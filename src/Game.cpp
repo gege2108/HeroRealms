@@ -21,7 +21,7 @@ void Game::run() {
         // --- Ajout : gestion de la commande godmode à chaque étape ---
         auto checkGodMode = [&]() {
             std::string commande;
-            std::cout << "\nTapez une commande spéciale ('godmode') ou appuyez sur Entrée pour continuer : ";
+            // Suppression de l'affichage de la commande spéciale
             std::getline(std::cin, commande);
             if (commande == "godmode") {
                 godMode = !godMode;

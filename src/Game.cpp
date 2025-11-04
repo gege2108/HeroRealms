@@ -308,54 +308,66 @@ void Game::phaseAchatActions(const std::string& /* nomJoueur */, Joueur& joueur)
     if (godMode) {
         std::cout << "\n⚡ GODMODE : Vous pouvez acheter n'importe quelle carte du marché ! ⚡" << std::endl;
         auto& stack = plateau.getMarche().getStackActions();
-        if (stack.empty()) {
-            std::cout << "Le marché est vide." << std::endl;
-            return;
-        }
-        std::cout << "\nCartes disponibles dans le marché (pioche complète) :" << std::endl;
-        for (size_t i = 0; i < stack.size(); ++i) {
-            Action* action = stack[i];
-            std::string factionEmoji;
-            switch(action->getFaction()) {
-                case Faction::FactionJaune: factionEmoji = "👑"; break;
-                case Faction::FactionBleu: factionEmoji = "🗡️"; break;
-                case Faction::FactionRouge: factionEmoji = "💀"; break;
-                case Faction::FactionVert: factionEmoji = "🐺"; break;
-                default: factionEmoji = "⚪"; break;
+        while (true) {
+            // Vérifier s'il reste des cartes et si le joueur a assez d'argent pour au moins une carte
+            int prixMin = -1;
+            for (auto* action : stack) {
+                if (prixMin == -1 || action->getPrix() < prixMin) prixMin = action->getPrix();
             }
-            Champion* champ = dynamic_cast<Champion*>(action);
-            std::string typeIcon = champ ? "🎖️" : "📜";
-            std::cout << "  [" << i << "] " << factionEmoji << " " << typeIcon << " "
-                      << action->getNom() << " (" << action->getPrix() << " 💰)" << std::endl;
-        }
-        std::cout << "Entrez l'indice de la carte à acheter (ou -1 pour passer) : ";
-        int idx;
-        std::cin >> idx;
-        if (idx >= 0 && idx < (int)stack.size()) {
-            Action* action = stack[idx];
-            if (joueur.getArgent() >= action->getPrix()) {
-                joueur.setArgent(joueur.getArgent() - action->getPrix());
-                MainJoueur main = joueur.getMain();
-                main.addCarte(action); // Ajout direct dans la main
-                joueur.setMain(main);
-                plateau.getMarche().removeStackAction(action);
-                std::cout << "✓ Carte achetée et ajoutée directement dans votre main !" << std::endl;
+            if (stack.empty() || joueur.getArgent() < prixMin) {
+                std::cout << "Le marché est vide ou vous n'avez plus assez d'or pour acheter une carte." << std::endl;
+                break;
+            }
 
-                // GODMODE : Proposer d'appliquer les effets de la carte achetée uniquement
-                Joueur& adversaire = (&joueur == &plateau.getJoueur1()) ? plateau.getJoueur2() : plateau.getJoueur1();
-                phaseUtilisationEffetGodModeUnique(action, joueur, adversaire);
+            std::cout << "\nCartes disponibles dans le marché (pioche complète) :" << std::endl;
+            for (size_t i = 0; i < stack.size(); ++i) {
+                Action* action = stack[i];
+                std::string factionEmoji;
+                switch(action->getFaction()) {
+                    case Faction::FactionJaune: factionEmoji = "👑"; break;
+                    case Faction::FactionBleu: factionEmoji = "🗡️"; break;
+                    case Faction::FactionRouge: factionEmoji = "💀"; break;
+                    case Faction::FactionVert: factionEmoji = "🐺"; break;
+                    default: factionEmoji = "⚪"; break;
+                }
+                Champion* champ = dynamic_cast<Champion*>(action);
+                std::string typeIcon = champ ? "🎖️" : "📜";
+                std::cout << "  [" << i << "] " << factionEmoji << " " << typeIcon << " "
+                          << action->getNom() << " (" << action->getPrix() << " 💰)" << std::endl;
+            }
+            std::cout << "Entrez l'indice de la carte à acheter (ou -1 pour passer) : ";
+            int idx;
+            std::cin >> idx;
+            if (idx == -1) {
+                std::cout << "Achat terminé." << std::endl;
+                break;
+            }
+            if (idx >= 0 && idx < (int)stack.size()) {
+                Action* action = stack[idx];
+                if (joueur.getArgent() >= action->getPrix()) {
+                    joueur.setArgent(joueur.getArgent() - action->getPrix());
+                    MainJoueur main = joueur.getMain();
+                    main.addCarte(action); // Ajout direct dans la main
+                    joueur.setMain(main);
+                    plateau.getMarche().removeStackAction(action);
+                    std::cout << "✓ Carte achetée et ajoutée directement dans votre main !" << std::endl;
 
-                // Retirer la carte achetée de la main (simule la défausse ou mise en jeu)
-                main.removeCarte(action);
-                for (auto* c : joueur.getMain().getCartes()) main.addCarte(c);
-                joueur.setMain(main);
+                    // GODMODE : Proposer d'appliquer les effets de la carte achetée uniquement
+                    Joueur& adversaire = (&joueur == &plateau.getJoueur1()) ? plateau.getJoueur2() : plateau.getJoueur1();
+                    phaseUtilisationEffetGodModeUnique(action, joueur, adversaire);
+
+                    // Retirer la carte achetée de la main (simule la défausse ou mise en jeu)
+                    main.removeCarte(action);
+                    for (auto* c : joueur.getMain().getCartes()) main.addCarte(c);
+                    joueur.setMain(main);
+                } else {
+                    std::cout << "Pas assez d'or pour acheter cette carte." << std::endl;
+                }
             } else {
-                std::cout << "Pas assez d'or pour acheter cette carte." << std::endl;
+                std::cout << "Indice invalide. Achat annulé." << std::endl;
             }
-        } else {
-            std::cout << "Achat annulé." << std::endl;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         return;
     }
 

@@ -65,18 +65,6 @@ make run    # Exécute le binaire HeroRealms (équivalent à ./HeroRealms)
 
 ---
 
-## Utilisation
-
-Lancez le jeu depuis la console :
-
-```bash
-./HeroRealms
-```
-
-Suivez les instructions à l'écran pour jouer, acheter des cartes, utiliser vos champions et tenter de vaincre votre adversaire.
-
----
-
 ## Tests
 
 Des tests unitaires peuvent être ajoutés dans le dossier `tests/` (non inclus par défaut).

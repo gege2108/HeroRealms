@@ -67,7 +67,8 @@ make run    # Exécute le binaire HeroRealms (équivalent à ./HeroRealms)
 
 ## Tests
 
-Des tests unitaires peuvent être ajoutés dans le dossier `tests/` (non inclus par défaut).
+Le projet intègre une suite de tests unitaires et d'intégration « maison » (sans framework externe). 
+Ils s'exécutent via la console avec un suivi textuel des états du jeu et comportent quelques scénarios interactifs nécessitant des saisies utilisateur.
 
 ---
 

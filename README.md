@@ -9,8 +9,6 @@ Hero Realms est une adaptation console du jeu de deckbuilding Hero Realms, déve
 - [Installation](#installation)
 - [Utilisation](#utilisation)
 - [Tests](#tests)
-- [Contribuer](#contribuer)
-- [Auteurs](#auteurs)
 - [Licence](#licence)
 
 ---

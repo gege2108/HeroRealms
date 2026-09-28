@@ -72,9 +72,6 @@ Ils s'exécutent via la console avec un suivi textuel des états du jeu et compo
 
 ---
 
-
----
-
 ## Licence
 
 Ce projet est sous licence MIT.
